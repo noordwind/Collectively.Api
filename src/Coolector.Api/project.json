@@ -1,0 +1,33 @@
+﻿{
+  "version": "1.0.0-*",
+  "buildOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "Autofac": "4.1.0",
+    "Coolector.Infrastructure": "1.0.0-*",
+    "Microsoft.NETCore.App": {
+      "type": "platform",
+      "version": "1.0.1"
+    },
+    "Nancy": "2.0.0-barneyrubble"
+  },
+
+  "frameworks": {
+    "netcoreapp1.0": {
+      "dependencies": {
+        "Microsoft.AspNetCore.Hosting": "1.0.0",
+        "Microsoft.AspNetCore.Server.Kestrel": "1.0.0",
+        "Microsoft.AspNetCore.Owin": "1.0.0",
+        "Microsoft.Extensions.Configuration.Binder": "1.0.0",
+        "Microsoft.Extensions.Configuration.Json": "1.0.0",
+        "NLog.Extensions.Logging": "1.0.0-*"
+      },
+      "imports": [
+        "dotnet54",
+        "portable-net451+win8"
+      ]
+    }
+  }
+}

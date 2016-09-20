@@ -1,0 +1,39 @@
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Nancy.Owin;
+using NLog.Extensions.Logging;
+
+namespace Collector.Api
+{
+    public class Startup
+    {
+        public IConfiguration Configuration { get; set; }
+
+        public Startup(IHostingEnvironment env)
+        {
+            var builder = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables()
+                .SetBasePath(env.ContentRootPath);
+
+            Configuration = builder.Build();
+        }
+
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        {
+
+            var config = this.Configuration;
+            //var appConfig = new AppConfiguration();
+            //ConfigurationBinder.Bind(config, appConfig);
+
+
+            //app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new DemoBootstrapper(appConfig)));
+            loggerFactory.AddNLog();
+            env.ConfigureNLog("nlog.config");
+            app.UseOwin().UseNancy(x => x.Bootstrapper = new CoolectorBootstrapper(Configuration));
+        }
+    }
+}
