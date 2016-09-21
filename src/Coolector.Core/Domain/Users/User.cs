@@ -7,6 +7,7 @@ namespace Coolector.Core.Domain.Users
     {
         public string ExternalId { get; set; }
         public string Email { get; protected set; }
+        public string Name { get; protected set; }
         public Role Role { get; protected set; }
         public State State { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
