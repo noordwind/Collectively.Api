@@ -1,4 +1,5 @@
 ﻿{
+  "title": "Coolector.Api",
   "version": "1.0.0-*",
   "buildOptions": {
     "emitEntryPoint": true
@@ -11,7 +12,8 @@
       "type": "platform",
       "version": "1.0.1"
     },
-    "Nancy": "2.0.0-barneyrubble"
+    "Nancy": "2.0.0-barneyrubble",
+    "NETStandard.Library": "1.6.0"
   },
 
   "frameworks": {

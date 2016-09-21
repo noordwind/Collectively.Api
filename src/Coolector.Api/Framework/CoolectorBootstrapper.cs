@@ -1,10 +1,10 @@
 ﻿using Autofac;
-using Coolector.Infrastructure.Settings;
 using Microsoft.Extensions.Configuration;
 using Nancy;
 using Nancy.Bootstrapper;
+using Coolector.Infrastructure.Settings;
 
-namespace Collector.Api
+namespace Coolector.Api.Framework
 {
     public class CoolectorBootstrapper : AutofacNancyBootstrapper
     {

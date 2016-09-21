@@ -2,7 +2,7 @@
 using Nancy;
 using NLog;
 
-namespace Collector.Api.Modules
+namespace Coolector.Api.Modules
 {
     public class HomeModule : NancyModule
     {

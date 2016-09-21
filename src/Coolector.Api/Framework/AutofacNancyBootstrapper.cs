@@ -7,7 +7,7 @@ using Nancy.Bootstrapper;
 using Nancy.Configuration;
 using Nancy.Diagnostics;
 
-namespace Collector.Api
+namespace Coolector.Api.Framework
 {
     //TODO: take the bootstrapper from nuget package when it will be updated
     public abstract class AutofacNancyBootstrapper : NancyBootstrapperWithRequestContainerBase<ILifetimeScope>
