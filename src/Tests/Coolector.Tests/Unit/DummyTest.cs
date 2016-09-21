@@ -1,15 +1,22 @@
-﻿using FluentAssertions;
-using NUnit.Framework;
+﻿using Machine.Specifications;
 
 namespace Coolector.Tests.Unit
 {
-    [TestFixture]
+    [Subject("Dummy")]
     public class DummyTest
     {
-        [Test]
-        public void TrueShouldBeTrue()
+        static bool value;
+
+        Establish context = () =>
         {
-            true.Should().BeTrue();
-        }
+            value = true;
+        };
+
+        Because of = () =>
+        {
+
+        };
+
+        It should_be_true = () => value.ShouldBeTrue();
     }
 }
