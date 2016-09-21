@@ -27,15 +27,15 @@ namespace Coolector.Infrastructure.IoC.Modules
             }).As<IMongoDatabase>()
                 .InstancePerLifetimeScope();
 
-            //builder.RegisterType<MongoDatabaseSeeder>()
-            //    .As<IDatabaseSeeder>()
-            //    .SingleInstance();
+            builder.RegisterType<MongoDatabaseSeeder>()
+                .As<IDatabaseSeeder>()
+                .SingleInstance();
 
             builder.RegisterType<MongoDatabaseInitializer>()
                 .As<IDatabaseInitializer>()
                 .SingleInstance();
 
-            //builder.RegisterModule<MongoRepositoryModule>();
+            builder.RegisterModule<MongoRepositoryModule>();
         }
     }
 }

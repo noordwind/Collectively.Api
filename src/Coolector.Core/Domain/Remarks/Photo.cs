@@ -9,7 +9,7 @@ namespace Coolector.Core.Domain.Remarks
         public string Url { get; protected set; }
         public long SizeBytes { get; protected set; }
         public string InternalId { get; protected set; }
-        public DateTime CreatedAt { get; }
+        public DateTime CreatedAt { get; protected set; }
 
         protected Photo()
         {

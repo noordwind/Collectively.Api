@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Coolector.Core.Domain.Remarks;
 using Coolector.Core.Domain.Users;
 using Coolector.Infrastructure.Services;
 using MongoDB.Bson;
@@ -50,6 +51,9 @@ namespace Coolector.Infrastructure.Mongo
         private async Task CreateDatabaseAsync()
         {
             await _database.CreateCollectionAsync<User>("Users");
+            await _database.CreateCollectionAsync<Category>("Categories");
+            await _database.CreateCollectionAsync<Remark>("Remarks");
+            await _database.CreateCollectionAsync<Photo>("Photos");
         }
     }
 }

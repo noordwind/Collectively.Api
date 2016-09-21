@@ -19,11 +19,15 @@ namespace Coolector.Api.Framework
 
         protected override void ApplicationStartup(ILifetimeScope container, IPipelines pipelines)
         {
-            // No registrations should be performed in here, however you may
-            // resolve things that are needed during application startup.
-
+            var databaseSettings = container.Resolve<DatabaseSettings>();
             var databaseInitializer = container.Resolve<IDatabaseInitializer>();
             databaseInitializer.InitializeAsync();
+
+            if (databaseSettings.Seed)
+            {
+                var seeder = container.Resolve<IDatabaseSeeder>();
+                seeder.SeedAsync();
+            }
         }
 
         protected override void ConfigureApplicationContainer(ILifetimeScope container)
