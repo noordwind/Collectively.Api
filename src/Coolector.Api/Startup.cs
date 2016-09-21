@@ -25,13 +25,6 @@ namespace Coolector.Api
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-
-            var config = this.Configuration;
-            //var appConfig = new AppConfiguration();
-            //ConfigurationBinder.Bind(config, appConfig);
-
-
-            //app.UseOwin(x => x.UseNancy(opt => opt.Bootstrapper = new DemoBootstrapper(appConfig)));
             loggerFactory.AddNLog();
             env.ConfigureNLog("nlog.config");
             app.UseOwin().UseNancy(x => x.Bootstrapper = new CoolectorBootstrapper(Configuration));
