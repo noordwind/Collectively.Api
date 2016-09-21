@@ -1,4 +1,6 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
+using Coolector.Infrastructure.Services;
 using Microsoft.Extensions.Configuration;
 using Nancy;
 using Nancy.Bootstrapper;
@@ -19,6 +21,9 @@ namespace Coolector.Api.Framework
         {
             // No registrations should be performed in here, however you may
             // resolve things that are needed during application startup.
+
+            var databaseInitializer = container.Resolve<IDatabaseInitializer>();
+            databaseInitializer.InitializeAsync();
         }
 
         protected override void ConfigureApplicationContainer(ILifetimeScope container)
@@ -31,6 +36,8 @@ namespace Coolector.Api.Framework
                     .As<GeneralSettings>();
                 builder.Register(x => GetConfigurationValue<DatabaseSettings>("database"))
                     .As<DatabaseSettings>();
+
+                builder.RegisterModule<Infrastructure.IoC.ModuleContainer>();
             });
         }
 
