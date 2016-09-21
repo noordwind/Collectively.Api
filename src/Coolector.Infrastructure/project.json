@@ -5,7 +5,10 @@
   "dependencies": {
     "NETStandard.Library": "1.6.0",
     "MongoDB.Driver": "2.3.0-rc1",
-    "Coolector.Core": "1.0.0-*"
+    "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
+    "Coolector.Core": "1.0.0-*",
+    "Autofac.Extensions.DependencyInjection": "4.0.0",
+    "Autofac": "4.1.0"
   },
 
   "frameworks": {
