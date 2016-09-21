@@ -31,14 +31,25 @@ namespace Coolector.Core.Domain.Users
         {
             if (email.Empty())
                 throw new ArgumentException("Email can not be empty.", nameof(email));
-
             if (!email.IsEmail())
                 throw new ArgumentException($"Invalid email {email}.", nameof(email));
-
             if (Email.EqualsCaseInvariant(email))
                 return;
 
             Email = email.ToLowerInvariant();
+            UpdatedAt = DateTime.UtcNow;
+        }
+
+        public void SetName(string name)
+        {
+            if (name.Empty())
+                throw new ArgumentException("User name can not be empty.", nameof(name));
+            if (name.Length > 50)
+                throw new ArgumentException("User name is too long.", nameof(name));
+            if (Name.EqualsCaseInvariant(name))
+                return;
+
+            Name = name.ToLowerInvariant();
             UpdatedAt = DateTime.UtcNow;
         }
 

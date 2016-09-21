@@ -1,12 +1,31 @@
-﻿namespace Coolector.Core.Domain.Remarks
+﻿using System;
+using Coolector.Core.Extensions;
+
+namespace Coolector.Core.Domain.Remarks
 {
     public class Category : Entity
     {
         public string Name { get; protected set; }
 
-        protected Category(string name)
+        protected Category()
         {
-            Name = name;
+        }
+
+        public Category(string name)
+        {
+            SetName(name);
+        }
+
+        public void SetName(string name)
+        {
+            if (name.Empty())
+                throw new ArgumentException("Category name can not be empty.", nameof(name));
+            if (name.Length > 50)
+                throw new ArgumentException("Category name is too long.", nameof(name));
+            if (Name.EqualsCaseInvariant(name))
+                return;
+
+            Name = name.ToLowerInvariant();
         }
     }
 }

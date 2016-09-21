@@ -1,4 +1,6 @@
-﻿namespace Coolector.Core.Domain.Remarks
+﻿using System;
+
+namespace Coolector.Core.Domain.Remarks
 {
     public class Position : IValueObject
     {
@@ -7,6 +9,11 @@
 
         protected Position(double latitude, double longitude)
         {
+            if(latitude > 90 || latitude < -90)
+                throw new ArgumentException($"Invalid latitude {latitude}", nameof(latitude));
+            if (longitude > 180 || longitude < -180)
+                throw new ArgumentException($"Invalid longitude {longitude}", nameof(longitude));
+
             Latitude = latitude;
             Longitude = longitude;
         }
