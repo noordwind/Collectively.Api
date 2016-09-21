@@ -20,7 +20,7 @@ namespace Coolector.Core.Domain.Remarks
         {
             if (name.Empty())
                 throw new ArgumentException("Category name can not be empty.", nameof(name));
-            if (name.Length > 50)
+            if (name.Length > 100)
                 throw new ArgumentException("Category name is too long.", nameof(name));
             if (Name.EqualsCaseInvariant(name))
                 return;

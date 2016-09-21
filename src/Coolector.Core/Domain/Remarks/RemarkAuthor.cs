@@ -1,4 +1,5 @@
 ﻿using System;
+using Coolector.Core.Extensions;
 using Coolector.Core.Domain.Users;
 
 namespace Coolector.Core.Domain.Remarks
@@ -10,6 +11,11 @@ namespace Coolector.Core.Domain.Remarks
 
         protected RemarkAuthor(Guid id, string name)
         {
+            if (id == Guid.Empty)
+                throw new ArgumentException("Author id can not be empty.", nameof(name));
+            if (name.Empty())
+                throw new ArgumentException("Author name can not be empty.", nameof(name));
+
             Id = id;
             Name = name;
         }

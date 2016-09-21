@@ -1,19 +1,24 @@
-﻿namespace Coolector.Core.Domain.Remarks
+﻿using System;
+
+namespace Coolector.Core.Domain.Remarks
 {
     public class Location : IValueObject
     {
         public string Address { get; protected set; }
         public Position Position { get; protected set; }
 
-        protected Location(string address, Position position)
+        protected Location(Position position, string address = null)
         {
-            Address = address;
+            if (position == null)
+                throw new ArgumentException("Position can not be null.", nameof(position));
+
             Position = position;
+            Address = address;
         }
 
-        public static Location Empty => new Location(string.Empty, Position.Zero);
+        public static Location Empty => new Location(Position.Zero);
 
-        public static Location Create(string address, double latitude, double longitude)
-            => new Location(address, Position.Create(latitude, longitude));
+        public static Location Create(double latitude, double longitude, string address = null)
+            => new Location(Position.Create(latitude, longitude), address);
     }
 }

@@ -8,7 +8,7 @@ namespace Coolector.Core.Domain.Remarks
         public string FileName { get; protected set; }
         public string Url { get; protected set; }
         public long SizeBytes { get; protected set; }
-        public string FileBucketId { get; protected set; }
+        public string InternalId { get; protected set; }
         public DateTime CreatedAt { get; }
 
         protected Photo()
@@ -30,14 +30,14 @@ namespace Coolector.Core.Domain.Remarks
             CreatedAt = DateTime.UtcNow;
         }
 
-        public void SetFileBucketId(string fileBucketId)
+        public void SetInternalId(string internalId)
         {
-            if (fileBucketId.Empty())
-                throw new ArgumentException("File bucket id can not be empty.", nameof(fileBucketId));
-            if (FileBucketId.EqualsCaseInvariant(fileBucketId))
+            if (internalId.Empty())
+                throw new ArgumentException("Internal id can not be empty.", nameof(internalId));
+            if (InternalId.EqualsCaseInvariant(internalId))
                 return;
 
-            FileBucketId = fileBucketId;
+            InternalId = internalId;
         }
     }
 }

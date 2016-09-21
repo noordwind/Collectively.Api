@@ -11,7 +11,9 @@ namespace Coolector.Core.Domain.Remarks
         public RemarkPhoto Photo { get; protected set; }
         public string Description { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
+        public RemarkAuthor Resolver { get; protected set; }
         public DateTime? ResolvedAt { get; protected set; }
+        public bool Resolved => Resolver != null;
 
         protected Remark()
         {
@@ -62,11 +64,14 @@ namespace Coolector.Core.Domain.Remarks
             Photo = RemarkPhoto.Create(photo);
         }
 
-        public void Resolve()
+        public void Resolve(User resolver)
         {
-            if (ResolvedAt.HasValue)
-                throw new DomainException($"Remark {Id} has been already resolved at {ResolvedAt}");
-
+            if (Resolved)
+            {
+                throw new DomainException($"Remark {Id} has been already resolved " +
+                                          $"by {Resolver.Name} at {ResolvedAt}.");
+            }
+            Resolver = RemarkAuthor.Create(resolver);
             ResolvedAt = DateTime.UtcNow;
         }
     }
