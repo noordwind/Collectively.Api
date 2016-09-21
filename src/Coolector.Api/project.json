@@ -24,6 +24,7 @@
         "Microsoft.AspNetCore.Owin": "1.0.0",
         "Microsoft.Extensions.Configuration.Binder": "1.0.0",
         "Microsoft.Extensions.Configuration.Json": "1.0.0",
+        "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0",
         "NLog.Extensions.Logging": "1.0.0-*"
       },
       "imports": [
