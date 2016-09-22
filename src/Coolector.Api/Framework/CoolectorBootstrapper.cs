@@ -5,11 +5,13 @@ using Microsoft.Extensions.Configuration;
 using Nancy;
 using Nancy.Bootstrapper;
 using Coolector.Infrastructure.Settings;
+using NLog;
 
 namespace Coolector.Api.Framework
 {
     public class CoolectorBootstrapper : AutofacNancyBootstrapper
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IConfiguration _configuration;
 
         public CoolectorBootstrapper(IConfiguration configuration)
@@ -34,10 +36,13 @@ namespace Coolector.Api.Framework
                 ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
                 ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
             };
+
+            Logger.Info("API Started");
         }
 
         protected override void ConfigureApplicationContainer(ILifetimeScope container)
         {
+            Logger.Info("Configuring IoC");
             base.ConfigureApplicationContainer(container);
 
             container.Update(builder =>

@@ -6,11 +6,13 @@ using Coolector.Infrastructure.Services;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Driver;
+using NLog;
 
 namespace Coolector.Infrastructure.Mongo
 {
     public class MongoDatabaseInitializer : IDatabaseInitializer
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private bool _initialized;
         private readonly IMongoDatabase _database;
 
@@ -28,8 +30,12 @@ namespace Coolector.Infrastructure.Mongo
             var collections = await _database.ListCollectionsAsync();
             var exists = await collections.AnyAsync();
             if (exists)
+            {
+                Logger.Info("Database already exists, initialization skipped");
                 return;
+            }
 
+            Logger.Info("Initialize database");
             await CreateDatabaseAsync();
         }
 

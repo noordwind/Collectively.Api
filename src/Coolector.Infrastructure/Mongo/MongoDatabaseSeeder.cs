@@ -6,11 +6,13 @@ using Coolector.Infrastructure.Mongo.Queries;
 using Coolector.Infrastructure.Services;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
+using NLog;
 
 namespace Coolector.Infrastructure.Mongo
 {
     public class MongoDatabaseSeeder : IDatabaseSeeder
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IMongoDatabase _database;
 
         public MongoDatabaseSeeder(IMongoDatabase database)
@@ -20,6 +22,7 @@ namespace Coolector.Infrastructure.Mongo
 
         public async Task SeedAsync()
         {
+            Logger.Info("Seeding database");
             await SeedCategoriesAsync();
             await SeedUsersAsync();
         }
@@ -28,7 +31,10 @@ namespace Coolector.Infrastructure.Mongo
         {
             var exists = await _database.Categories().AsQueryable().AnyAsync();
             if (exists)
+            {
+                Logger.Info("Categories collection already contains documents, seeding skipped");
                 return;
+            }
 
             var categories = new List<Category>
             {
@@ -36,6 +42,7 @@ namespace Coolector.Infrastructure.Mongo
                 new Category("Collected Garbage")
             };
 
+            Logger.Info("Seeding categories");
             await _database.Categories().InsertManyAsync(categories);
         }
 
@@ -43,7 +50,10 @@ namespace Coolector.Infrastructure.Mongo
         {
             var exists = await _database.Users().AsQueryable().AnyAsync();
             if (exists)
+            {
+                Logger.Info("Users collection already contains documents, seeding skipped");
                 return;
+            }
 
             var users = new List<User>
             {
@@ -52,6 +62,7 @@ namespace Coolector.Infrastructure.Mongo
                 new User("noordwind-test3@mailinator.com", externalId: "auth0|57e3a50416c45ca671b6c3d6")
             };
 
+            Logger.Info("Seeding users");
             await _database.Users().InsertManyAsync(users);
         }
     }
