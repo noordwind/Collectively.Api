@@ -28,6 +28,12 @@ namespace Coolector.Api.Framework
                 var seeder = container.Resolve<IDatabaseSeeder>();
                 seeder.SeedAsync();
             }
+
+            pipelines.AfterRequest += (ctx) =>
+            {
+                ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
+            };
         }
 
         protected override void ConfigureApplicationContainer(ILifetimeScope container)

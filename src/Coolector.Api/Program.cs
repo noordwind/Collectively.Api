@@ -11,6 +11,7 @@ namespace Coolector.Api
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseKestrel()
                 .UseStartup<Startup>()
+                .UseUrls("http://*:5000")
                 .Build();
 
             host.Run();

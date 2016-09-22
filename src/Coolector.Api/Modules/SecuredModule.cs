@@ -1,4 +1,5 @@
-﻿using Nancy;
+﻿using System.Threading.Tasks;
+using Nancy;
 using Nancy.Security;
 
 namespace Coolector.Api.Modules
@@ -9,7 +10,15 @@ namespace Coolector.Api.Modules
         {
             this.RequiresAuthentication();
 
-            Get("/secured/{name}", args => $"Args: {args.name}, user:{Context.CurrentUser.Identity.Name}");
+            Get("/secured", async args =>
+            {
+                var dto = new
+                {
+                    user = Context.CurrentUser.Identity.Name
+                };
+
+                return await Task.FromResult(dto);
+            });
         }
     }
 }
