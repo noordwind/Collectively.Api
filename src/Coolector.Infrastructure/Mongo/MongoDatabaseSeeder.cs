@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Coolector.Core.Domain.Remarks;
 using Coolector.Core.Domain.Users;
@@ -32,7 +33,11 @@ namespace Coolector.Infrastructure.Mongo
                 new Category("Collected Garbage")
             };
 
-            await _database.Categories().InsertManyAsync(categories);
+            foreach (var category in categories)
+                await _database.Categories().ReplaceOneAsync(x => x.Name == category.Name, category, new UpdateOptions
+                {
+                    IsUpsert = true
+                });
         }
 
         private async Task SeedUsersAsync()
@@ -44,7 +49,11 @@ namespace Coolector.Infrastructure.Mongo
                 new User("noordwind-test3@mailinator.com", externalId: "auth0|57e3a50416c45ca671b6c3d6")
             };
 
-            await _database.Users().InsertManyAsync(users);
+            foreach (var user in users)
+                await _database.Users().ReplaceOneAsync(x => x.Email == user.Email, user, new UpdateOptions
+                {
+                    IsUpsert = true
+                });
         }
     }
 }
