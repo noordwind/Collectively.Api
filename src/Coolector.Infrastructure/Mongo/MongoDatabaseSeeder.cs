@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Coolector.Core.Domain.Remarks;
 using Coolector.Core.Domain.Users;
 using Coolector.Infrastructure.Mongo.Queries;
 using Coolector.Infrastructure.Services;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Coolector.Infrastructure.Mongo
 {
@@ -24,24 +24,27 @@ namespace Coolector.Infrastructure.Mongo
             await SeedUsersAsync();
         }
 
-
         private async Task SeedCategoriesAsync()
         {
+            var exists = await _database.Categories().AsQueryable().AnyAsync();
+            if (exists)
+                return;
+
             var categories = new List<Category>
             {
                 new Category("Litter"),
                 new Category("Collected Garbage")
             };
 
-            foreach (var category in categories)
-                await _database.Categories().ReplaceOneAsync(x => x.Name == category.Name, category, new UpdateOptions
-                {
-                    IsUpsert = true
-                });
+            await _database.Categories().InsertManyAsync(categories);
         }
 
         private async Task SeedUsersAsync()
         {
+            var exists = await _database.Users().AsQueryable().AnyAsync();
+            if (exists)
+                return;
+
             var users = new List<User>
             {
                 new User("noordwind-test1@mailinator.com", externalId: "auth0|57e27dc60c5cc4183aa84fdb"),
@@ -49,11 +52,7 @@ namespace Coolector.Infrastructure.Mongo
                 new User("noordwind-test3@mailinator.com", externalId: "auth0|57e3a50416c45ca671b6c3d6")
             };
 
-            foreach (var user in users)
-                await _database.Users().ReplaceOneAsync(x => x.Email == user.Email, user, new UpdateOptions
-                {
-                    IsUpsert = true
-                });
+            await _database.Users().InsertManyAsync(users);
         }
     }
 }
