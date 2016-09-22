@@ -16,13 +16,16 @@ namespace Coolector.Infrastructure.Mongo.Repositories
             _database = database;
         }
 
-        public Task<User> GetAsync(Guid id)
-            => _database.Users().GetByIdAsync(id);
+        public async Task<User> GetAsync(Guid id)
+            => await _database.Users().GetByIdAsync(id);
 
-        public Task<User> GetByEmailAsync(string email)
-            => _database.Users().GetByEmailAsync(email);
+        public async Task<User> GetByEmailAsync(string email)
+            => await _database.Users().GetByEmailAsync(email);
 
-        public Task<User> GetByNameAsync(string name)
-            => _database.Users().GetByNameAsync(name);
+        public async Task<User> GetByNameAsync(string name)
+            => await _database.Users().GetByNameAsync(name);
+
+        public async Task AddAsync(User user)
+            => await _database.Users().InsertOneAsync(user);
     }
 }

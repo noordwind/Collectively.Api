@@ -39,9 +39,9 @@ namespace Coolector.Infrastructure.Mongo
         {
             var users = new List<User>
             {
-                new User("noordwind-test1@mailinator.com"),
-                new User("noordwind-test2@mailinator.com"),
-                new User("noordwind=test3@mailinator.com")
+                new User("noordwind-test1@mailinator.com", externalId: "auth0|57e27dc60c5cc4183aa84fdb"),
+                new User("noordwind-test2@mailinator.com", externalId: "auth0|57e3821a4711fe293101fe11"),
+                new User("noordwind-test3@mailinator.com", externalId: "auth0|57e3a50416c45ca671b6c3d6")
             };
 
             await _database.Users().InsertManyAsync(users);

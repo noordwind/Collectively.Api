@@ -7,7 +7,10 @@ namespace Coolector.Infrastructure.IoC
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterModule<DispatcherModule>();
             builder.RegisterModule<MongoModule>();
+            builder.RegisterModule<ServiceModule>();
+            builder.RegisterModule<Auth0Module>();
         }
     }
 }

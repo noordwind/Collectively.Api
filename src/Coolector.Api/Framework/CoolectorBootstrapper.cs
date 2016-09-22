@@ -46,6 +46,8 @@ namespace Coolector.Api.Framework
                     .As<GeneralSettings>();
                 builder.Register(x => GetConfigurationValue<DatabaseSettings>("database"))
                     .As<DatabaseSettings>();
+                builder.Register(x => GetConfigurationValue<Auth0Settings>("auth0"))
+                    .As<Auth0Settings>();
 
                 builder.RegisterModule<Infrastructure.IoC.ModuleContainer>();
             });
