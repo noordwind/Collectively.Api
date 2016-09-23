@@ -35,7 +35,7 @@ namespace Coolector.Infrastructure.Services
             var user = await _repository.GetByEmailAsync(email);
             if (user == null)
             {
-                await _eventDispatcher.DispatchAsync(new NewUserSignedIn(email, externalId, picture));
+                await _eventDispatcher.DispatchAsync(new NewUserSignedUp(email, externalId, picture));
                 return;
             }
 

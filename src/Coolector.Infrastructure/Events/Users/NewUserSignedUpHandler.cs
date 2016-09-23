@@ -4,16 +4,16 @@ using Coolector.Infrastructure.Services;
 
 namespace Coolector.Infrastructure.Events.Users
 {
-    public class NewUserSignedInHandler : IEventHandler<NewUserSignedIn>
+    public class NewUserSignedUpHandler : IEventHandler<NewUserSignedUp>
     {
         private readonly IUserService _userService;
 
-        public NewUserSignedInHandler(IUserService userService)
+        public NewUserSignedUpHandler(IUserService userService)
         {
             _userService = userService;
         }
 
-        public async Task HandleAsync(NewUserSignedIn @event)
+        public async Task HandleAsync(NewUserSignedUp @event)
         {
             await _userService.CreateAsync(@event.Email, @event.ExternalId);
         }

@@ -1,12 +1,12 @@
 ﻿namespace Coolector.Core.Events.Users
 {
-    public class NewUserSignedIn : IEvent
+    public class NewUserSignedUp : IEvent
     {
         public string Email { get; }
         public string ExternalId { get; }
         public string Picture { get; }
 
-        public NewUserSignedIn(string email, string externalId, string picture)
+        public NewUserSignedUp(string email, string externalId, string picture)
         {
             Email = email;
             ExternalId = externalId;
