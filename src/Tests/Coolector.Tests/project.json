@@ -20,5 +20,8 @@
         }
       }
     }
+  },
+  "configurations": {
+    "Dev": {}
   }
 }

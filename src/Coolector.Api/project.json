@@ -1,10 +1,9 @@
-﻿{
+{
   "title": "Coolector.Api",
   "version": "1.0.0-*",
   "buildOptions": {
     "emitEntryPoint": true
   },
-
   "dependencies": {
     "Autofac": "4.1.0",
     "Coolector.Infrastructure": "1.0.0-*",
@@ -15,7 +14,6 @@
     "Nancy": "2.0.0-barneyrubble",
     "NETStandard.Library": "1.6.0"
   },
-
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
@@ -32,5 +30,8 @@
         "portable-net451+win8"
       ]
     }
+  },
+  "configurations": {
+    "Dev": {}
   }
 }
