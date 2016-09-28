@@ -6,7 +6,6 @@
     "Machine.Specifications": "0.11.0",
     "Machine.Specifications.Should": "0.11.0",
     "Coolector.Core": "1.0.0-*",
-    "Coolector.Infrastructure": "1.0.0-*",
     "Moq": "4.6.38-alpha"
   },
   "testRunner": "mspec",

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Coolector.Core.Events;
+using Coolector.Common.Events;
 
 namespace Coolector.Core.Domain
 {

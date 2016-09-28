@@ -5,14 +5,18 @@
     "emitEntryPoint": true
   },
   "dependencies": {
+    "NETStandard.Library": "1.6.0",
     "Autofac": "4.1.0",
-    "Coolector.Infrastructure": "1.0.0-*",
+    "Autofac.Extensions.DependencyInjection": "4.0.0",
+    "Coolector.Common": "1.0.0-*",
+    "Coolector.Core": "1.0.0-*",
+    "RawRabbit": "1.10.0",
+    "RawRabbit.vNext": "1.10.0",
     "Microsoft.NETCore.App": {
       "type": "platform",
       "version": "1.0.1"
     },
-    "Nancy": "2.0.0-barneyrubble",
-    "NETStandard.Library": "1.6.0"
+    "Nancy": "2.0.0-barneyrubble"
   },
   "frameworks": {
     "netcoreapp1.0": {
@@ -26,8 +30,8 @@
         "NLog.Extensions.Logging": "1.0.0-*"
       },
       "imports": [
-        "dotnet54",
-        "portable-net451+win8"
+        "dotnet5.6",
+        "dnxcore50"
       ]
     }
   },

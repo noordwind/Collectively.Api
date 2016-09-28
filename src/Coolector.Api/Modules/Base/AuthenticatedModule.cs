@@ -1,4 +1,4 @@
-﻿using Coolector.Infrastructure.Commands;
+﻿using Coolector.Core.Commands;
 using Nancy.Security;
 
 namespace Coolector.Api.Modules.Base

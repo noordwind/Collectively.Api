@@ -1,11 +1,14 @@
 ﻿using System.Reflection;
 using Autofac;
-using Coolector.Infrastructure.Services;
+using Coolector.Core.IoC;
+using Coolector.Core.Services;
+using Coolector.Core.Settings;
 using Microsoft.Extensions.Configuration;
 using Nancy;
 using Nancy.Bootstrapper;
-using Coolector.Infrastructure.Settings;
 using NLog;
+using RawRabbit;
+using RawRabbit.vNext;
 
 namespace Coolector.Api.Framework
 {
@@ -47,6 +50,7 @@ namespace Coolector.Api.Framework
 
             container.Update(builder =>
             {
+                builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
                 builder.Register(x => GetConfigurationValue<GeneralSettings>("general"))
                     .As<GeneralSettings>();
                 builder.Register(x => GetConfigurationValue<DatabaseSettings>("database"))
@@ -54,7 +58,7 @@ namespace Coolector.Api.Framework
                 builder.Register(x => GetConfigurationValue<Auth0Settings>("auth0"))
                     .As<Auth0Settings>();
 
-                builder.RegisterModule<Infrastructure.IoC.ModuleContainer>();
+                builder.RegisterModule<ModuleContainer>();
             });
         }
 

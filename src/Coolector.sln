@@ -7,13 +7,17 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Api", "Coolector.
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Core", "Coolector.Core\Coolector.Core.xproj", "{8F41CE3F-ECB9-45E8-8AE4-374D7009CF85}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Infrastructure", "Coolector.Infrastructure\Coolector.Infrastructure.xproj", "{838FB81D-4E15-4945-8BBD-4389C8EF07B0}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{4E813C1B-FB6C-4DE9-A21A-B2E7ACAEF37F}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Tests", "Tests\Coolector.Tests\Coolector.Tests.xproj", "{6446D473-8BA0-4E81-A925-91EA6310D172}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Tests.EndToEnd", "Tests\Coolector.Tests.EndToEnd\Coolector.Tests.EndToEnd.xproj", "{BA47E362-72B2-4F60-AE21-55330C44E4F7}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Common", "Coolector.Common\Coolector.Common.xproj", "{BBB97E5E-7961-4D5C-8F7A-E8DE1E9612BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{C90D48B3-4C67-455B-81F6-0A84145927DB}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Services", "Services\Coolector.Services\Coolector.Services.xproj", "{6C63C007-8D73-4C7D-BD21-E1726557345A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,12 +38,6 @@ Global
 		{8F41CE3F-ECB9-45E8-8AE4-374D7009CF85}.Dev|Any CPU.Build.0 = Dev|Any CPU
 		{8F41CE3F-ECB9-45E8-8AE4-374D7009CF85}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8F41CE3F-ECB9-45E8-8AE4-374D7009CF85}.Release|Any CPU.Build.0 = Release|Any CPU
-		{838FB81D-4E15-4945-8BBD-4389C8EF07B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{838FB81D-4E15-4945-8BBD-4389C8EF07B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{838FB81D-4E15-4945-8BBD-4389C8EF07B0}.Dev|Any CPU.ActiveCfg = Dev|Any CPU
-		{838FB81D-4E15-4945-8BBD-4389C8EF07B0}.Dev|Any CPU.Build.0 = Dev|Any CPU
-		{838FB81D-4E15-4945-8BBD-4389C8EF07B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{838FB81D-4E15-4945-8BBD-4389C8EF07B0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6446D473-8BA0-4E81-A925-91EA6310D172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6446D473-8BA0-4E81-A925-91EA6310D172}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6446D473-8BA0-4E81-A925-91EA6310D172}.Dev|Any CPU.ActiveCfg = Dev|Any CPU
@@ -52,6 +50,18 @@ Global
 		{BA47E362-72B2-4F60-AE21-55330C44E4F7}.Dev|Any CPU.Build.0 = Dev|Any CPU
 		{BA47E362-72B2-4F60-AE21-55330C44E4F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA47E362-72B2-4F60-AE21-55330C44E4F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBB97E5E-7961-4D5C-8F7A-E8DE1E9612BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB97E5E-7961-4D5C-8F7A-E8DE1E9612BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBB97E5E-7961-4D5C-8F7A-E8DE1E9612BB}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBB97E5E-7961-4D5C-8F7A-E8DE1E9612BB}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{BBB97E5E-7961-4D5C-8F7A-E8DE1E9612BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBB97E5E-7961-4D5C-8F7A-E8DE1E9612BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6C63C007-8D73-4C7D-BD21-E1726557345A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C63C007-8D73-4C7D-BD21-E1726557345A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6C63C007-8D73-4C7D-BD21-E1726557345A}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{6C63C007-8D73-4C7D-BD21-E1726557345A}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{6C63C007-8D73-4C7D-BD21-E1726557345A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6C63C007-8D73-4C7D-BD21-E1726557345A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -59,5 +69,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{6446D473-8BA0-4E81-A925-91EA6310D172} = {4E813C1B-FB6C-4DE9-A21A-B2E7ACAEF37F}
 		{BA47E362-72B2-4F60-AE21-55330C44E4F7} = {4E813C1B-FB6C-4DE9-A21A-B2E7ACAEF37F}
+		{6C63C007-8D73-4C7D-BD21-E1726557345A} = {C90D48B3-4C67-455B-81F6-0A84145927DB}
 	EndGlobalSection
 EndGlobal

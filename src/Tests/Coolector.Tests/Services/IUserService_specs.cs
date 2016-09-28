@@ -1,10 +1,10 @@
 ﻿using System;
+using Coolector.Common.Events.Users;
 using Coolector.Core.Domain;
 using Coolector.Core.Domain.Users;
-using Coolector.Core.Events.Users;
+using Coolector.Core.Events;
 using Coolector.Core.Repositories;
-using Coolector.Infrastructure.Events;
-using Coolector.Infrastructure.Services;
+using Coolector.Core.Services;
 using Machine.Specifications;
 using Moq;
 using It = Machine.Specifications.It;

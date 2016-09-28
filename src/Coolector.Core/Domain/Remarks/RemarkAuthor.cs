@@ -1,5 +1,5 @@
 ﻿using System;
-using Coolector.Core.Extensions;
+using Coolector.Common.Extensions;
 using Coolector.Core.Domain.Users;
 
 namespace Coolector.Core.Domain.Remarks
