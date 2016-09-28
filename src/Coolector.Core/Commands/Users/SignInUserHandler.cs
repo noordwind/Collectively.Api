@@ -1,5 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Coolector.Common.Commands;
+using Coolector.Common.Commands.Users;
 using Coolector.Core.Auth0;
 using Coolector.Core.Services;
 

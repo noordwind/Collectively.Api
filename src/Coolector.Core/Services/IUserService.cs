@@ -39,7 +39,7 @@ namespace Coolector.Core.Services
                 return;
             }
 
-            await _eventDispatcher.DispatchAsync(new UserSignedIn(email));
+            await _eventDispatcher.DispatchAsync(new UserSignedIn(externalId, email));
         }
 
         public async Task CreateAsync(string email, string externalId)

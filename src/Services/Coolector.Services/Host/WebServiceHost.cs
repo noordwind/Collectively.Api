@@ -28,7 +28,7 @@ namespace Coolector.Services.Host
         {
             if (string.IsNullOrWhiteSpace(name))
             {
-                name = $"Warden Service: {typeof(TStartup).Namespace.Split('.').Last()}";
+                name = $"Coolector Service: {typeof(TStartup).Namespace.Split('.').Last()}";
             }            
 
             Console.Title = name;
