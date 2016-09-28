@@ -5,7 +5,10 @@ using Coolector.Services.Encryption;
 using Coolector.Services.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Nancy;
+using Coolector.Services.Users.Auth0;
 using Coolector.Services.Users.Handlers;
+using Coolector.Services.Users.Repositories;
+using Coolector.Services.Users.Services;
 using Microsoft.Extensions.Configuration;
 using Nancy.Bootstrapper;
 using NLog;
@@ -31,9 +34,13 @@ namespace Coolector.Services.Users.Framework
             container.Update(builder =>
             {
                 builder.RegisterInstance(_configuration.GetSettings<MongoDbSettings>());
+                builder.RegisterInstance(_configuration.GetSettings<Auth0Settings>());
                 builder.RegisterModule<MongoDbModule>();
                 builder.RegisterType<MongoDbInitializer>().As<IDatabaseInitializer>();
                 builder.RegisterType<Encrypter>().As<IEncrypter>();
+                builder.RegisterType<Auth0RestClient>().As<IAuth0RestClient>();
+                builder.RegisterType<UserRepository>().As<IUserRepository>();
+                builder.RegisterType<UserService>().As<IUserService>();
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
                 builder.RegisterType<SignInUserHandler>().As<ICommandHandler<SignInUser>>();
             });

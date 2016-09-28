@@ -1,11 +1,14 @@
 ﻿using System;
+using Coolector.Common.DTO.Common;
+using Coolector.Common.DTO.Users;
 using Coolector.Common.Extensions;
+using Coolector.Services.Domain;
 
-namespace Coolector.Core.Domain.Users
+namespace Coolector.Services.Users.Domain
 {
     public class User : Entity, ITimestampable
     {
-        public string ExternalId { get; set; }
+        public string UserId { get; set; }
         public string Email { get; protected set; }
         public string Name { get; protected set; }
         public Role Role { get; protected set; }
@@ -17,14 +20,23 @@ namespace Coolector.Core.Domain.Users
         {
         }
 
-        public User(string email, Role role = Role.User, string externalId = null)
+        public User(string userId, string email, Role role = Role.User)
         {
+            SetUserId(userId);
             SetEmail(email);
             Role = role;
             State = State.Inactive;
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
-            ExternalId = externalId;
+            UserId = userId;
+        }
+        public void SetUserId(string userId)
+        {
+            if (userId.Empty())
+                throw new ArgumentException("User id can not be empty.", nameof(userId));
+
+            UserId = userId;
+            UpdatedAt = DateTime.UtcNow;
         }
 
         public void SetEmail(string email)
@@ -50,15 +62,6 @@ namespace Coolector.Core.Domain.Users
                 return;
 
             Name = name.ToLowerInvariant();
-            UpdatedAt = DateTime.UtcNow;
-        }
-
-        public void SetExternalId(string externalId)
-        {
-            if (externalId.Empty())
-                throw new ArgumentException("External id can not be empty.", nameof(externalId));
-
-            ExternalId = externalId;
             UpdatedAt = DateTime.UtcNow;
         }
 

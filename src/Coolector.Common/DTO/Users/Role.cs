@@ -1,4 +1,4 @@
-﻿namespace Coolector.Core.Domain.Users
+﻿namespace Coolector.Common.DTO.Users
 {
     public enum Role
     {

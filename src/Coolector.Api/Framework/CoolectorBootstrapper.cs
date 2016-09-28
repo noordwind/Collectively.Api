@@ -1,8 +1,5 @@
-﻿using System.Reflection;
-using Autofac;
+﻿using Autofac;
 using Coolector.Core.IoC;
-using Coolector.Core.Services;
-using Coolector.Core.Settings;
 using Microsoft.Extensions.Configuration;
 using Nancy;
 using Nancy.Bootstrapper;
@@ -24,16 +21,6 @@ namespace Coolector.Api.Framework
 
         protected override void ApplicationStartup(ILifetimeScope container, IPipelines pipelines)
         {
-            var databaseSettings = container.Resolve<DatabaseSettings>();
-            var databaseInitializer = container.Resolve<IDatabaseInitializer>();
-            databaseInitializer.InitializeAsync();
-
-            if (databaseSettings.Seed)
-            {
-                var seeder = container.Resolve<IDatabaseSeeder>();
-                seeder.SeedAsync();
-            }
-
             pipelines.AfterRequest += (ctx) =>
             {
                 ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
@@ -51,13 +38,6 @@ namespace Coolector.Api.Framework
             container.Update(builder =>
             {
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
-                builder.Register(x => GetConfigurationValue<GeneralSettings>("general"))
-                    .As<GeneralSettings>();
-                builder.Register(x => GetConfigurationValue<DatabaseSettings>("database"))
-                    .As<DatabaseSettings>();
-                builder.Register(x => GetConfigurationValue<Auth0Settings>("auth0"))
-                    .As<Auth0Settings>();
-
                 builder.RegisterModule<ModuleContainer>();
             });
         }
@@ -71,14 +51,6 @@ namespace Coolector.Api.Framework
         {
             // No registrations should be performed in here, however you may
             // resolve things that are needed during request startup.
-        }
-
-        private T GetConfigurationValue<T>(string section) where T : new()
-        {
-            var configurationValue = new T();
-            _configuration.GetSection(section).Bind(configurationValue);
-
-            return configurationValue;
         }
     }
 }

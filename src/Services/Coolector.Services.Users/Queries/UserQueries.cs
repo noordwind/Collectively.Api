@@ -1,32 +1,24 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Coolector.Common.Extensions;
-using Coolector.Core.Domain.Users;
+using Coolector.Services.Users.Domain;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
-namespace Coolector.Core.Mongo.Queries
+namespace Coolector.Services.Users.Queries
 {
     public static class UserQueries
     {
         public static IMongoCollection<User> Users(this IMongoDatabase database)
             => database.GetCollection<User>("Users");
 
-        public static async Task<User> GetByIdAsync(this IMongoCollection<User> users,
-            Guid id)
+
+        public static async Task<User> GetByUserIdAsync(this IMongoCollection<User> users, string userId)
         {
-            if (id.IsEmpty())
+            if (userId.Empty())
                 return null;
 
-            return await users.AsQueryable().FirstOrDefaultAsync(x => x.Id == id);
-        }
-
-        public static async Task<User> GetByExternalIdAsync(this IMongoCollection<User> users, string externalId)
-        {
-            if (externalId.Empty())
-                return null;
-
-            return await users.AsQueryable().FirstOrDefaultAsync(x => x.ExternalId == externalId);
+            return await users.AsQueryable().FirstOrDefaultAsync(x => x.UserId == userId);
         }
 
         public static async Task<User> GetByEmailAsync(this IMongoCollection<User> users, string email)

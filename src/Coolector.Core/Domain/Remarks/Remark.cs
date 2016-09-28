@@ -1,5 +1,4 @@
 ﻿using System;
-using Coolector.Core.Domain.Users;
 
 namespace Coolector.Core.Domain.Remarks
 {
@@ -68,8 +67,8 @@ namespace Coolector.Core.Domain.Remarks
         {
             if (Resolved)
             {
-                throw new DomainException($"Remark {Id} has been already resolved " +
-                                          $"by {Resolver.Name} at {ResolvedAt}.");
+                throw new InvalidOperationException($"Remark {Id} has been already resolved " +
+                                                    $"by {Resolver.Name} at {ResolvedAt}.");
             }
             Resolver = RemarkAuthor.Create(resolver);
             ResolvedAt = DateTime.UtcNow;

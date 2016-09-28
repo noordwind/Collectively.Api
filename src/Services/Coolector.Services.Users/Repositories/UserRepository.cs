@@ -1,11 +1,10 @@
-﻿using System;
-using System.Threading.Tasks;
-using Coolector.Core.Domain.Users;
-using Coolector.Core.Mongo.Queries;
-using Coolector.Core.Repositories;
+﻿using System.Threading.Tasks;
+using Coolector.Common.Types;
+using Coolector.Services.Users.Domain;
+using Coolector.Services.Users.Queries;
 using MongoDB.Driver;
 
-namespace Coolector.Core.Mongo.Repositories
+namespace Coolector.Services.Users.Repositories
 {
     public class UserRepository : IUserRepository
     {
@@ -16,13 +15,13 @@ namespace Coolector.Core.Mongo.Repositories
             _database = database;
         }
 
-        public async Task<User> GetAsync(Guid id)
-            => await _database.Users().GetByIdAsync(id);
+        public async Task<Maybe<User>> GetByUserIdAsync(string userId)
+            => await _database.Users().GetByUserIdAsync(userId);
 
-        public async Task<User> GetByEmailAsync(string email)
+        public async Task<Maybe<User>> GetByEmailAsync(string email)
             => await _database.Users().GetByEmailAsync(email);
 
-        public async Task<User> GetByNameAsync(string name)
+        public async Task<Maybe<User>> GetByNameAsync(string name)
             => await _database.Users().GetByNameAsync(name);
 
         public async Task AddAsync(User user)

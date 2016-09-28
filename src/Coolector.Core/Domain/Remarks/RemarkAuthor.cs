@@ -1,6 +1,5 @@
 ﻿using System;
 using Coolector.Common.Extensions;
-using Coolector.Core.Domain.Users;
 
 namespace Coolector.Core.Domain.Remarks
 {

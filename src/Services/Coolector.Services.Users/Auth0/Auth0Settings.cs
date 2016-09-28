@@ -1,4 +1,4 @@
-﻿namespace Coolector.Core.Settings
+﻿namespace Coolector.Services.Users.Auth0
 {
     public class Auth0Settings
     {

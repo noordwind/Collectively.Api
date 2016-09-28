@@ -21,10 +21,8 @@ namespace Coolector.Core.IoC.Modules
                 .InstancePerLifetimeScope();
 
             var coreAssembly = Assembly.Load(new AssemblyName("Coolector.Core"));
-            var infrastructureAssembly = Assembly.Load(new AssemblyName("Coolector.Infrastructure"));
+            builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(ICommandHandler<>));
             builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
-            builder.RegisterAssemblyTypes(infrastructureAssembly).AsClosedTypesOf(typeof(ICommandHandler<>));
-            builder.RegisterAssemblyTypes(infrastructureAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
         }
     }
 }

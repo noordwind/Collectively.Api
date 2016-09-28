@@ -1,4 +1,4 @@
-﻿namespace Coolector.Core.Domain
+﻿namespace Coolector.Common.DTO.Common
 {
     public enum State
     {
