@@ -8,10 +8,10 @@ namespace Coolector.Api
         public static void Main(string[] args)
         {
             var host = new WebHostBuilder()
-                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseKestrel()
+                .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
-                .UseUrls("http://*:5000")
+                .UseIISIntegration()
                 .Build();
 
             host.Run();

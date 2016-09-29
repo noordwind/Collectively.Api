@@ -1,4 +1,5 @@
 ﻿{
+  "title": "Coolector.Services.Users",
   "version": "1.0.0-*",
   "buildOptions": {
     "emitEntryPoint": true
