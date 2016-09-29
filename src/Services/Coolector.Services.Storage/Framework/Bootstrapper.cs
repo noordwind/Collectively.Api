@@ -1,5 +1,4 @@
 ﻿using Autofac;
-using AutoMapper;
 using Coolector.Services.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Nancy;
@@ -37,8 +36,6 @@ namespace Coolector.Services.Storage.Framework
                 builder.RegisterModule<MongoDbModule>();
                 builder.RegisterType<MongoDbInitializer>().As<IDatabaseInitializer>();
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
-                builder.RegisterInstance(MapperConfigurationFactory.Create()).SingleInstance();
-                builder.Register(ctx => ctx.Resolve<MapperConfiguration>().CreateMapper()).As<IMapper>();
                 builder.RegisterType<UserRepository>().As<IUserRepository>();
                 builder.RegisterType<ServiceClient>().As<IServiceClient>();
                 builder.RegisterType<ProviderClient>().As<IProviderClient>();
