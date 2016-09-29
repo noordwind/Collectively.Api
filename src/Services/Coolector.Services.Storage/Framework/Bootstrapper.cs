@@ -42,6 +42,7 @@ namespace Coolector.Services.Storage.Framework
                 builder.RegisterType<UserRepository>().As<IUserRepository>();
                 builder.RegisterType<ServiceClient>().As<IServiceClient>();
                 builder.RegisterType<ProviderClient>().As<IProviderClient>();
+                builder.RegisterType<UserProvider>().As<IUserProvider>();
             });
             LifeTimeScope = container;
         }
