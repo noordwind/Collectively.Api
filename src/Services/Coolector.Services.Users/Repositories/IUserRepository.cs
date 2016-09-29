@@ -12,5 +12,6 @@ namespace Coolector.Services.Users.Repositories
         Task<Maybe<User>> GetByNameAsync(string name);
         Task<Maybe<PagedResult<User>>> BrowseAsync(int page = 1, int results = 10);
         Task AddAsync(User user);
+        Task UpdateAsync(User user);
     }
 }

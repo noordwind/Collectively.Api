@@ -10,5 +10,6 @@ namespace Coolector.Services.Users.Services
         Task<Maybe<User>> GetAsync(string userId);
         Task<Maybe<PagedResult<User>>> BrowseAsync(int page = 1, int results = 10);
         Task CreateAsync(string userId, string email, string role, bool activate = true, string pictureUrl = null);
+        Task ChangeNameAsync(string userId, string name);
     }
 }

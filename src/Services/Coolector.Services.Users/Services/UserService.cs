@@ -37,6 +37,16 @@ namespace Coolector.Services.Users.Services
             await _userRepository.AddAsync(user.Value);
         }
 
+        public async Task ChangeNameAsync(string userId, string name)
+        {
+            var user = await GetAsync(userId);
+            if (user.HasNoValue)
+                throw new ServiceException($"User with id {userId} has not been found.");
+
+            user.Value.SetName(name);
+            await _userRepository.UpdateAsync(user.Value);
+        }
+
         private static string GetFixedUserId(string userId)
             => userId.Empty() ? string.Empty : userId.Replace("auth0|", string.Empty);
     }
