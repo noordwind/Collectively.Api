@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-using Coolector.Common.DTO.Users;
 using Coolector.Common.Extensions;
 using Coolector.Common.Types;
 using Coolector.Services.Domain;
@@ -17,29 +16,24 @@ namespace Coolector.Services.Users.Services
             _userRepository = userRepository;
         }
 
-        public async Task<Maybe<UserDto>> GetAsync(string userId)
-        {
-            var user = await _userRepository.GetByUserIdAsync(GetFixedUserId(userId));
-            if (user.HasNoValue)
-                return new Maybe<UserDto>();
+        public async Task<Maybe<User>> GetAsync(string userId)
+            => await _userRepository.GetByUserIdAsync(GetFixedUserId(userId));
 
-            return new UserDto
-            {
-                UserId = user.Value.UserId,
-                Email = user.Value.Email
-            };
-        }
+        public async Task<Maybe<PagedResult<User>>> BrowseAsync(int page = 1, int results = 10)
+            => await _userRepository.BrowseAsync(page, results);
 
-        public async Task CreateAsync(string userId, string email, Role role = Role.User, bool activate = true)
+        public async Task CreateAsync(string userId, string email, string role,
+            bool activate = true, string pictureUrl = null)
         {
             userId = GetFixedUserId(userId);
             var user = await _userRepository.GetByUserIdAsync(userId);
             if (user.HasValue)
                 throw new ServiceException($"User with id: {userId} already exists!");
 
-            user = new User(userId, email, role);
+            user = new User(userId, email, role, pictureUrl);
             if (activate)
                 user.Value.Activate();
+
             await _userRepository.AddAsync(user.Value);
         }
 

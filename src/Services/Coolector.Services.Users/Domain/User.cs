@@ -1,18 +1,17 @@
 ﻿using System;
-using Coolector.Common.DTO.Common;
-using Coolector.Common.DTO.Users;
 using Coolector.Common.Extensions;
 using Coolector.Services.Domain;
 
 namespace Coolector.Services.Users.Domain
 {
-    public class User : Entity, ITimestampable
+    public class User : IdentifiableEntity, ITimestampable
     {
         public string UserId { get; set; }
         public string Email { get; protected set; }
         public string Name { get; protected set; }
-        public Role Role { get; protected set; }
-        public State State { get; protected set; }
+        public string PictureUrl { get; protected set; }
+        public string Role { get; protected set; }
+        public string State { get; protected set; }
         public DateTime CreatedAt { get; protected set; }
         public DateTime UpdatedAt { get; protected set; }
 
@@ -20,16 +19,18 @@ namespace Coolector.Services.Users.Domain
         {
         }
 
-        public User(string userId, string email, Role role = Role.User)
+        public User(string userId, string email, string role, string pictureUrl = null)
         {
             SetUserId(userId);
             SetEmail(email);
             Role = role;
-            State = State.Inactive;
+            PictureUrl = pictureUrl;
+            State = States.Inactive;
             CreatedAt = DateTime.UtcNow;
             UpdatedAt = DateTime.UtcNow;
             UserId = userId;
         }
+
         public void SetUserId(string userId)
         {
             if (userId.Empty())
@@ -65,7 +66,7 @@ namespace Coolector.Services.Users.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
-        public void SetRole(Role role)
+        public void SetRole(string role)
         {
             if (Role == role)
                 return;
@@ -76,19 +77,19 @@ namespace Coolector.Services.Users.Domain
 
         public void Lock()
         {
-            if (State == State.Locked)
+            if (State == States.Locked)
                 return;
 
-            State = State.Locked;
+            State = States.Locked;
             UpdatedAt = DateTime.UtcNow;
         }
 
         public void Activate()
         {
-            if (State == State.Active)
+            if (State == States.Active)
                 return;
 
-            State = State.Active;
+            State = States.Active;
             UpdatedAt = DateTime.UtcNow;
         }
     }

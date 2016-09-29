@@ -16,7 +16,8 @@
     "Microsoft.AspNetCore.Owin": "1.0.0",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
-    "Microsoft.Extensions.Configuration.Json": "1.0.0"
+    "Microsoft.Extensions.Configuration.Json": "1.0.0",
+    "Newtonsoft.Json": "9.0.1"
   },
   "frameworks": {
     "netstandard1.6": {

@@ -36,5 +36,13 @@ namespace Coolector.Services.Users.Queries
 
             return await users.AsQueryable().FirstOrDefaultAsync(x => x.Name == name);
         }
+
+        public static IMongoQueryable<User> Query(this IMongoCollection<User> users,
+            BrowseUsers query)
+        {
+            var values = users.AsQueryable();
+
+            return values.OrderBy(x => x.Name);
+        }
     }
 }

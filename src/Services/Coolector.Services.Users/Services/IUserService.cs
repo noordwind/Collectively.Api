@@ -1,12 +1,14 @@
 ﻿using System.Threading.Tasks;
-using Coolector.Common.DTO.Users;
 using Coolector.Common.Types;
+using Coolector.Services.Domain;
+using Coolector.Services.Users.Domain;
 
 namespace Coolector.Services.Users.Services
 {
     public interface IUserService
     {
-        Task<Maybe<UserDto>> GetAsync(string userId);
-        Task CreateAsync(string userId, string email, Role role = Role.User, bool activate = true);
+        Task<Maybe<User>> GetAsync(string userId);
+        Task<Maybe<PagedResult<User>>> BrowseAsync(int page = 1, int results = 10);
+        Task CreateAsync(string userId, string email, string role, bool activate = true, string pictureUrl = null);
     }
 }
