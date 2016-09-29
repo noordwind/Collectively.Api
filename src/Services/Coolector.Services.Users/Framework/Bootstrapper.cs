@@ -43,6 +43,7 @@ namespace Coolector.Services.Users.Framework
                 builder.RegisterType<UserService>().As<IUserService>();
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
                 builder.RegisterType<SignInUserHandler>().As<ICommandHandler<SignInUser>>();
+                builder.RegisterType<ChangeUserNameHandler>().As<ICommandHandler<ChangeUserName>>();
             });
             LifetimeScope = container;
         }

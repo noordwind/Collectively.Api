@@ -13,6 +13,7 @@ namespace Coolector.Services.Users
                 .UseAutofac(Bootstrapper.LifetimeScope)
                 .UseRabbitMq()
                 .SubscribeToCommand<SignInUser>()
+                .SubscribeToCommand<ChangeUserName>()
                 .Build()
                 .Run();
         }

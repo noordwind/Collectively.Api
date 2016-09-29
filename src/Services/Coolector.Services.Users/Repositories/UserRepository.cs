@@ -41,5 +41,8 @@ namespace Coolector.Services.Users.Repositories
 
         public async Task AddAsync(User user)
             => await _database.Users().InsertOneAsync(user);
+
+        public async Task UpdateAsync(User user)
+            => await _database.Users().ReplaceOneAsync(x => x.Id == user.Id, user);
     }
 }
