@@ -1,12 +1,16 @@
 ﻿using Autofac;
+using AutoMapper;
 using Coolector.Services.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Nancy;
-using Microsoft.Extensions.Configuration;
+using Coolector.Services.Storage.Providers;
+using Coolector.Services.Storage.Repositories;
+using Coolector.Services.Storage.Settings;
 using Nancy.Bootstrapper;
 using NLog;
 using RawRabbit;
 using RawRabbit.vNext;
+using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace Coolector.Services.Storage.Framework
 {
@@ -29,9 +33,13 @@ namespace Coolector.Services.Storage.Framework
             container.Update(builder =>
             {
                 builder.RegisterInstance(_configuration.GetSettings<MongoDbSettings>());
+                builder.RegisterInstance(_configuration.GetSettings<ProviderSettings>());
                 builder.RegisterModule<MongoDbModule>();
                 builder.RegisterType<MongoDbInitializer>().As<IDatabaseInitializer>();
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
+                builder.RegisterType<UserRepository>().As<IUserRepository>();
+                builder.RegisterType<ServiceClient>().As<IServiceClient>();
+                builder.RegisterType<ProviderClient>().As<IProviderClient>();
             });
             LifeTimeScope = container;
         }
