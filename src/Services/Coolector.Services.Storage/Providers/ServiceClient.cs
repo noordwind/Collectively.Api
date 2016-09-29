@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
+using AutoMapper;
 using Coolector.Common.Types;
 using Newtonsoft.Json;
 
@@ -8,6 +9,13 @@ namespace Coolector.Services.Storage.Providers
 {
     public class ServiceClient : IServiceClient
     {
+        private readonly IMapper _mapper;
+
+        public ServiceClient(IMapper mapper)
+        {
+            _mapper = mapper;
+        }
+
         public async Task<Maybe<T>> GetAsync<T>(string url, string endpoint) where T : class
         {
             var httpClient = new HttpClient { BaseAddress = new Uri(GetBaseAddress(url)) };
@@ -19,9 +27,10 @@ namespace Coolector.Services.Storage.Providers
                 return new Maybe<T>();
 
             var content = await response.Content.ReadAsStringAsync();
-            var data = JsonConvert.DeserializeObject<T>(content);
+            var data = JsonConvert.DeserializeObject<dynamic>(content);
+            var result = _mapper.Map<T>(data);
 
-            return data;
+            return result;
         }
 
         private string GetBaseAddress(string url) => url.EndsWith("/") ? url : $"{url}/";
