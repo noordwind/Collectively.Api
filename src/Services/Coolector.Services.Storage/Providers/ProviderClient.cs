@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Coolector.Common.Types;
 using Coolector.Services.Storage.Mappers;
 
-namespace Coolector.Services.Storage.Modules.Providers
+namespace Coolector.Services.Storage.Providers
 {
     public class ProviderClient : IProviderClient
     {

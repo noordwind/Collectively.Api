@@ -5,7 +5,7 @@ using Coolector.Services.Storage.Mappers;
 using Coolector.Services.Storage.Repositories;
 using Coolector.Services.Storage.Settings;
 
-namespace Coolector.Services.Storage.Modules.Providers
+namespace Coolector.Services.Storage.Providers
 {
     public class UserProvider : IUserProvider
     {

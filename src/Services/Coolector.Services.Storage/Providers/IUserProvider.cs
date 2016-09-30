@@ -2,7 +2,7 @@
 using Coolector.Common.DTO.Users;
 using Coolector.Common.Types;
 
-namespace Coolector.Services.Storage.Modules.Providers
+namespace Coolector.Services.Storage.Providers
 {
     public interface IUserProvider
     {

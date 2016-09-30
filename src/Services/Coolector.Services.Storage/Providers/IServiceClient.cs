@@ -2,7 +2,7 @@
 using Coolector.Common.Types;
 using Coolector.Services.Storage.Mappers;
 
-namespace Coolector.Services.Storage.Modules.Providers
+namespace Coolector.Services.Storage.Providers
 {
     public interface IServiceClient
     {
