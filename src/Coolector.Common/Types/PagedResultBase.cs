@@ -1,4 +1,4 @@
-﻿namespace Coolector.Services.Domain
+﻿namespace Coolector.Common.Types
 {
     public abstract class PagedResultBase
     {

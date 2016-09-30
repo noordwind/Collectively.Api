@@ -1,26 +1,24 @@
-﻿using Autofac.Core;
+﻿using System.Collections.Generic;
 using Coolector.Api.Modules.Base;
-using Coolector.Common.Commands.Users;
+using Coolector.Common.DTO.Users;
 using Coolector.Core.Commands;
+using Coolector.Core.Filters;
+using Coolector.Core.Storages;
 using Nancy.ModelBinding;
 
 namespace Coolector.Api.Modules
 {
-    public class UserModule : AuthenticatedModule
+    public class UserModule : ModuleBase
     {
-        public UserModule(ICommandDispatcher commandDispatcher)
-            :base(commandDispatcher)
+        public UserModule(ICommandDispatcher commandDispatcher, IUserStorage userStorage)
+            :base(commandDispatcher, modulePath: "users")
         {
-            Post("sign-in", async args =>
+            Get("", async args =>
             {
-                var command = this.Bind<SignInUser>();
-                await CommandDispatcher.DispatchAsync(command);
-            });
+                var query = this.Bind<BrowseUsers>();
+                var users = await userStorage.BrowseAsync(query);
 
-            Put("users/edit", async args =>
-            {
-                var command = BindAuthenticatedCommand<EditUser>();
-                await CommandDispatcher.DispatchAsync(command);
+                return users.HasValue ? users.Value.Items : new List<UserDto>();
             });
         }
     }

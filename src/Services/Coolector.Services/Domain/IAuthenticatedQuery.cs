@@ -1,4 +1,6 @@
-﻿namespace Coolector.Services.Domain
+﻿using Coolector.Common.Types;
+
+namespace Coolector.Services.Domain
 {
     public interface IAuthenticatedQuery : IQuery
     {

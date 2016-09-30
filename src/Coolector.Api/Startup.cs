@@ -33,6 +33,7 @@ namespace Coolector.Api
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             services.AddWebEncoders();
+            services.AddCors();
             ApplicationContainer = GetServiceContainer(services);
 
             return new AutofacServiceProvider(ApplicationContainer);

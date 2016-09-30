@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Coolector.Services.Domain
+namespace Coolector.Common.Types
 {
     public class PagedResult<T> : PagedResultBase
     {
@@ -24,7 +24,6 @@ namespace Coolector.Services.Domain
             int currentPage, int resultsPerPage,
             int totalPages, long totalResults)
             => new PagedResult<T>(items, currentPage, resultsPerPage, totalPages, totalResults);
-
 
         public static PagedResult<T> From(PagedResultBase result, IEnumerable<T> items)
             => new PagedResult<T>(items, result.CurrentPage, result.ResultsPerPage,

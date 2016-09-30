@@ -8,6 +8,7 @@
     "RawRabbit": "1.10.0",
     "RawRabbit.vNext": "1.10.0",
     "Microsoft.Extensions.DependencyInjection.Abstractions": "1.0.0",
+    "Microsoft.Extensions.Caching.Abstractions": "1.0.0",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
     "Autofac": "4.1.0",
     "Newtonsoft.Json": "9.0.1",

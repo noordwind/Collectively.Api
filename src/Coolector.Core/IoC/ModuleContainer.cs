@@ -8,6 +8,8 @@ namespace Coolector.Core.IoC
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterModule<DispatcherModule>();
+            builder.RegisterModule<FilterModule>();
+            builder.RegisterModule<StorageModule>();
         }
     }
 }

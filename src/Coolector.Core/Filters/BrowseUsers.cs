@@ -1,6 +1,6 @@
 ﻿using Coolector.Common.Types;
 
-namespace Coolector.Services.Users.Queries
+namespace Coolector.Core.Filters
 {
     public class BrowseUsers : PagedQueryBase
     {

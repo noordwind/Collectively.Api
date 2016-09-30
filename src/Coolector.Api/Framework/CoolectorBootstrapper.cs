@@ -1,5 +1,7 @@
 ﻿using Autofac;
 using Coolector.Core.IoC;
+using Coolector.Core.Storages;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Nancy;
 using Nancy.Bootstrapper;
@@ -37,7 +39,9 @@ namespace Coolector.Api.Framework
 
             container.Update(builder =>
             {
+                builder.RegisterInstance(GetConfigurationValue<StorageSettings>()).SingleInstance();
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
+                builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterModule<ModuleContainer>();
             });
         }
@@ -51,6 +55,19 @@ namespace Coolector.Api.Framework
         {
             // No registrations should be performed in here, however you may
             // resolve things that are needed during request startup.
+        }
+
+        private T GetConfigurationValue<T>(string section = "") where T : new()
+        {
+            if (string.IsNullOrWhiteSpace(section))
+            {
+                section = typeof(T).Name.Replace("Settings", string.Empty);
+            }
+
+            var configurationValue = new T();
+            _configuration.GetSection(section).Bind(configurationValue);
+
+            return configurationValue;
         }
     }
 }
