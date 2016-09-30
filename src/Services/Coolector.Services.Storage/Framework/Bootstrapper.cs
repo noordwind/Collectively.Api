@@ -2,6 +2,7 @@
 using Coolector.Services.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Nancy;
+using Coolector.Services.Storage.Framework.IoC;
 using Coolector.Services.Storage.Providers;
 using Coolector.Services.Storage.Repositories;
 using Coolector.Services.Storage.Settings;
@@ -40,6 +41,7 @@ namespace Coolector.Services.Storage.Framework
                 builder.RegisterType<ServiceClient>().As<IServiceClient>();
                 builder.RegisterType<ProviderClient>().As<IProviderClient>();
                 builder.RegisterType<UserProvider>().As<IUserProvider>();
+                builder.RegisterModule<MapperModule>();
             });
             LifeTimeScope = container;
         }
