@@ -2,8 +2,8 @@ using System.Collections.Generic;
 
 namespace Coolector.Common.Types
 {
-    public interface IFilter<TResult, in TQuery> where TQuery : PagedQueryBase
+    public interface IFilter<TResult, in TQuery> where TQuery : IQuery
     {
-        Maybe<PagedResult<TResult>> Filter(Maybe<IEnumerable<TResult>> values, TQuery query);
+        Maybe<IEnumerable<TResult>> Filter(Maybe<IEnumerable<TResult>> values, TQuery query);
     }
 }

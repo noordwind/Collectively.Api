@@ -5,7 +5,7 @@ using Coolector.Common.Types;
 using Coolector.Services.Storage.Mappers;
 using Newtonsoft.Json;
 
-namespace Coolector.Services.Storage.Providers
+namespace Coolector.Services.Storage.Modules.Providers
 {
     public class ServiceClient : IServiceClient
     {

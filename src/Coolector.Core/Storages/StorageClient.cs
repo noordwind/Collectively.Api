@@ -6,21 +6,26 @@ using Coolector.Common.Types;
 using Coolector.Common.Extensions;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Reflection;
+using System.Text;
+using Coolector.Core.Filters;
 
 namespace Coolector.Core.Storages
 {
     public class StorageClient : IStorageClient
     {
         private readonly ICache _cache;
+        private readonly IFilterResolver _filterResolver;
         private readonly StorageSettings _settings;
         private readonly HttpClient _httpClient;
 
         private string BaseAddress
             => _settings.Url.EndsWith("/", StringComparison.CurrentCulture) ? _settings.Url : $"{_settings.Url}/";
 
-        public StorageClient(ICache cache, StorageSettings settings)
+        public StorageClient(ICache cache, IFilterResolver filterResolver, StorageSettings settings)
         {
             _cache = cache;
+            _filterResolver = filterResolver;
             _settings = settings;
             _httpClient = new HttpClient {BaseAddress = new Uri(BaseAddress)};
             _httpClient.DefaultRequestHeaders.Remove("Accept");
@@ -67,20 +72,63 @@ namespace Coolector.Core.Storages
             return result;
         }
 
-        public async Task<Maybe<IEnumerable<T>>> GetCollectionUsingCacheAsync<T>(string endpoint, string cacheKey = null,
+        public async Task<Maybe<PagedResult<T>>> GetCollectionUsingCacheAsync<T>(string endpoint, string cacheKey = null,
             TimeSpan? expiry = null) where T : class
         {
-            var result = await GetFromCacheAsync<IEnumerable<T>>(endpoint, cacheKey);
-            if (result.HasValue && result.Value.Any())
-                return result;
+            var results = await GetFromCacheAsync<IEnumerable<T>>(endpoint, cacheKey);
+            if (results.HasValue && results.Value.Any())
+                return results.Value.PaginateWithoutLimit();
 
-            result = await GetAsync<IEnumerable<T>>(endpoint);
-            if (result.HasNoValue || !result.Value.Any())
-                return new Maybe<IEnumerable<T>>();
+            results = await GetAsync<IEnumerable<T>>(endpoint);
+            if (results.HasNoValue || !results.Value.Any())
+                return new Maybe<PagedResult<T>>();
 
-            await StoreInCacheAsync(result, endpoint, cacheKey, expiry);
+            await StoreInCacheAsync(results, endpoint, cacheKey, expiry);
 
-            return result;
+            return results.Value.PaginateWithoutLimit();
+        }
+
+        public async Task<Maybe<PagedResult<TResult>>> GetFilteredCollectionUsingCacheAsync<TResult, TQuery>(
+            TQuery query, string endpoint, string cacheKey = null, TimeSpan? expiry = null) where TResult : class
+            where TQuery : class, IPagedQuery
+        {
+            var filter = _filterResolver.Resolve<TResult, TQuery>();
+            var results = await GetFromCacheAsync<IEnumerable<TResult>>(endpoint, cacheKey);
+            if (results.HasValue && results.Value.Any())
+                return FilterAndPaginateResults(filter, results, query);
+
+            results = await GetAsync<IEnumerable<TResult>>(GetEndpointWithQuery(endpoint, query));
+            if (results.HasNoValue || !results.Value.Any())
+                return PagedResult<TResult>.Empty;
+
+            await StoreInCacheAsync(results, endpoint, cacheKey, expiry);
+
+            return FilterAndPaginateResults(filter, results, query);
+        }
+
+        private static Maybe<PagedResult<TResult>> FilterAndPaginateResults<TResult, TQuery>(
+            IFilter<TResult, TQuery> filter,
+            Maybe<IEnumerable<TResult>> results, TQuery query) where TQuery : class, IPagedQuery
+        {
+            var filteredValues = filter.Filter(results, query);
+
+            return filteredValues.HasValue ? filteredValues.Value.Paginate(query) : PagedResult<TResult>.Empty;
+        }
+
+        private static string GetEndpointWithQuery<T>(string endpoint, T query) where T : class, IQuery
+        {
+            if (query == null)
+                return endpoint;
+
+            var values = new List<string>();
+            foreach (var property in query.GetType().GetProperties())
+            {
+                var value = property.GetValue(query, null);
+                values.Add($"{property.Name.ToLowerInvariant()}={value}");
+            }
+
+            var endpointQuery = string.Join("&", values);
+            return $"{endpoint}?{endpointQuery}";
         }
 
         private async Task<Maybe<T>> GetFromCacheAsync<T>(string endpoint, string cacheKey = null) where T : class

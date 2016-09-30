@@ -1,4 +1,4 @@
-﻿using Coolector.Services.Storage.Providers;
+﻿using Coolector.Services.Storage.Modules.Providers;
 using Nancy;
 
 namespace Coolector.Services.Storage.Modules

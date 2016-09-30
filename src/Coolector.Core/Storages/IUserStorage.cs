@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Coolector.Common.DTO.Users;
 using Coolector.Common.Types;
 using Coolector.Core.Filters;

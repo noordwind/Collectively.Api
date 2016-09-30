@@ -3,7 +3,7 @@ using Coolector.Services.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Nancy;
 using Coolector.Services.Storage.Framework.IoC;
-using Coolector.Services.Storage.Providers;
+using Coolector.Services.Storage.Modules.Providers;
 using Coolector.Services.Storage.Repositories;
 using Coolector.Services.Storage.Settings;
 using Nancy.Bootstrapper;

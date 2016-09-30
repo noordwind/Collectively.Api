@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Coolector.Common.Types;
 
@@ -12,7 +11,11 @@ namespace Coolector.Core.Storages
         Task<Maybe<T>> GetUsingCacheAsync<T>(string endpoint, string cacheKey = null, TimeSpan? expiry = null)
             where T : class;
 
-        Task<Maybe<IEnumerable<T>>> GetCollectionUsingCacheAsync<T>(string endpoint, string cacheKey = null,
+        Task<Maybe<PagedResult<T>>> GetCollectionUsingCacheAsync<T>(string endpoint, string cacheKey = null,
             TimeSpan? expiry = null) where T : class;
+
+        Task<Maybe<PagedResult<TResult>>> GetFilteredCollectionUsingCacheAsync<TResult, TQuery>(TQuery query, 
+            string endpoint, string cacheKey = null, TimeSpan? expiry = null)
+            where TResult : class where TQuery : class, IPagedQuery;
     }
 }
