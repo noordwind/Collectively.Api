@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Coolector.Common.Types;
+using Coolector.Services.Storage.Mappers;
 
 namespace Coolector.Services.Storage.Providers
 {
@@ -13,11 +14,11 @@ namespace Coolector.Services.Storage.Providers
             _serviceClient = serviceClient;
         }
 
-        public async Task<Maybe<T>> GetAsync<T>(string url, string endpoint) where T : class
-        => await _serviceClient.GetAsync<T>(url, endpoint);
+        public async Task<Maybe<T>> GetAsync<T>(string url, string endpoint, IMapper<T> mapper) where T : class
+        => await _serviceClient.GetAsync<T>(url, endpoint, mapper);
 
         public async Task<Maybe<T>> GetUsingStorageAsync<T>(string url, string endpoint,
-            Func<Task<Maybe<T>>> storageFetch, Func<T, Task> storageSave) where T : class
+            Func<Task<Maybe<T>>> storageFetch, Func<T, Task> storageSave, IMapper<T> mapper) where T : class
         {
             if (storageFetch != null)
             {
@@ -26,7 +27,7 @@ namespace Coolector.Services.Storage.Providers
                     return data;
             }
 
-            var response = await GetAsync<T>(url, endpoint);
+            var response = await GetAsync(url, endpoint, mapper);
             if (response.HasNoValue)
                 return new Maybe<T>();
 
