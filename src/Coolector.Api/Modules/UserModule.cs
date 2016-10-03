@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Coolector.Api.Modules.Base;
+﻿using Coolector.Api.Modules.Base;
+using Coolector.Common.Extensions;
 using Coolector.Core.Commands;
 using Coolector.Core.Filters;
 using Coolector.Core.Storages;
@@ -17,7 +17,7 @@ namespace Coolector.Api.Modules
                 var query = this.Bind<BrowseUsers>();
                 var users = await userStorage.BrowseAsync(query);
 
-                return FromPagedResult(users);
+                return FromPagedResult(users.Select(x => new {x.UserId, x.Name}));
             });
         }
     }

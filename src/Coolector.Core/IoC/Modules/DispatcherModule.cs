@@ -20,7 +20,7 @@ namespace Coolector.Core.IoC.Modules
                 .As<IEventDispatcher>()
                 .InstancePerLifetimeScope();
 
-            var coreAssembly = Assembly.Load(new AssemblyName("Coolector.Core"));
+            var coreAssembly = typeof(IEntity).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(ICommandHandler<>));
             builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
         }
