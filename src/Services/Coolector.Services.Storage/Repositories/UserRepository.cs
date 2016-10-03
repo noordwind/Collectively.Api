@@ -17,6 +17,9 @@ namespace Coolector.Services.Storage.Repositories
             _database = database;
         }
 
+        public async Task<bool> ExisitsAsync(string id)
+            => await _database.Users().ExistsAsync(id);
+
         public async Task<Maybe<PagedResult<UserDto>>> BrowseAsync(BrowseUsers query)
             => await _database.Users()
                 .Query(query)

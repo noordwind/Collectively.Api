@@ -8,6 +8,7 @@ namespace Coolector.Services.Storage.Repositories
 {
     public interface IUserRepository
     {
+        Task<bool> ExisitsAsync(string id);
         Task<Maybe<PagedResult<UserDto>>> BrowseAsync(BrowseUsers query);
         Task<Maybe<UserDto>> GetByIdAsync(string id);
         Task AddAsync(UserDto user);

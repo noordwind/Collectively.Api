@@ -1,8 +1,12 @@
 ﻿using Autofac;
+using Coolector.Common.Commands;
+using Coolector.Common.Events;
+using Coolector.Common.Events.Users;
 using Coolector.Services.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Nancy;
 using Coolector.Services.Storage.Framework.IoC;
+using Coolector.Services.Storage.Handlers;
 using Coolector.Services.Storage.Providers;
 using Coolector.Services.Storage.Repositories;
 using Coolector.Services.Storage.Settings;
@@ -41,6 +45,7 @@ namespace Coolector.Services.Storage.Framework
                 builder.RegisterType<ServiceClient>().As<IServiceClient>();
                 builder.RegisterType<ProviderClient>().As<IProviderClient>();
                 builder.RegisterType<UserProvider>().As<IUserProvider>();
+                builder.RegisterType<NewUserSignedInHandler>().As<IEventHandler<NewUserSignedIn>>();
                 builder.RegisterModule<MapperModule>();
             });
             LifeTimeScope = container;

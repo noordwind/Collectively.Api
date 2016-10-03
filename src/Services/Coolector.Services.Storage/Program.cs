@@ -1,4 +1,5 @@
-﻿using Coolector.Services.Host;
+﻿using Coolector.Common.Events.Users;
+using Coolector.Services.Host;
 using Coolector.Services.Storage.Framework;
 
 namespace Coolector.Services.Storage
@@ -11,6 +12,7 @@ namespace Coolector.Services.Storage
                 .Create<Startup>(port: 10000)
                 .UseAutofac(Bootstrapper.LifeTimeScope)
                 .UseRabbitMq()
+                .SubscribeToEvent<NewUserSignedIn>()
                 .Build()
                 .Run();
         }

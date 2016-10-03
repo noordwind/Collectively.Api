@@ -12,6 +12,9 @@ namespace Coolector.Services.Storage.Queries
         public static IMongoCollection<UserDto> Users(this IMongoDatabase database)
             => database.GetCollection<UserDto>();
 
+        public static async Task<bool> ExistsAsync(this IMongoCollection<UserDto> users, string id)
+            => await users.AsQueryable().AnyAsync(x => x.UserId == id);
+
         public static async Task<UserDto> GetByIdAsync(this IMongoCollection<UserDto> users, string id)
         {
             if (id.Empty())
