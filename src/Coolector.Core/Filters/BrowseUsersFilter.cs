@@ -1,6 +1,6 @@
 using System.Collections.Generic;
-using Coolector.Common.DTO.Users;
 using Coolector.Common.Types;
+using Coolector.Dto.Users;
 
 namespace Coolector.Core.Filters
 {

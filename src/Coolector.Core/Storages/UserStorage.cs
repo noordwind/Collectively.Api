@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Coolector.Common.DTO.Users;
 using Coolector.Common.Types;
 using Coolector.Core.Filters;
+using Coolector.Dto.Users;
 
 namespace Coolector.Core.Storages
 {

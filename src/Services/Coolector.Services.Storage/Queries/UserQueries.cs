@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
-using Coolector.Common.DTO.Users;
 using Coolector.Services.Mongo;
 using Coolector.Common.Extensions;
+using Coolector.Dto.Users;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 

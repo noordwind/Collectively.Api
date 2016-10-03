@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Coolector.Common.DTO.Users;
 using Coolector.Common.Types;
 using Coolector.Services.Storage.Queries;
+using Coolector.Dto.Users;
 
 namespace Coolector.Services.Storage.Repositories
 {

@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Coolector.Common.DTO.Users
+namespace Coolector.Dto.Users
 {
     public class Auth0UserDto
     {

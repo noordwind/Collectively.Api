@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Coolector.Common.DTO.Users;
+using Coolector.Dto.Users;
 
 namespace Coolector.Services.Users.Auth0
 {

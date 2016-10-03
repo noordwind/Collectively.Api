@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Coolector.Common.DTO.Users
+namespace Coolector.Dto.Users
 {
     public class UserDto
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Coolector.Common.DTO.Users;
+using Coolector.Dto.Users;
 using Newtonsoft.Json;
 
 namespace Coolector.Services.Users.Auth0

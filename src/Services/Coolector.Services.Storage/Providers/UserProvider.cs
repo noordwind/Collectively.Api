@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using Coolector.Common.DTO.Users;
 using Coolector.Common.Types;
 using Coolector.Services.Storage.Mappers;
 using Coolector.Services.Storage.Queries;
 using Coolector.Services.Storage.Repositories;
 using Coolector.Services.Storage.Settings;
+using Coolector.Dto.Users;
 
 namespace Coolector.Services.Storage.Providers
 {

@@ -26,7 +26,8 @@
     "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0",
     "Microsoft.AspNetCore.Server.IISIntegration": "1.0.0",
     "NLog.Extensions.Logging": "1.0.0-*",
-    "Nancy": "2.0.0-barneyrubble"
+    "Nancy": "2.0.0-barneyrubble",
+    "Coolector.Dto": "1.0.0-*"
   },
   "frameworks": {
     "netcoreapp1.0": {
