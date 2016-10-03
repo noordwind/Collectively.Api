@@ -1,26 +1,19 @@
-{
-  "version": "1.0.0-*",
-  "dependencies": {
-    "dotnet-test-mspec": "*",
-    "FluentAssertions": "4.14.0",
-    "Machine.Specifications": "0.11.0",
-    "Machine.Specifications.Should": "0.11.0",
-    "Coolector.Core": "1.0.0-*",
-    "Moq": "4.6.38-alpha"
-  },
-  "testRunner": "mspec",
-  "frameworks": {
-    "netcoreapp1.0": {
-      "imports": "portable-net45+win8",
-      "dependencies": {
-        "Microsoft.NETCore.App": {
-          "version": "1.0.0-*",
-          "type": "platform"
+﻿{
+    "testRunner": "mspec",
+    "frameworks": {
+        "netcoreapp1.0": {
+            "dependencies": {
+              "Microsoft.NETCore.App": {
+                "version": "1.*",
+                "type": "platform"
+              }
+            }
         }
-      }
+    },
+    "dependencies": {
+        "FluentAssertions": "4.12.0",
+        "Machine.Specifications": "0.11.0",
+        "Machine.Specifications.Should": "0.11.0",
+        "dotnet-test-mspec": "*"
     }
-  },
-  "configurations": {
-    "Dev": {}
-  }
 }
