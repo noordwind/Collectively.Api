@@ -27,5 +27,13 @@ namespace Coolector.Services.Storage.Queries
 
             return await users.AsQueryable().FirstOrDefaultAsync(x => x.Email == email);
         }
+
+        public static IMongoQueryable<UserDto> Query(this IMongoCollection<UserDto> users,
+            BrowseUsers query)
+        {
+            var values = users.AsQueryable();
+
+            return values.OrderBy(x => x.Name);
+        }
     }
 }

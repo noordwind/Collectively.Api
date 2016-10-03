@@ -1,7 +1,9 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Coolector.Common.DTO.Users;
 using Coolector.Common.Types;
 using Coolector.Services.Storage.Mappers;
+using Coolector.Services.Storage.Queries;
 using Coolector.Services.Storage.Repositories;
 using Coolector.Services.Storage.Settings;
 
@@ -13,30 +15,25 @@ namespace Coolector.Services.Storage.Providers
         private readonly IProviderClient _providerClient;
         private readonly ProviderSettings _providerSettings;
         private readonly IMapper<UserDto> _mapper;
+        private readonly IMapper<IEnumerable<UserDto>> _collectionMapper;
 
         public UserProvider(IUserRepository userRepository,
             IProviderClient providerClient,
-            ProviderSettings providerSettings,
-            IMapper<UserDto> mapper)
+            ProviderSettings providerSettings)
         {
             _userRepository = userRepository;
             _providerClient = providerClient;
             _providerSettings = providerSettings;
-            _mapper = mapper;
         }
+
+        public async Task<Maybe<PagedResult<UserDto>>> BrowseAsync(BrowseUsers query)
+            => await _providerClient.GetCollectionUsingStorageAsync(_providerSettings.UsersApiUrl, "users",
+                async () => await _userRepository.BrowseAsync(query),
+                async users => await _userRepository.AddManyAsync(users.Items));
 
         public async Task<Maybe<UserDto>> GetAsync(string userId)
             => await _providerClient.GetUsingStorageAsync(_providerSettings.UsersApiUrl, $"users/{userId}",
-                async () =>
-                {
-                    var user = await _userRepository.GetByIdAsync(userId);
-
-                    return user.HasValue ? user.Value : new Maybe<UserDto>();
-                },
-                async user =>
-                {
-                    await _userRepository.AddAsync(user);
-                },
-                _mapper);
+                async () =>  await _userRepository.GetByIdAsync(userId),
+                async user => await _userRepository.AddAsync(user));
     }
 }
