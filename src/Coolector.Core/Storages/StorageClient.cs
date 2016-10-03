@@ -109,11 +109,7 @@ namespace Coolector.Core.Storages
         private static Maybe<PagedResult<TResult>> FilterAndPaginateResults<TResult, TQuery>(
             IFilter<TResult, TQuery> filter,
             Maybe<IEnumerable<TResult>> results, TQuery query) where TQuery : class, IPagedQuery
-        {
-            var filteredValues = filter.Filter(results, query);
-
-            return filteredValues.HasValue ? filteredValues.Value.Paginate(query) : PagedResult<TResult>.Empty;
-        }
+        => filter.Filter(results.Value, query).Paginate(query);
 
         private static string GetEndpointWithQuery<T>(string endpoint, T query) where T : class, IQuery
         {
