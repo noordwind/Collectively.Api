@@ -11,7 +11,7 @@ namespace Coolector.Core.IoC.Modules
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<FilterResolver>().As<IFilterResolver>();
-            var coreAssembly = Assembly.Load(new AssemblyName("Coolector.Core"));
+            var coreAssembly = typeof(IEntity).GetTypeInfo().Assembly;
             builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(IFilter<,>));
         }
     }

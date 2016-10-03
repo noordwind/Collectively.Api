@@ -6,13 +6,8 @@ namespace Coolector.Core.Filters
 {
     public class BrowseUsersFilter : IFilter<UserDto, BrowseUsers>
     {
-        public Maybe<IEnumerable<UserDto>> Filter(Maybe<IEnumerable<UserDto>> values, BrowseUsers query)
+        public IEnumerable<UserDto> Filter(IEnumerable<UserDto> values, BrowseUsers query)
         {
-            if(values.HasNoValue)
-                return new Maybe<IEnumerable<UserDto>>();
-            if (query == null)
-                return values;
-
             return values;
         }
     }
