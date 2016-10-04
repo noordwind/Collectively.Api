@@ -13,6 +13,7 @@ namespace Coolector.Services.Storage
                 .UseAutofac(Bootstrapper.LifeTimeScope)
                 .UseRabbitMq()
                 .SubscribeToEvent<NewUserSignedIn>()
+                .SubscribeToEvent<UserNameChanged>()
                 .Build()
                 .Run();
         }
