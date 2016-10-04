@@ -25,6 +25,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Tests", "Tests\Co
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Dto", "Coolector.Dto\Coolector.Dto.xproj", "{5EA7B4A9-F043-487A-AC12-AD405604D0EF}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Coolector.Services.Remarks", "Services\Coolector.Services.Remarks\Coolector.Services.Remarks.xproj", "{58DEFF1F-7C1E-4712-B522-168BECC0A3F7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -86,6 +88,12 @@ Global
 		{5EA7B4A9-F043-487A-AC12-AD405604D0EF}.Dev|Any CPU.Build.0 = Debug|Any CPU
 		{5EA7B4A9-F043-487A-AC12-AD405604D0EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5EA7B4A9-F043-487A-AC12-AD405604D0EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{58DEFF1F-7C1E-4712-B522-168BECC0A3F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{58DEFF1F-7C1E-4712-B522-168BECC0A3F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{58DEFF1F-7C1E-4712-B522-168BECC0A3F7}.Dev|Any CPU.ActiveCfg = Debug|Any CPU
+		{58DEFF1F-7C1E-4712-B522-168BECC0A3F7}.Dev|Any CPU.Build.0 = Debug|Any CPU
+		{58DEFF1F-7C1E-4712-B522-168BECC0A3F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{58DEFF1F-7C1E-4712-B522-168BECC0A3F7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,5 +104,6 @@ Global
 		{CE760254-CA61-41E1-B797-C09FEA9125B5} = {C90D48B3-4C67-455B-81F6-0A84145927DB}
 		{5B28C528-51C7-4B85-81A4-16040041F6C3} = {C90D48B3-4C67-455B-81F6-0A84145927DB}
 		{239F7042-14A3-49AB-AF02-F95C7E8813C6} = {4E813C1B-FB6C-4DE9-A21A-B2E7ACAEF37F}
+		{58DEFF1F-7C1E-4712-B522-168BECC0A3F7} = {C90D48B3-4C67-455B-81F6-0A84145927DB}
 	EndGlobalSection
 EndGlobal
