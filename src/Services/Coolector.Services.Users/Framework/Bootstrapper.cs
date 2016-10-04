@@ -56,6 +56,7 @@ namespace Coolector.Services.Users.Framework
             pipelines.AfterRequest += (ctx) =>
             {
                 ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                ctx.Response.Headers.Add("Access-Control-Allow-Methods", "POST,PUT,GET,OPTIONS,DELETE");
                 ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
             };
             Logger.Info("Coolector.Services.Users API Started");

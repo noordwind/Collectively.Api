@@ -52,9 +52,12 @@ namespace Coolector.Api
                     NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
                 }
             };
+            app.UseCors(builder => builder.AllowAnyHeader()
+                .AllowAnyMethod()
+                .AllowAnyOrigin()
+                .AllowCredentials());
             app.UseJwtBearerAuthentication(options);
             app.UseOwin().UseNancy(x => x.Bootstrapper = new CoolectorBootstrapper(Configuration));
-            
         }
 
         protected static IContainer GetServiceContainer(IEnumerable<ServiceDescriptor> services)
