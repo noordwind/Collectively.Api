@@ -27,6 +27,12 @@ namespace Coolector.Api.Modules
                 var command = BindAuthenticatedCommand<ChangeUserName>();
                 await CommandDispatcher.DispatchAsync(command);
             });
+
+            Put("me/avatar", async args =>
+            {
+                var command = BindAuthenticatedCommand<ChangeAvatar>();
+                await CommandDispatcher.DispatchAsync(command);
+            });
         }
     }
 }

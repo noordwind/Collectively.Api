@@ -50,6 +50,16 @@ namespace Coolector.Services.Users.Services
             await _userRepository.UpdateAsync(user.Value);
         }
 
+        public async Task ChangeAvatarAsync(string userId, string pictureUrl)
+        {
+            var user = await GetAsync(userId);
+            if (user.HasNoValue)
+                throw new ServiceException($"User with id {userId} has not been found.");
+
+            user.Value.SetAvatar(pictureUrl);
+            await _userRepository.UpdateAsync(user.Value);
+        }
+
         private static string GetFixedUserId(string userId)
             => userId.Empty() ? string.Empty : userId.Replace("auth0|", string.Empty);
     }

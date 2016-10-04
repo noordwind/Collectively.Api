@@ -1,12 +1,10 @@
 ﻿using Autofac;
 using Coolector.Common.Commands;
-using Coolector.Common.Commands.Users;
 using Coolector.Services.Encryption;
 using Coolector.Services.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Nancy;
 using Coolector.Services.Users.Auth0;
-using Coolector.Services.Users.Handlers;
 using Coolector.Services.Users.Repositories;
 using Coolector.Services.Users.Services;
 using Microsoft.Extensions.Configuration;
@@ -14,6 +12,7 @@ using Nancy.Bootstrapper;
 using NLog;
 using RawRabbit;
 using RawRabbit.vNext;
+using System.Reflection;
 
 namespace Coolector.Services.Users.Framework
 {
@@ -42,8 +41,9 @@ namespace Coolector.Services.Users.Framework
                 builder.RegisterType<UserRepository>().As<IUserRepository>();
                 builder.RegisterType<UserService>().As<IUserService>();
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
-                builder.RegisterType<SignInUserHandler>().As<ICommandHandler<SignInUser>>();
-                builder.RegisterType<ChangeUserNameHandler>().As<ICommandHandler<ChangeUserName>>();
+
+                var coreAssembly = typeof(Startup).GetTypeInfo().Assembly;
+                builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(ICommandHandler<>));
             });
             LifetimeScope = container;
         }

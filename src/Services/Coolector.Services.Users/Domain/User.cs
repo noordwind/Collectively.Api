@@ -92,5 +92,10 @@ namespace Coolector.Services.Users.Domain
             State = States.Active;
             UpdatedAt = DateTime.UtcNow;
         }
+
+        public void SetAvatar(string pictureUrl)
+        {
+            PictureUrl = pictureUrl;
+        }
     }
 }

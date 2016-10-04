@@ -13,5 +13,6 @@ namespace Coolector.Services.Users.Services
             string name = null);
 
         Task ChangeNameAsync(string userId, string name);
+        Task ChangeAvatarAsync(string userId, string name);
     }
 }
