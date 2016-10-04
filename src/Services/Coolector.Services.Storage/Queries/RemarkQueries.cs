@@ -20,6 +20,16 @@ namespace Coolector.Services.Storage.Queries
             return await remarks.AsQueryable().FirstOrDefaultAsync(x => x.Id == id);
         }
 
+        public static async Task<string> GetPhotoIdAsync(this IMongoCollection<RemarkDto> remarks, Guid id)
+        {
+            if (id == Guid.Empty)
+                return null;
+
+            return await remarks.AsQueryable().Where(x => x.Id == id)
+                .Select(x => x.Photo.FileId)
+                .FirstOrDefaultAsync(_ => true);
+        }
+
         public static IMongoQueryable<RemarkDto> Query(this IMongoCollection<RemarkDto> remarks,
             BrowseRemarks query)
         {

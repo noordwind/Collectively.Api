@@ -9,7 +9,7 @@ namespace Coolector.Services.Remarks.Modules
 {
     public class RemarkModule : ModuleBase
     {
-        public RemarkModule(IRemarkService remarkService, IFileHandler fileHandler) : base("remarks")
+        public RemarkModule(IRemarkService remarkService) : base("remarks")
         {
             Get("", async args =>
             {
@@ -28,17 +28,13 @@ namespace Coolector.Services.Remarks.Modules
             });
             Get("{id}/photo", async args =>
             {
-                var remark = await remarkService.GetAsync((Guid)args.id);
-                if (remark.HasNoValue)
+                var stream = await remarkService.GetPhotoAsync((Guid) args.id);
+                if (stream.HasNoValue)
                     return HttpStatusCode.NotFound;
 
-                var fileStreamInfo = await fileHandler.GetFileStreamInfoAsync(remark.Value.Photo.FileId);
-                if (fileStreamInfo.HasNoValue)
-                    return HttpStatusCode.NotFound;
+                var response = new StreamResponse(() => stream.Value.Stream, stream.Value.ContentType);
 
-                var response = new StreamResponse(() => fileStreamInfo.Value.Stream, fileStreamInfo.Value.ContentType);
-
-                return response.AsAttachment(fileStreamInfo.Value.Name);
+                return response.AsAttachment(stream.Value.Name);
             });
         }
     }

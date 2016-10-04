@@ -26,6 +26,9 @@ namespace Coolector.Services.Storage.Repositories
                 .Query(query)
                 .PaginateAsync(query);
 
+        public async Task<Maybe<string>> GetPhotoIdAsync(Guid id)
+            => await _database.Remarks().GetPhotoIdAsync(id);
+
         public async Task AddAsync(RemarkDto remark)
             => await _database.Remarks().InsertOneAsync(remark);
 

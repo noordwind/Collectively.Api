@@ -11,6 +11,7 @@ namespace Coolector.Services.Storage.Repositories
     {
         Task<Maybe<RemarkDto>> GetByIdAsync(Guid id);
         Task<Maybe<PagedResult<RemarkDto>>> BrowseAsync(BrowseRemarks query);
+        Task<Maybe<string>> GetPhotoIdAsync(Guid id);
         Task AddAsync(RemarkDto remark);
         Task UpdateAsync(RemarkDto remark);
         Task AddManyAsync(IEnumerable<RemarkDto> remarks);

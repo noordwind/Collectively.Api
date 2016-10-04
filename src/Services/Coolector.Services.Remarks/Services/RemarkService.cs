@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading.Tasks;
 using Coolector.Common.Types;
 using Coolector.Services.Remarks.Domain;
@@ -30,6 +31,9 @@ namespace Coolector.Services.Remarks.Services
         public async Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query)
             => await _remarkRepository.BrowseAsync(query);
 
+        public async Task<Maybe<FileStreamInfo>> GetPhotoAsync(Guid id)
+            => await _fileHandler.GetFileStreamInfoAsync(id);
+
         public async Task CreateAsync(Guid id, string userId, Guid categoryId, File photo, 
             Position position, string description = null)
         {
@@ -48,9 +52,11 @@ namespace Coolector.Services.Remarks.Services
 
             var location = Location.Create(position);
             var remarkPhoto = RemarkPhoto.Empty;
+            var extension = photo.Name.Split('.').Last();
+            var fileName = $"remark-{id:N}.{extension}";
             await _fileHandler.UploadAsync(photo, fileId =>
             {
-                remarkPhoto = RemarkPhoto.Create(fileId, photo.Name, photo.ContentType);
+                remarkPhoto = RemarkPhoto.Create(fileId, fileName, photo.Name, photo.ContentType);
             });
             var remark = new Remark(id, user.Value, category.Value, location, remarkPhoto, description);
             await _remarkRepository.AddAsync(remark);

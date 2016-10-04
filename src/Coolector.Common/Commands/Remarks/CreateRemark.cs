@@ -1,6 +1,4 @@
 ﻿using System;
-using System.IO;
-
 namespace Coolector.Common.Commands.Remarks
 {
     public class CreateRemark : IAuthenticatedCommand

@@ -35,10 +35,10 @@ namespace Coolector.Services.Remarks.Handlers
             await _remarkService.CreateAsync(remarkId, command.UserId, command.CategoryId,
                 file.Value, position, command.Description);
             var remark = await _remarkService.GetAsync(remarkId);
-            await _bus.PublishAsync(new RemarkCreated(remarkId, command.UserId, 
-                new RemarkCreated.RemarkCategory(remark.Value.Category.Id, remark.Value.Category.Name), 
-                new RemarkCreated.RemarkLocation(remark.Value.Location.Address, command.Latitude, command.Longitude), 
-                new RemarkCreated.RemarkFile(remark.Value.Photo.FileId, file.Value.Bytes, file.Value.Name,
+            await _bus.PublishAsync(new RemarkCreated(remarkId, command.UserId,
+                new RemarkCreated.RemarkCategory(remark.Value.Category.Id, remark.Value.Category.Name),
+                new RemarkCreated.RemarkLocation(remark.Value.Location.Address, command.Latitude, command.Longitude),
+                new RemarkCreated.RemarkFile(remark.Value.Photo.FileId, file.Value.Bytes, remark.Value.Photo.Name,
                     file.Value.ContentType), command.Description));
         }
     }

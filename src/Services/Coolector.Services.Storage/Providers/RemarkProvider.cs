@@ -51,5 +51,8 @@ namespace Coolector.Services.Storage.Providers
             => await _providerClient.GetCollectionUsingStorageAsync(_providerSettings.RemarksApiUrl, "remarks",
                 async () => await _remarkRepository.BrowseAsync(query),
                 async remarks => await _remarkRepository.AddManyAsync(remarks.Items));
+
+        public async Task<Maybe<FileStreamInfo>> GetPhotoAsync(Guid id)
+            => await _fileHandler.GetFileStreamInfoAsync(id);
     }
 }

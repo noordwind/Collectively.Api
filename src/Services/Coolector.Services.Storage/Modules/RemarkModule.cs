@@ -1,5 +1,4 @@
 ﻿using System;
-using Coolector.Services.Storage.Files;
 using Coolector.Services.Storage.Providers;
 using Coolector.Services.Storage.Queries;
 using Nancy;
@@ -10,7 +9,7 @@ namespace Coolector.Services.Storage.Modules
 {
     public class RemarkModule : ModuleBase
     {
-        public RemarkModule(IRemarkProvider remarkProvider, IFileHandler fileHandler) : base("remarks")
+        public RemarkModule(IRemarkProvider remarkProvider) : base("remarks")
         {
             Get("", async args =>
             {
@@ -29,17 +28,13 @@ namespace Coolector.Services.Storage.Modules
             });
             Get("{id}/photo", async args =>
             {
-                var remark = await remarkProvider.GetAsync((Guid)args.id);
-                if (remark.HasNoValue)
+                var stream = await remarkProvider.GetPhotoAsync((Guid)args.id);
+                if (stream.HasNoValue)
                     return HttpStatusCode.NotFound;
 
-                var fileStreamInfo = await fileHandler.GetFileStreamInfoAsync(remark.Value.Photo.FileId);
-                if (fileStreamInfo.HasNoValue)
-                    return HttpStatusCode.NotFound;
+                var response = new StreamResponse(() => stream.Value.Stream, stream.Value.ContentType);
 
-                var response = new StreamResponse(() => fileStreamInfo.Value.Stream, fileStreamInfo.Value.ContentType);
-
-                return response.AsAttachment(fileStreamInfo.Value.Name);
+                return response.AsAttachment(stream.Value.Name);
             });
         }
     }
