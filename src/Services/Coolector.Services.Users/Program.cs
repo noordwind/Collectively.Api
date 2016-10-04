@@ -14,6 +14,7 @@ namespace Coolector.Services.Users
                 .UseRabbitMq()
                 .SubscribeToCommand<SignInUser>()
                 .SubscribeToCommand<ChangeUserName>()
+                .SubscribeToCommand<ChangeAvatar>()
                 .Build()
                 .Run();
         }

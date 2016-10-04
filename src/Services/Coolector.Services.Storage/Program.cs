@@ -14,6 +14,7 @@ namespace Coolector.Services.Storage
                 .UseRabbitMq()
                 .SubscribeToEvent<NewUserSignedIn>()
                 .SubscribeToEvent<UserNameChanged>()
+                .SubscribeToEvent<AvatarChanged>()
                 .Build()
                 .Run();
         }
