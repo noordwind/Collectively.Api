@@ -4,6 +4,6 @@ namespace Coolector.Services.Remarks.Services
 {
     public interface IUserService
     {
-        Task CreateAsync(string userId, string name);
+        Task CreateAsyncIfNotFound(string userId, string name);
     }
 }

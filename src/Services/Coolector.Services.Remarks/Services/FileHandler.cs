@@ -1,6 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Coolector.Common.Types;
+using Coolector.Common.Extensions;
+using Coolector.Services.Remarks.Domain;
 using MongoDB.Bson;
 using MongoDB.Driver.GridFS;
 using File = Coolector.Services.Remarks.Domain.File;
@@ -29,6 +32,19 @@ namespace Coolector.Services.Remarks.Services
                 fileInBucketId = fileId.ToString();
             }
             onUploaded?.Invoke(fileInBucketId);
+        }
+
+        public async Task<Maybe<FileStreamInfo>> GetFileStreamInfoAsync(string fileId)
+        {
+            if(fileId.Empty())
+                return new Maybe<FileStreamInfo>();
+
+            var fileFromBucket = await _bucket.OpenDownloadStreamAsync(new ObjectId(fileId));
+            if(fileFromBucket == null || fileFromBucket.Length == 0)
+                return new Maybe<FileStreamInfo>();
+
+            return FileStreamInfo.Create(fileFromBucket.FileInfo.Filename,
+                fileFromBucket.FileInfo.Metadata["contentType"].ToString(), fileFromBucket);
         }
     }
 }

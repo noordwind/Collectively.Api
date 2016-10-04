@@ -23,7 +23,7 @@ namespace Coolector.Services.Users.Services
             => await _userRepository.BrowseAsync(page, results);
 
         public async Task CreateAsync(string userId, string email, string role,
-            bool activate = true, string pictureUrl = null)
+            bool activate = true, string pictureUrl = null, string name = null)
         {
             userId = GetFixedUserId(userId);
             var user = await _userRepository.GetByUserIdAsync(userId);
@@ -33,6 +33,9 @@ namespace Coolector.Services.Users.Services
             user = new User(userId, email, role, pictureUrl);
             if (activate)
                 user.Value.Activate();
+
+            if(name.Empty())
+                user.Value.SetName($"user-{user.Value.Id:N}");
 
             await _userRepository.AddAsync(user.Value);
         }

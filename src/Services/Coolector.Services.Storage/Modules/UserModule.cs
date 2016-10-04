@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Coolector.Services.Storage.Providers;
+﻿using Coolector.Services.Storage.Providers;
 using Coolector.Services.Storage.Queries;
 using Nancy;
 using Nancy.ModelBinding;
 
 namespace Coolector.Services.Storage.Modules
 {
-    public class UserModule : NancyModule
+    public class UserModule : ModuleBase
     {
         private readonly IUserProvider _userProvider;
 
@@ -18,10 +17,8 @@ namespace Coolector.Services.Storage.Modules
             {
                 var query = this.Bind<BrowseUsers>();
                 var users = await _userProvider.BrowseAsync(query);
-                if (users.HasValue)
-                    return users.Value.Items;
 
-                return new List<string>();
+                return FromPagedResult(users);
             });
 
             Get("/{id}", async args =>

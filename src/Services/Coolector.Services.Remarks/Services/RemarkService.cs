@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Coolector.Common.Types;
 using Coolector.Services.Remarks.Domain;
+using Coolector.Services.Remarks.Queries;
 using Coolector.Services.Remarks.Repositories;
 using File = Coolector.Services.Remarks.Domain.File;
 
@@ -22,6 +24,12 @@ namespace Coolector.Services.Remarks.Services
             _categoryRepository = categoryRepository;
         }
 
+        public async Task<Maybe<Remark>> GetAsync(Guid id)
+            => await _remarkRepository.GetByIdAsync(id);
+
+        public async Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query)
+            => await _remarkRepository.BrowseAsync(query);
+
         public async Task CreateAsync(string userId, Guid categoryId, File photo, Position position,
             string description = null)
         {
@@ -29,9 +37,14 @@ namespace Coolector.Services.Remarks.Services
             if (user.HasNoValue)
                 throw new ArgumentException($"User with id: {userId} has not been found.");
 
-            var category = await _categoryRepository.GetByIdAsync(categoryId);
+            //TODO: Use this code if the different categories will be needed.
+            //var category = await _categoryRepository.GetByIdAsync(categoryId);
+            //if (category.HasNoValue)
+            //    throw new ArgumentException($"Category with id: {userId} has not been found.");
+
+            var category = await _categoryRepository.GetDefaultAsync();
             if (category.HasNoValue)
-                throw new ArgumentException($"Category with id: {userId} has not been found.");
+                throw new ArgumentException("Default category has not been found.");
 
             var location = Location.Create(position);
             var remarkPhoto = RemarkPhoto.Empty;

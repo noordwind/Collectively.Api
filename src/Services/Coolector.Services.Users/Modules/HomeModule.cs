@@ -2,7 +2,7 @@
 
 namespace Coolector.Services.Users.Modules
 {
-    public class HomeModule : NancyModule
+    public class HomeModule : ModuleBase
     {
         public HomeModule()
         {

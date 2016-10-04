@@ -19,5 +19,13 @@ namespace Coolector.Services.Remarks.Queries
 
             return await remarks.AsQueryable().FirstOrDefaultAsync(x => x.Id == id);
         }
+
+        public static IMongoQueryable<Remark> Query(this IMongoCollection<Remark> remarks,
+            BrowseRemarks query)
+        {
+            var values = remarks.AsQueryable();
+
+            return values.OrderByDescending(x => x.CreatedAt);
+        }
     }
 }

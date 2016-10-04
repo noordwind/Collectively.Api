@@ -19,6 +19,9 @@ namespace Coolector.Services.Remarks.Repositories
         public async Task<Maybe<Category>> GetByIdAsync(Guid id)
             => await _database.Categories().GetByIdAsync(id);
 
+        public async Task<Maybe<Category>> GetDefaultAsync()
+            => await GetByNameAsync("litter");
+
         public async Task<Maybe<Category>> GetByNameAsync(string name)
             => await _database.Categories().GetByNameAsync(name);
 

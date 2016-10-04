@@ -21,11 +21,12 @@ namespace Coolector.Services.Remarks.Handlers
         public async Task HandleAsync(CreateRemark command)
         {
             var file = _fileResolver.FromBase64(command.Photo.Base64, command.Photo.Name, command.Photo.ContentType);
-            if(file.HasNoValue)
+            if (file.HasNoValue)
                 return;
 
             var position = Position.Create(command.Latitude, command.Longitude);
-            await _remarkService.CreateAsync(command.UserId, command.CategoryId, file.Value, position, command.Description);
+            await _remarkService.CreateAsync(command.UserId, command.CategoryId,
+                file.Value, position, command.Description);
         }
     }
 }

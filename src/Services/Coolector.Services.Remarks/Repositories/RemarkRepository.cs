@@ -4,6 +4,7 @@ using Coolector.Common.Types;
 using Coolector.Services.Remarks.Domain;
 using Coolector.Services.Remarks.Queries;
 using MongoDB.Driver;
+using Coolector.Services.Mongo;
 
 namespace Coolector.Services.Remarks.Repositories
 {
@@ -18,6 +19,11 @@ namespace Coolector.Services.Remarks.Repositories
 
         public async Task<Maybe<Remark>> GetByIdAsync(Guid id)
             => await _database.Remarks().GetByIdAsync(id);
+
+        public async Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query)
+            => await _database.Remarks()
+                .Query(query)
+                .PaginateAsync(query);
 
         public async Task AddAsync(Remark remark)
             => await _database.Remarks().InsertOneAsync(remark);
