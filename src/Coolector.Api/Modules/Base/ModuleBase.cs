@@ -2,6 +2,7 @@
 using Coolector.Common.Types;
 using Coolector.Core.Commands;
 using Nancy;
+using Nancy.ModelBinding;
 
 namespace Coolector.Api.Modules.Base
 {
@@ -14,6 +15,8 @@ namespace Coolector.Api.Modules.Base
         {
             CommandDispatcher = commandDispatcher;
         }
+
+        protected T BindRequest<T>() => this.Bind<T>();
 
         //TODO: Add headers etc.
         protected IEnumerable<T> FromPagedResult<T>(Maybe<PagedResult<T>> result)

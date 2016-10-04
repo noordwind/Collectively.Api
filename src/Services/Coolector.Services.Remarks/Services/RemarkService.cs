@@ -30,8 +30,8 @@ namespace Coolector.Services.Remarks.Services
         public async Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query)
             => await _remarkRepository.BrowseAsync(query);
 
-        public async Task CreateAsync(string userId, Guid categoryId, File photo, Position position,
-            string description = null)
+        public async Task CreateAsync(Guid id, string userId, Guid categoryId, File photo, 
+            Position position, string description = null)
         {
             var user = await _userRepository.GetByUserIdAsync(userId);
             if (user.HasNoValue)
@@ -50,9 +50,9 @@ namespace Coolector.Services.Remarks.Services
             var remarkPhoto = RemarkPhoto.Empty;
             await _fileHandler.UploadAsync(photo, fileId =>
             {
-                remarkPhoto = RemarkPhoto.Create(fileId);
+                remarkPhoto = RemarkPhoto.Create(fileId, photo.Name, photo.ContentType);
             });
-            var remark = new Remark(user.Value, category.Value, location, remarkPhoto, description);
+            var remark = new Remark(id, user.Value, category.Value, location, remarkPhoto, description);
             await _remarkRepository.AddAsync(remark);
         }
     }

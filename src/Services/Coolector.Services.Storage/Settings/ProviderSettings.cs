@@ -3,5 +3,6 @@
     public class ProviderSettings
     {
         public string UsersApiUrl { get; set; }
+        public string RemarksApiUrl { get; set; }
     }
 }

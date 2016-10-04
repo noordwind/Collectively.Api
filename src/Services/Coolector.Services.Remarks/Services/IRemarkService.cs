@@ -11,6 +11,8 @@ namespace Coolector.Services.Remarks.Services
     {
         Task<Maybe<Remark>> GetAsync(Guid id);
         Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query);
-        Task CreateAsync(string userId, Guid categoryId, File photo, Position position, string description = null);
+
+        Task CreateAsync(Guid id, string userId, Guid categoryId, File photo,
+            Position position, string description = null);
     }
 }

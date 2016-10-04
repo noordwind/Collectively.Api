@@ -32,6 +32,8 @@ namespace Coolector.Api.Modules.Base
             _currentUserId = id;
         }
 
+        protected T Bind<T>() => BindRequest<T>();
+
         protected T BindAuthenticatedCommand<T>() where T : IAuthenticatedCommand
         {
             var command = this.Bind<T>();

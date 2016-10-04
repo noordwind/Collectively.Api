@@ -5,10 +5,13 @@ using Coolector.Common.Events.Users;
 using Coolector.Services.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Nancy;
+using Coolector.Services.Storage.Files;
 using Coolector.Services.Storage.Framework.IoC;
 using Coolector.Services.Storage.Providers;
 using Coolector.Services.Storage.Repositories;
 using Coolector.Services.Storage.Settings;
+using MongoDB.Driver;
+using MongoDB.Driver.GridFS;
 using Nancy.Bootstrapper;
 using NLog;
 using RawRabbit;
@@ -23,7 +26,7 @@ namespace Coolector.Services.Storage.Framework
         private readonly IConfiguration _configuration;
 
         public static ILifetimeScope LifeTimeScope { get; private set; }
-        
+
         public Bootstrapper(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -38,11 +41,23 @@ namespace Coolector.Services.Storage.Framework
                 builder.RegisterInstance(_configuration.GetSettings<MongoDbSettings>());
                 builder.RegisterInstance(_configuration.GetSettings<ProviderSettings>());
                 builder.RegisterModule<MongoDbModule>();
+                builder.Register(c =>
+                    {
+                        var database = c.Resolve<IMongoDatabase>();
+                        var bucket = new GridFSBucket(database);
+
+                        return bucket;
+                    })
+                    .As<IGridFSBucket>()
+                    .SingleInstance();
                 builder.RegisterType<MongoDbInitializer>().As<IDatabaseInitializer>();
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
+                builder.RegisterType<FileHandler>().As<IFileHandler>();
+                builder.RegisterType<RemarkRepository>().As<IRemarkRepository>();
                 builder.RegisterType<UserRepository>().As<IUserRepository>();
                 builder.RegisterType<ServiceClient>().As<IServiceClient>();
                 builder.RegisterType<ProviderClient>().As<IProviderClient>();
+                builder.RegisterType<RemarkProvider>().As<IRemarkProvider>();
                 builder.RegisterType<UserProvider>().As<IUserProvider>();
                 builder.RegisterModule<MapperModule>();
                 builder.RegisterModule<EventHandlersModule>();
@@ -58,7 +73,8 @@ namespace Coolector.Services.Storage.Framework
             pipelines.AfterRequest += (ctx) =>
             {
                 ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-                ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
+                ctx.Response.Headers.Add("Access-Control-Allow-Headers",
+                    "Authorization, Origin, X-Requested-With, Content-Type, Accept");
             };
             Logger.Info("Coolector.Services.Storage API Started");
         }

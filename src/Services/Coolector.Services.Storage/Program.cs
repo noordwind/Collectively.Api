@@ -1,4 +1,5 @@
-﻿using Coolector.Common.Events.Users;
+﻿using Coolector.Common.Events.Remarks;
+using Coolector.Common.Events.Users;
 using Coolector.Services.Host;
 using Coolector.Services.Storage.Framework;
 
@@ -14,6 +15,7 @@ namespace Coolector.Services.Storage
                 .UseRabbitMq()
                 .SubscribeToEvent<NewUserSignedIn>()
                 .SubscribeToEvent<UserNameChanged>()
+                .SubscribeToEvent<RemarkCreated>()
                 .Build()
                 .Run();
         }

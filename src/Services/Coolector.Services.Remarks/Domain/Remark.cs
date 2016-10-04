@@ -20,9 +20,10 @@ namespace Coolector.Services.Remarks.Domain
         {
         }
 
-        public Remark(User author, Category category, Location location,
+        public Remark(Guid id, User author, Category category, Location location,
             RemarkPhoto photo, string description = null)
         {
+            Id = id;
             SetAuthor(author);
             SetCategory(category);
             SetLocation(location);

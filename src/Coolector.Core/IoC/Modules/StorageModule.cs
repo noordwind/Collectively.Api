@@ -13,6 +13,9 @@ namespace Coolector.Core.IoC.Modules
             builder.RegisterType<UserStorage>()
                 .As<IUserStorage>()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<RemarkStorage>()
+                .As<IRemarkStorage>()
+                .InstancePerLifetimeScope();
             builder.RegisterType<InMemoryCache>()
                 .As<ICache>()
                 .SingleInstance();

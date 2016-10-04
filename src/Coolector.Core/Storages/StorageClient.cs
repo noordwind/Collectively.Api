@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Coolector.Common.Types;
@@ -34,22 +35,11 @@ namespace Coolector.Core.Storages
 
         public async Task<Maybe<T>> GetAsync<T>(string endpoint) where T : class
         {
-            if (endpoint.Empty())
-                throw new ArgumentException("Endpoint can not be empty.");
-
-            HttpResponseMessage response = null;
-            try
-            {
-                response = await _httpClient.GetAsync(endpoint);
-                if (!response.IsSuccessStatusCode)
-                    return new Maybe<T>();
-            }
-            catch (Exception)
-            {
+            var response = await GetResponseAsync(endpoint);
+            if(response.HasNoValue)
                 return new Maybe<T>();
-            }
 
-            var content = await response.Content.ReadAsStringAsync();
+            var content = await response.Value.Content.ReadAsStringAsync();
             var data = JsonConvert.DeserializeObject<T>(content);
 
             return data;
@@ -70,6 +60,15 @@ namespace Coolector.Core.Storages
             await StoreInCacheAsync(result, endpoint, cacheKey, expiry);
 
             return result;
+        }
+
+        public async Task<Maybe<Stream>> GetStreamAsync(string endpoint)
+        {
+            var response = await GetResponseAsync(endpoint);
+            if (response.HasNoValue)
+                return new Maybe<Stream>();
+
+            return await response.Value.Content.ReadAsStreamAsync();
         }
 
         public async Task<Maybe<PagedResult<T>>> GetCollectionUsingCacheAsync<T>(string endpoint, string cacheKey = null,
@@ -104,6 +103,24 @@ namespace Coolector.Core.Storages
             await StoreInCacheAsync(results, endpoint, cacheKey, expiry);
 
             return FilterAndPaginateResults(filter, results, query);
+        }
+
+        private async Task<Maybe<HttpResponseMessage>> GetResponseAsync(string endpoint)
+        {
+            if (endpoint.Empty())
+                throw new ArgumentException("Endpoint can not be empty.");
+
+            try
+            {
+                var response = await _httpClient.GetAsync(endpoint);
+                if (response.IsSuccessStatusCode)
+                    return response;
+            }
+            catch (Exception)
+            {
+            }
+
+            return new Maybe<HttpResponseMessage>();
         }
 
         private static Maybe<PagedResult<TResult>> FilterAndPaginateResults<TResult, TQuery>(
