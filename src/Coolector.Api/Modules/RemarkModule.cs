@@ -14,11 +14,6 @@ namespace Coolector.Api.Modules
             Post("", async args =>
             {
                 var command = BindAuthenticatedCommand<CreateRemark>();
-
-                //TODO: Extract this to the remarks service.
-                //var startIndex = command.Base64File.IndexOf(",") + 1;
-                //var base64String = command.Base64File.Substring(startIndex);
-                //var imageBytes = Convert.FromBase64String(base64String);
                 await CommandDispatcher.DispatchAsync(command);
             });
         }

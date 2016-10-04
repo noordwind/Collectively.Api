@@ -1,10 +1,10 @@
 ﻿using System;
 using Coolector.Common.Extensions;
+using Coolector.Services.Domain;
 
-
-namespace Coolector.Core.Domain.Remarks
+namespace Coolector.Services.Remarks.Domain
 {
-    public class RemarkCategory : IValueObject
+    public class RemarkCategory : ValueObject<RemarkCategory>
     {
         public Guid Id { get; protected set; }
         public string Name { get; protected set; }
@@ -22,5 +22,9 @@ namespace Coolector.Core.Domain.Remarks
 
         public static RemarkCategory Create(Category category)
             => new RemarkCategory(category.Id, category.Name);
+
+        protected override bool EqualsCore(RemarkCategory other) => Id.Equals(other.Id);
+
+        protected override int GetHashCodeCore() => Id.GetHashCode();
     }
 }

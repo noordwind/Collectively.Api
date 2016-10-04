@@ -16,6 +16,7 @@
     "Nancy": "2.0.0-barneyrubble",
     "NLog.Extensions.Logging": "1.0.0-*",
     "MongoDB.Driver": "2.3.0-rc1",
+    "MongoDB.Driver.GridFS": "2.3.0-rc1",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0",
     "Microsoft.Extensions.Configuration.FileExtensions": "1.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0",

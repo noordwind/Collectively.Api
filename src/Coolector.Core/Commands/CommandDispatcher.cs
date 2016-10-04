@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Coolector.Common.Commands;
-using Coolector.Core.Domain;
 using RawRabbit;
 
 namespace Coolector.Core.Commands

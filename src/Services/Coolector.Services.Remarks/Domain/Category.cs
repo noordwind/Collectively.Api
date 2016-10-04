@@ -1,9 +1,10 @@
 ﻿using System;
 using Coolector.Common.Extensions;
+using Coolector.Services.Domain;
 
-namespace Coolector.Core.Domain.Remarks
+namespace Coolector.Services.Remarks.Domain
 {
-    public class Category : Entity
+    public class Category : IdentifiableEntity
     {
         public string Name { get; protected set; }
 

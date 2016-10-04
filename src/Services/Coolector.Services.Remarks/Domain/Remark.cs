@@ -1,8 +1,10 @@
 ﻿using System;
+using Coolector.Services.Domain;
+using Coolector.Common.Extensions;
 
-namespace Coolector.Core.Domain.Remarks
+namespace Coolector.Services.Remarks.Domain
 {
-    public class Remark : Entity, ITimestampable
+    public class Remark : IdentifiableEntity, ITimestampable
     {
         public RemarkAuthor Author { get; protected set; }
         public RemarkCategory Category { get; protected set; }
@@ -19,12 +21,13 @@ namespace Coolector.Core.Domain.Remarks
         }
 
         public Remark(User author, Category category, Location location,
-            Photo photo = null)
+            RemarkPhoto photo, string description = null)
         {
             SetAuthor(author);
             SetCategory(category);
             SetLocation(location);
             SetPhoto(photo);
+            SetDescription(description);
             CreatedAt = DateTime.UtcNow;
         }
 
@@ -52,7 +55,7 @@ namespace Coolector.Core.Domain.Remarks
             Location = location;
         }
 
-        public void SetPhoto(Photo photo)
+        public void SetPhoto(RemarkPhoto photo)
         {
             if (photo == null)
             {
@@ -60,7 +63,7 @@ namespace Coolector.Core.Domain.Remarks
 
                 return;
             }
-            Photo = RemarkPhoto.Create(photo);
+            Photo = photo;
         }
 
         public void Resolve(User resolver)
@@ -72,6 +75,22 @@ namespace Coolector.Core.Domain.Remarks
             }
             Resolver = RemarkAuthor.Create(resolver);
             ResolvedAt = DateTime.UtcNow;
+        }
+
+        public void SetDescription(string description)
+        {
+            if (description.Empty())
+            {
+                Description = string.Empty;
+
+                return;
+            }
+            if (description.Length > 500)
+                throw new ArgumentException("Description is too long.", nameof(description));
+            if (Description.EqualsCaseInvariant(description))
+                return;
+
+            Description = description;
         }
     }
 }
