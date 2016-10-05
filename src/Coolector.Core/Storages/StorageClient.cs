@@ -86,7 +86,7 @@ namespace Coolector.Core.Storages
             return results.Value.PaginateWithoutLimit();
         }
 
-        public async Task<Maybe<PagedResult<TResult>>> GetFilteredCollectionc<TResult, TQuery>(TQuery query,
+        public async Task<Maybe<PagedResult<TResult>>> GetFilteredCollection<TResult, TQuery>(TQuery query,
             string endpoint) where TResult : class where TQuery : class, IPagedQuery
         {
             var results = await GetAsync<IEnumerable<TResult>>(GetEndpointWithQuery(endpoint, query));
