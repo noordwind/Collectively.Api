@@ -20,7 +20,7 @@ namespace Coolector.Core.Storages
             => await _storageClient.GetUsingCacheAsync<RemarkDto>($"remarks/{id}");
 
         public async Task<Maybe<PagedResult<RemarkDto>>> BrowseAsync(BrowseRemarks query)
-            => await _storageClient.GetFilteredCollectionc<RemarkDto, BrowseRemarks>(query, "remarks");
+            => await _storageClient.GetFilteredCollection<RemarkDto, BrowseRemarks>(query, "remarks");
 
         public async Task<Maybe<Stream>> GetPhotoStreamAsync(Guid id)
             => await _storageClient.GetStreamAsync($"remarks/{id}/photo");
