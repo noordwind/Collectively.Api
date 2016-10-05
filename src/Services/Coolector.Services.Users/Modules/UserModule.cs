@@ -1,7 +1,6 @@
 ﻿using Coolector.Services.Users.Queries;
 using Coolector.Services.Users.Services;
 using Nancy;
-using Nancy.ModelBinding;
 
 namespace Coolector.Services.Users.Modules
 {
@@ -14,7 +13,7 @@ namespace Coolector.Services.Users.Modules
             _userService = userService;
             Get("/", async args =>
             {
-                var query = this.Bind<BrowseUsers>();
+                var query = BindRequest<BrowseUsers>();
                 var users = await _userService.BrowseAsync(query.Page, query.Results);
 
                 return FromPagedResult(users);

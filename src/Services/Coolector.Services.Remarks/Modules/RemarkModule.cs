@@ -2,7 +2,6 @@
 using Coolector.Services.Remarks.Queries;
 using Coolector.Services.Remarks.Services;
 using Nancy;
-using Nancy.ModelBinding;
 using Nancy.Responses;
 
 namespace Coolector.Services.Remarks.Modules
@@ -13,7 +12,7 @@ namespace Coolector.Services.Remarks.Modules
         {
             Get("", async args =>
             {
-                var query = this.Bind<BrowseRemarks>();
+                var query = BindRequest<BrowseRemarks>();
                 var remarks = await remarkService.BrowseAsync(query);
 
                 return FromPagedResult(remarks);

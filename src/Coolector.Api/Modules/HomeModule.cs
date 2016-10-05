@@ -15,6 +15,7 @@ namespace Coolector.Api.Modules
             Get("/test/{name}", TestAsync);
         }
 
+
         private async Task<object> TestAsync(dynamic args)
         {
             Logger.Info($"TestAsync args: {args.name}");

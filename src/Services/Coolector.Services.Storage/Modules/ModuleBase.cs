@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Coolector.Common.Types;
 using Nancy;
+using Nancy.ModelBinding;
 
 namespace Coolector.Services.Storage.Modules
 {
@@ -8,6 +9,11 @@ namespace Coolector.Services.Storage.Modules
     {
         public ModuleBase(string modulePath = "") : base(modulePath)
         { 
+        }
+
+        protected T BindRequest<T>() where T : new()
+        {
+            return Request.Body.Length == 0 ? new T() : this.Bind<T>();
         }
 
         //TODO: Add headers etc.

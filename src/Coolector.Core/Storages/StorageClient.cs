@@ -8,7 +8,6 @@ using Coolector.Common.Extensions;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using Coolector.Core.Filters;
 
 namespace Coolector.Core.Storages
@@ -85,6 +84,16 @@ namespace Coolector.Core.Storages
             await StoreInCacheAsync(results, endpoint, cacheKey, expiry);
 
             return results.Value.PaginateWithoutLimit();
+        }
+
+        public async Task<Maybe<PagedResult<TResult>>> GetFilteredCollectionc<TResult, TQuery>(TQuery query,
+            string endpoint) where TResult : class where TQuery : class, IPagedQuery
+        {
+            var results = await GetAsync<IEnumerable<TResult>>(GetEndpointWithQuery(endpoint, query));
+            if (results.HasNoValue || !results.Value.Any())
+                return PagedResult<TResult>.Empty;
+
+            return results.Value.Paginate(query);
         }
 
         public async Task<Maybe<PagedResult<TResult>>> GetFilteredCollectionUsingCacheAsync<TResult, TQuery>(

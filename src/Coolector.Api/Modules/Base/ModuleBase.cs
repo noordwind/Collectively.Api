@@ -16,7 +16,10 @@ namespace Coolector.Api.Modules.Base
             CommandDispatcher = commandDispatcher;
         }
 
-        protected T BindRequest<T>() => this.Bind<T>();
+        protected T BindRequest<T>() where T : new()
+        {
+            return Request.Body.Length == 0 ? new T() : this.Bind<T>();
+        }
 
         //TODO: Add headers etc.
         protected IEnumerable<T> FromPagedResult<T>(Maybe<PagedResult<T>> result)
