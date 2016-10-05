@@ -34,5 +34,11 @@
         "dnxcore50"
       ]
     }
+  },
+  "publishOptions": {
+    "include": [
+      "nlog.config",
+      "appsettings.json"
+    ]
   }
 }
