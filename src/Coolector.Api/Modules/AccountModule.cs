@@ -22,13 +22,13 @@ namespace Coolector.Api.Modules
                 await CommandDispatcher.DispatchAsync(command);
             });
 
-            Put("me/nickname", async args =>
+            Put("account/username", async args =>
             {
                 var command = BindAuthenticatedCommand<ChangeUserName>();
                 await CommandDispatcher.DispatchAsync(command);
             });
 
-            Put("me/avatar", async args =>
+            Put("account/avatar", async args =>
             {
                 var command = BindAuthenticatedCommand<ChangeAvatar>();
                 await CommandDispatcher.DispatchAsync(command);

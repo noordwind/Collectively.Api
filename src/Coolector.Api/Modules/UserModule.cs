@@ -19,6 +19,12 @@ namespace Coolector.Api.Modules
 
                 return FromPagedResult(users.Select(x => new {x.UserId, x.Name}));
             });
+
+            Get("/{id}", async args =>
+            {
+                var user = await userStorage.GetAsync((string) args.id);
+                return user.Value;
+            });
         }
     }
 }
