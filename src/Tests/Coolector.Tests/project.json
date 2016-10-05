@@ -1,4 +1,4 @@
-﻿{
+{
     "testRunner": "mspec",
     "frameworks": {
         "netcoreapp1.0": {
@@ -10,10 +10,12 @@
             }
         }
     },
-    "dependencies": {
-        "FluentAssertions": "4.12.0",
-        "Machine.Specifications": "0.11.0",
-        "Machine.Specifications.Should": "0.11.0",
-        "dotnet-test-mspec": "*"
-    }
+  "dependencies": {
+    "FluentAssertions": "4.12.0",
+    "Machine.Specifications": "0.11.0",
+    "Machine.Specifications.Should": "0.11.0",
+    "dotnet-test-mspec": "*",
+    "Coolector.Services.Storage": "1.0.0-*",
+    "Moq": "4.6.38-alpha"
+  }
 }
