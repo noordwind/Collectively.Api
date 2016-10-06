@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Coolector.Common.Extensions;
 using Coolector.Common.Types;
@@ -12,10 +11,12 @@ namespace Coolector.Services.Storage.Providers
 {
     public class ServiceClient : IServiceClient
     {
+        private readonly IHttpClient _httpClient;
         private readonly IMapperResolver _mapperResolver;
 
-        public ServiceClient(IMapperResolver mapperResolver)
+        public ServiceClient(IHttpClient httpClient, IMapperResolver mapperResolver)
         {
+            _httpClient = httpClient;
             _mapperResolver = mapperResolver;
         }
 
@@ -33,7 +34,7 @@ namespace Coolector.Services.Storage.Providers
 
         public async Task<Maybe<Stream>> GetStreamAsync(string url, string endpoint)
         {
-            var response = await GetResponseAsync(url, endpoint);
+            var response = await _httpClient.GetAsync(url, endpoint);
             if (response.HasNoValue)
                 return new Maybe<Stream>();
 
@@ -56,7 +57,7 @@ namespace Coolector.Services.Storage.Providers
 
         private async Task<Maybe<dynamic>> GetDataAsync(string url, string endpoint)
         {
-            var response = await GetResponseAsync(url, endpoint);
+            var response = await _httpClient.GetAsync(url, endpoint);
             if (response.HasNoValue)
                 return new Maybe<dynamic>();
 
@@ -65,27 +66,5 @@ namespace Coolector.Services.Storage.Providers
 
             return data;
         }
-
-        private async Task<Maybe<HttpResponseMessage>> GetResponseAsync(string url, string endpoint)
-        {
-            var httpClient = new HttpClient {BaseAddress = new Uri(GetBaseAddress(url))};
-            httpClient.DefaultRequestHeaders.Remove("Accept");
-            httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
-
-            try
-            {
-                var response = await httpClient.GetAsync(endpoint);
-                if (response.IsSuccessStatusCode)
-                    return response;
-            }
-            catch (Exception)
-            {
-            }
-
-            return new Maybe<HttpResponseMessage>();
-        }
-
-        private string GetBaseAddress(string url)
-            => url.EndsWith("/", StringComparison.CurrentCultureIgnoreCase) ? url : $"{url}/";
     }
 }

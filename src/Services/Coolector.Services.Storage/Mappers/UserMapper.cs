@@ -14,6 +14,7 @@ namespace Coolector.Services.Storage.Mappers
                 Name = source.name,
                 Role = source.role,
                 State = source.state,
+                PictureUrl = source.pictureUrl,
                 CreatedAt = source.createdAt
             };
         }
