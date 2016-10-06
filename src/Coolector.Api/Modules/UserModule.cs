@@ -3,7 +3,6 @@ using Coolector.Common.Extensions;
 using Coolector.Core.Commands;
 using Coolector.Core.Filters;
 using Coolector.Core.Storages;
-using Nancy.ModelBinding;
 
 namespace Coolector.Api.Modules
 {
@@ -14,16 +13,10 @@ namespace Coolector.Api.Modules
         {
             Get("", async args =>
             {
-                var query = this.Bind<BrowseUsers>();
+                var query = BindRequest<BrowseUsers>();
                 var users = await userStorage.BrowseAsync(query);
 
                 return FromPagedResult(users.Select(x => new {x.UserId, x.Name}));
-            });
-
-            Get("/{id}", async args =>
-            {
-                var user = await userStorage.GetAsync((string) args.id);
-                return user.Value;
             });
         }
     }

@@ -1,23 +1,27 @@
 ﻿using Coolector.Api.Modules.Base;
 using Coolector.Common.Commands.Users;
 using Coolector.Core.Commands;
+using Coolector.Core.Storages;
+using Nancy.Security;
 
 namespace Coolector.Api.Modules
 {
-    public class AccountModule : AuthenticatedModule
+    public class AccountModule : ModuleBase
     {
-        public AccountModule(ICommandDispatcher commandDispatcher)
+        public AccountModule(ICommandDispatcher commandDispatcher, IUserStorage userStorage)
             : base(commandDispatcher)
         {
-            Post("sign-in", async args =>
+            this.RequiresAuthentication();
+
+            Get("account", async args =>
             {
-                var command = this.Bind<SignInUser>();
-                await CommandDispatcher.DispatchAsync(command);
+                var user = await userStorage.GetAsync(CurrentUserId);
+                return user.Value;
             });
 
-            Put("me/edit", async args =>
+            Post("sign-in", async args =>
             {
-                var command = BindAuthenticatedCommand<EditUser>();
+                var command = BindRequest<SignInUser>();
                 await CommandDispatcher.DispatchAsync(command);
             });
 

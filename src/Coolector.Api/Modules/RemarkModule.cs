@@ -6,10 +6,11 @@ using Coolector.Core.Filters;
 using Coolector.Core.Storages;
 using Nancy;
 using Nancy.Responses;
+using Nancy.Security;
 
 namespace Coolector.Api.Modules
 {
-    public class RemarkModule : AuthenticatedModule
+    public class RemarkModule : ModuleBase
     {
         public RemarkModule(ICommandDispatcher commandDispatcher, IRemarkStorage remarkStorage)
             :base(commandDispatcher, modulePath: "remarks")
@@ -46,6 +47,7 @@ namespace Coolector.Api.Modules
             });
             Post("", async args =>
             {
+                this.RequiresAuthentication();
                 var command = BindAuthenticatedCommand<CreateRemark>();
                 await CommandDispatcher.DispatchAsync(command);
             });

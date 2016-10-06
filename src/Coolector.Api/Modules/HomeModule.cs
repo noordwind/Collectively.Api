@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Nancy;
+﻿using Nancy;
 using NLog;
 
 namespace Coolector.Api.Modules
@@ -11,16 +10,6 @@ namespace Coolector.Api.Modules
         public HomeModule()
         {
             Get("/", args => "Hello from Nancy running on CoreCLR");
-
-            Get("/test/{name}", TestAsync);
-        }
-
-
-        private async Task<object> TestAsync(dynamic args)
-        {
-            Logger.Info($"TestAsync args: {args.name}");
-
-            return $"Test parameter: {args.name}";
         }
     }
 }
