@@ -55,6 +55,7 @@ namespace Coolector.Services.Storage.Framework
                 builder.RegisterType<FileHandler>().As<IFileHandler>();
                 builder.RegisterType<RemarkRepository>().As<IRemarkRepository>();
                 builder.RegisterType<UserRepository>().As<IUserRepository>();
+                builder.RegisterType<CustomHttpClient>().As<IHttpClient>();
                 builder.RegisterType<ServiceClient>().As<IServiceClient>();
                 builder.RegisterType<ProviderClient>().As<IProviderClient>();
                 builder.RegisterType<RemarkProvider>().As<IRemarkProvider>();
