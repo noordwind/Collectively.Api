@@ -1,7 +1,6 @@
 ﻿using Coolector.Api.Modules.Base;
 using Coolector.Common.Commands.Users;
 using Coolector.Core.Commands;
-using Nancy.ModelBinding;
 
 namespace Coolector.Api.Modules
 {

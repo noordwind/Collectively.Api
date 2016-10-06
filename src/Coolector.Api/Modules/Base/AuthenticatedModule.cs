@@ -21,7 +21,7 @@ namespace Coolector.Api.Modules.Base
             get
             {
                 if (_currentUserId.Empty())
-                    SetCurrentUserId(Context.CurrentUser?.Identity?.Name?.Replace("auth0|", string.Empty));
+                    SetCurrentUserId(Context.CurrentUser?.Identity?.Name);
 
                 return _currentUserId;
             }

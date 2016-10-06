@@ -17,7 +17,7 @@ namespace Coolector.Services.Users.Services
         }
 
         public async Task<Maybe<User>> GetAsync(string userId)
-            => await _userRepository.GetByUserIdAsync(GetFixedUserId(userId));
+            => await _userRepository.GetByUserIdAsync(userId);
 
         public async Task<Maybe<PagedResult<User>>> BrowseAsync(int page = 1, int results = 10)
             => await _userRepository.BrowseAsync(page, results);
@@ -25,7 +25,6 @@ namespace Coolector.Services.Users.Services
         public async Task CreateAsync(string userId, string email, string role,
             bool activate = true, string pictureUrl = null, string name = null)
         {
-            userId = GetFixedUserId(userId);
             var user = await _userRepository.GetByUserIdAsync(userId);
             if (user.HasValue)
                 throw new ServiceException($"User with id: {userId} already exists!");
@@ -59,8 +58,5 @@ namespace Coolector.Services.Users.Services
             user.Value.SetAvatar(pictureUrl);
             await _userRepository.UpdateAsync(user.Value);
         }
-
-        private static string GetFixedUserId(string userId)
-            => userId.Empty() ? string.Empty : userId.Replace("auth0|", string.Empty);
     }
 }

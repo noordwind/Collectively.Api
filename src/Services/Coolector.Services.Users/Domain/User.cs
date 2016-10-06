@@ -40,10 +40,19 @@ namespace Coolector.Services.Users.Domain
             UpdatedAt = DateTime.UtcNow;
         }
 
+        //TODO: Doesn't work with FB etc.
         public void SetEmail(string email)
         {
             if (email.Empty())
-                throw new ArgumentException("Email can not be empty.", nameof(email));
+            {
+                Email = string.Empty;
+                UpdatedAt = DateTime.UtcNow;
+
+                return;
+            }
+
+            //if (email.Empty())
+            //    throw new ArgumentException("Email can not be empty.", nameof(email));
             if (!email.IsEmail())
                 throw new ArgumentException($"Invalid email {email}.", nameof(email));
             if (Email.EqualsCaseInvariant(email))
