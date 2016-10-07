@@ -31,9 +31,9 @@ namespace Coolector.Services.Remarks.Handlers
                 return;
 
             var remarkId = Guid.NewGuid();
-            var position = Position.Create(command.Latitude, command.Longitude);
+            var location = Location.Create(command.Latitude, command.Longitude, command.Address);
             await _remarkService.CreateAsync(remarkId, command.UserId, command.CategoryId,
-                file.Value, position, command.Description);
+                file.Value, location, command.Description);
             var remark = await _remarkService.GetAsync(remarkId);
             await _bus.PublishAsync(new RemarkCreated(remarkId, command.UserId,
                 new RemarkCreated.RemarkCategory(remark.Value.Category.Id, remark.Value.Category.Name),

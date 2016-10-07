@@ -29,8 +29,12 @@ namespace Coolector.Services.Storage.Mappers
                 Location = new LocationDto
                 {
                     Address = source.location.address,
-                    Latitude = source.location.position.latitude,
-                    Longitude = source.location.position.longitude,
+                    Coordinates = new[]
+                    {
+                        (double) source.location.coordinates[0],
+                        (double) source.location.coordinates[1]
+                    },
+                    Type = source.location.type
                 },
                 Description = source.description,
                 Resolved = source.resolved,

@@ -40,6 +40,7 @@ namespace Coolector.Services.Mongo
             {
                 new IgnoreExtraElementsConvention(true),
                 new EnumRepresentationConvention(BsonType.String),
+                new CamelCaseElementNameConvention()
             };
         }
     }
