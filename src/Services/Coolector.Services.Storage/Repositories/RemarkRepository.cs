@@ -37,5 +37,8 @@ namespace Coolector.Services.Storage.Repositories
 
         public async Task AddManyAsync(IEnumerable<RemarkDto> remarks)
             => await _database.Remarks().InsertManyAsync(remarks);
+
+        public async Task DeleteAsync(RemarkDto remark)
+            => await _database.Remarks().DeleteOneAsync(x => x.Id == remark.Id);
     }
 }

@@ -15,5 +15,6 @@ namespace Coolector.Services.Storage.Repositories
         Task AddAsync(RemarkDto remark);
         Task UpdateAsync(RemarkDto remark);
         Task AddManyAsync(IEnumerable<RemarkDto> remarks);
+        Task DeleteAsync(RemarkDto remark);
     }
 }
