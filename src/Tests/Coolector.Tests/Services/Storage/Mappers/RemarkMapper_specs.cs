@@ -11,7 +11,7 @@ namespace Coolector.Tests.Services.Storage.Mappers
     [Subject("RemarkMapper Map")]
     public class when_invoking_remark_mapper_map : Mapper_specs<RemarkDto>
     {
-        Establish context = () =>
+        private Establish context = () =>
         {
             dynamic author = new ExpandoObject();
             author.userId = Guid.NewGuid().ToString();
@@ -27,11 +27,9 @@ namespace Coolector.Tests.Services.Storage.Mappers
             photo.contentType = "image/png";
 
             dynamic location = new ExpandoObject();
-            dynamic position = new ExpandoObject();
-            position.latitude = 1;
-            position.longitude = 1;
             location.address = "test";
-            location.position = position;
+            location.coordinates = new[] {1d, 2d};
+            location.type = "Point";
 
             Initialize(new RemarkMapper());
             Source.id = Guid.NewGuid();
@@ -59,8 +57,9 @@ namespace Coolector.Tests.Services.Storage.Mappers
             Result.Photo.Name.ShouldBeEquivalentTo((string)Source.photo.name);
             Result.Photo.ContentType.ShouldBeEquivalentTo((string)Source.photo.contentType);
             Result.Location.Address.ShouldBeEquivalentTo((string)Source.location.address);
-            Result.Location.Latitude.ShouldBeEquivalentTo((double)Source.location.position.latitude);
-            Result.Location.Longitude.ShouldBeEquivalentTo((double)Source.location.position.longitude);
+            Result.Location.Coordinates[0].ShouldBeEquivalentTo((double)Source.location.coordinates[0]);
+            Result.Location.Coordinates[1].ShouldBeEquivalentTo((double)Source.location.coordinates[1]);
+            Result.Location.Type.ShouldBeEquivalentTo((string)Source.location.type);
             Result.Description.ShouldBeEquivalentTo((string)Source.description);
             Result.Resolved.ShouldBeEquivalentTo((bool)Source.resolved);
             Result.ResolvedAt.ShouldBeEquivalentTo((DateTime)Source.resolvedAt);

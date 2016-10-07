@@ -50,7 +50,7 @@ namespace Coolector.Services.Storage.Providers
             if (storageFetch != null)
             {
                 var data = await storageFetch();
-                if (data.HasValue && data.Value.Items.Any())
+                if (data.HasValue)
                     return data;
             }
 

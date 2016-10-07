@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Coolector.Common.Extensions;
 using Coolector.Common.Types;
 using Coolector.Services.Remarks.Domain;
 using Coolector.Services.Remarks.Queries;
 using MongoDB.Driver;
-using Coolector.Services.Mongo;
 
 namespace Coolector.Services.Remarks.Repositories
 {
@@ -21,9 +21,12 @@ namespace Coolector.Services.Remarks.Repositories
             => await _database.Remarks().GetByIdAsync(id);
 
         public async Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query)
-            => await _database.Remarks()
-                .Query(query)
-                .PaginateAsync(query);
+        {
+            var results = await _database.Remarks()
+                .QueryAsync(query);
+
+            return results.Paginate(query);
+        }
 
         public async Task<Maybe<string>> GetPhotoIdAsync(Guid id)
             => await _database.Remarks().GetPhotoIdAsync(id);

@@ -31,7 +31,7 @@ namespace Coolector.Services.Remarks.Handlers
                 return;
 
             var remarkId = Guid.NewGuid();
-            var position = Position.Create(command.Latitude, command.Longitude);
+            var position = Location.Create(command.Latitude, command.Longitude, command.Address);
             await _remarkService.CreateAsync(remarkId, command.UserId, command.CategoryId,
                 file.Value, position, command.Description);
             var remark = await _remarkService.GetAsync(remarkId);

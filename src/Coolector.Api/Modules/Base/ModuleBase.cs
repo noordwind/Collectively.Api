@@ -21,7 +21,7 @@ namespace Coolector.Api.Modules.Base
 
         protected T BindRequest<T>() where T : new()
         {
-            return Request.Body.Length == 0 ? new T() : this.Bind<T>();
+            return Request.Body.Length == 0 && Request.Query == null ? new T() : this.Bind<T>();
         }
 
         //TODO: Add headers etc.

@@ -13,7 +13,7 @@ namespace Coolector.Services.Users.Modules
 
         protected T BindRequest<T>() where T : new()
         {
-            return Request.Body.Length == 0 ? new T() : this.Bind<T>();
+            return Request.Body.Length == 0 && Request.Query == null ? new T() : this.Bind<T>();
         }
 
         //TODO: Add headers etc.

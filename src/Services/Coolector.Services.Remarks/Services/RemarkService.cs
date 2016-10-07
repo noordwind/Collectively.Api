@@ -35,7 +35,7 @@ namespace Coolector.Services.Remarks.Services
             => await _fileHandler.GetFileStreamInfoAsync(id);
 
         public async Task CreateAsync(Guid id, string userId, Guid categoryId, File photo, 
-            Position position, string description = null)
+            Location location, string description = null)
         {
             var user = await _userRepository.GetByUserIdAsync(userId);
             if (user.HasNoValue)
@@ -50,7 +50,6 @@ namespace Coolector.Services.Remarks.Services
             if (category.HasNoValue)
                 throw new ArgumentException("Default category has not been found.");
 
-            var location = Location.Create(position);
             var remarkPhoto = RemarkPhoto.Empty;
             var extension = photo.Name.Split('.').Last();
             var fileName = $"remark-{id:N}.{extension}";

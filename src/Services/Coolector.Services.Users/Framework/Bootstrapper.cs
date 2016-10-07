@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Collections.Generic;
+using Autofac;
 using Coolector.Common.Commands;
 using Coolector.Services.Encryption;
 using Coolector.Services.Extensions;
@@ -13,6 +14,8 @@ using NLog;
 using RawRabbit;
 using RawRabbit.vNext;
 using System.Reflection;
+using Nancy;
+using Nancy.Configuration;
 
 namespace Coolector.Services.Users.Framework
 {
@@ -26,6 +29,14 @@ namespace Coolector.Services.Users.Framework
         {
             _configuration = configuration;
         }
+
+#if DEBUG
+        public override void Configure(INancyEnvironment environment)
+        {
+            base.Configure(environment);
+            environment.Tracing(enabled: false, displayErrorTraces: true);
+        }
+#endif
 
         protected override void ConfigureApplicationContainer(ILifetimeScope container)
         {
@@ -53,6 +64,13 @@ namespace Coolector.Services.Users.Framework
             var databaseSettings = container.Resolve<MongoDbSettings>();
             var databaseInitializer = container.Resolve<IDatabaseInitializer>();
             databaseInitializer.InitializeAsync();
+
+            pipelines.BeforeRequest += (ctx) =>
+            {
+                FixNumberFormat(ctx);
+
+                return null;
+            };
             pipelines.AfterRequest += (ctx) =>
             {
                 ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
@@ -60,6 +78,28 @@ namespace Coolector.Services.Users.Framework
                 ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
             };
             Logger.Info("Coolector.Services.Users API Started");
+        }
+
+        private void FixNumberFormat(NancyContext ctx)
+        {
+            if (ctx.Request.Query == null)
+                return;
+
+            var fixedNumbers = new Dictionary<string, double>();
+            foreach (var key in ctx.Request.Query)
+            {
+                var value = ctx.Request.Query[key].ToString();
+                if (!value.Contains("."))
+                    continue;
+
+                var number = 0;
+                if (int.TryParse(value.Split('.')[0], out number))
+                    fixedNumbers[key] = double.Parse(value.Replace(".", ","));
+            }
+            foreach (var fixedNumber in fixedNumbers)
+            {
+                ctx.Request.Query[fixedNumber.Key] = fixedNumber.Value;
+            }
         }
     }
 }

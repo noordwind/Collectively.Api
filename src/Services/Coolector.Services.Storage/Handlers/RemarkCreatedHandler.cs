@@ -62,8 +62,8 @@ namespace Coolector.Services.Storage.Handlers
                 Location = new LocationDto
                 {
                     Address = @event.Location.Address,
-                    Longitude = @event.Location.Longitude,
-                    Latitude = @event.Location.Latitude
+                    Coordinates = new[] {@event.Location.Longitude, @event.Location.Latitude},
+                    Type = "Point"
                 },
                 CreatedAt = DateTime.UtcNow,
                 Author = new RemarkAuthorDto
