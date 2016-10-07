@@ -16,6 +16,7 @@
     "Machine.Specifications.Should": "0.11.0",
     "dotnet-test-mspec": "*",
     "Coolector.Services.Storage": "1.0.0-*",
-    "Moq": "4.6.38-alpha"
+    "Moq": "4.6.38-alpha",
+    "Coolector.Services.Remarks": "1.0.0-*"
   }
 }
