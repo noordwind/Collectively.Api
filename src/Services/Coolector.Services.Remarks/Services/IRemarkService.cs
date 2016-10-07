@@ -14,6 +14,8 @@ namespace Coolector.Services.Remarks.Services
         Task<Maybe<FileStreamInfo>> GetPhotoAsync(Guid id);
 
         Task CreateAsync(Guid id, string userId, Guid categoryId, File photo,
-            Location location, string description = null);
+            Position position, string description = null);
+
+        Task DeleteAsync(Guid id, string userId);
     }
 }

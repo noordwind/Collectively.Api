@@ -14,6 +14,7 @@ namespace Coolector.Services.Remarks
                 .UseAutofac(Bootstrapper.LifetimeScope)
                 .UseRabbitMq()
                 .SubscribeToCommand<CreateRemark>()
+                .SubscribeToCommand<DeleteRemark>()
                 .SubscribeToEvent<NewUserSignedIn>()
                 .Build()
                 .Run();

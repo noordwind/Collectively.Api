@@ -17,6 +17,7 @@ namespace Coolector.Services.Storage
                 .SubscribeToEvent<UserNameChanged>()
                 .SubscribeToEvent<AvatarChanged>()
                 .SubscribeToEvent<RemarkCreated>()
+                .SubscribeToEvent<RemarkDeleted>()
                 .Build()
                 .Run();
         }

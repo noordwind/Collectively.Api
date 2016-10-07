@@ -13,5 +13,6 @@ namespace Coolector.Services.Remarks.Repositories
         Task<Maybe<string>> GetPhotoIdAsync(Guid id);
         Task AddAsync(Remark remark);
         Task UpdateAsync(Remark remark);
+        Task DeleteAsync(Remark remark);
     }
 }

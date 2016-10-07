@@ -10,5 +10,6 @@ namespace Coolector.Services.Remarks.Services
         Task UploadAsync(File file, Action<string> onUploaded = null);
         Task<Maybe<FileStreamInfo>> GetFileStreamInfoAsync(Guid remarkId);
         Task<Maybe<FileStreamInfo>> GetFileStreamInfoAsync(string fileId);
+        Task DeleteAsync(string fileId);
     }
 }
