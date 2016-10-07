@@ -1,4 +1,5 @@
-﻿using Autofac;
+﻿using System.Reflection;
+using Autofac;
 using Coolector.Common.Commands;
 using Coolector.Common.Commands.Remarks;
 using Coolector.Common.Events;
@@ -56,8 +57,10 @@ namespace Coolector.Services.Remarks.Framework
                 builder.RegisterType<FileHandler>().As<IFileHandler>();
                 builder.RegisterType<FileResolver>().As<IFileResolver>();
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
-                builder.RegisterType<CreaterRemarkHandler>().As<ICommandHandler<CreateRemark>>();
-                builder.RegisterType<NewUserSignedInHandler>().As<IEventHandler<NewUserSignedIn>>();
+
+                var coreAssembly = typeof(Startup).GetTypeInfo().Assembly;
+                builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
+                builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(ICommandHandler<>));
             });
             LifetimeScope = container;
         }

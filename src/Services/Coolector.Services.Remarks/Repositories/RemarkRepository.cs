@@ -33,5 +33,8 @@ namespace Coolector.Services.Remarks.Repositories
 
         public async Task UpdateAsync(Remark remark)
             => await _database.Remarks().ReplaceOneAsync(x => x.Id == remark.Id, remark);
+
+        public async Task DeleteAsync(Remark remark)
+            => await _database.Remarks().DeleteOneAsync(x => x.Id == remark.Id);
     }
 }

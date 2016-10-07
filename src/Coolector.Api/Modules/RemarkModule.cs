@@ -51,6 +51,12 @@ namespace Coolector.Api.Modules
                 var command = BindAuthenticatedCommand<CreateRemark>();
                 await CommandDispatcher.DispatchAsync(command);
             });
+            Delete("", async args =>
+            {
+                this.RequiresAuthentication();
+                var command = BindAuthenticatedCommand<DeleteRemark>();
+                await CommandDispatcher.DispatchAsync(command);
+            });
         }
     }
 }

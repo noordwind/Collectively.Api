@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Coolector.Common.Types;
+using Coolector.Services.Domain;
 using Coolector.Services.Remarks.Domain;
 using Coolector.Services.Remarks.Queries;
 using Coolector.Services.Remarks.Repositories;
@@ -60,6 +61,19 @@ namespace Coolector.Services.Remarks.Services
             });
             var remark = new Remark(id, user.Value, category.Value, location, remarkPhoto, description);
             await _remarkRepository.AddAsync(remark);
+        }
+
+        public async Task DeleteAsync(Guid id, string userId)
+        {
+            var remark = await _remarkRepository.GetByIdAsync(id);
+            if (remark.HasNoValue)
+                throw new ServiceException($"Remark with id: {id} does not exist!");
+
+            if (remark.Value.Author.UserId != userId)
+                throw new ServiceException($"User: {userId} is not allowed to delete remark: {id}");
+
+            await _fileHandler.DeleteAsync(remark.Value.Photo.FileId);
+            await _remarkRepository.DeleteAsync(remark.Value);
         }
     }
 }

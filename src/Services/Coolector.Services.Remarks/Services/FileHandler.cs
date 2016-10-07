@@ -61,5 +61,13 @@ namespace Coolector.Services.Remarks.Services
             return FileStreamInfo.Create(fileFromBucket.FileInfo.Filename,
                 fileFromBucket.FileInfo.Metadata["contentType"].ToString(), fileFromBucket);
         }
+
+        public async Task DeleteAsync(string fileId)
+        {
+            if (fileId.Empty())
+                return;
+
+            await _bucket.DeleteAsync(new ObjectId(fileId));
+        }
     }
 }

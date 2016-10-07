@@ -15,5 +15,7 @@ namespace Coolector.Services.Remarks.Services
 
         Task CreateAsync(Guid id, string userId, Guid categoryId, File photo,
             Position position, string description = null);
+
+        Task DeleteAsync(Guid id, string userId);
     }
 }
