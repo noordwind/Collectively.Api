@@ -8,6 +8,7 @@ using Coolector.Common.Extensions;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Reflection;
+using Coolector.Common.Queries;
 using Coolector.Core.Filters;
 
 namespace Coolector.Core.Storages

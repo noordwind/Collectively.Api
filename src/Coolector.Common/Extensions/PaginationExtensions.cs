@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Coolector.Common.Types;
 using System.Linq;
+using Coolector.Common.Queries;
 
 namespace Coolector.Common.Extensions
 {

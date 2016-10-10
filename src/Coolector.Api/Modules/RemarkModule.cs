@@ -1,62 +1,40 @@
-﻿using System;
-using Coolector.Api.Modules.Base;
-using Coolector.Common.Commands.Remarks;
+﻿using Coolector.Common.Commands.Remarks;
+using Coolector.Common.Types;
 using Coolector.Core.Commands;
-using Coolector.Core.Filters;
+using Coolector.Core.Queries;
 using Coolector.Core.Storages;
+using Coolector.Dto.Remarks;
 using Nancy;
-using Nancy.Responses;
-using Nancy.Security;
 
 namespace Coolector.Api.Modules
 {
     public class RemarkModule : ModuleBase
     {
         public RemarkModule(ICommandDispatcher commandDispatcher, IRemarkStorage remarkStorage)
-            :base(commandDispatcher, modulePath: "remarks")
+            : base(commandDispatcher, modulePath: "remarks")
         {
-            Get("", async args =>
-            {
-                var query = BindRequest<BrowseRemarks>();
-                var remarks = await remarkStorage.BrowseAsync(query);
+            Get("", async args => await FetchCollection<BrowseRemarks, RemarkDto>
+                (async x => await remarkStorage.BrowseAsync(x)).HandleAsync());
 
-                return FromPagedResult(remarks);
-            });
-            Get("{id}", async args =>
-            {
-                var remark = await remarkStorage.GetAsync((Guid)args.Id);
-                if (remark.HasValue)
-                    return remark.Value;
+            Get("{id}", async args => await Fetch<GetRemark, RemarkDto>
+                (async x => await remarkStorage.GetAsync(x.Id)).HandleAsync());
 
-                return HttpStatusCode.NotFound;
-            });
-            Get("{id}/photo", async args =>
-            {
-                var remarkId = (Guid)args.id;
-                var remark = await remarkStorage.GetAsync(remarkId);
-                if (remark.HasNoValue)
-                    return HttpStatusCode.NotFound;
+            Get("{id}/photo", async args => await Fetch<GetRemarkPhoto, Response>
+            (async x =>
+                {
+                    var remark = await remarkStorage.GetAsync(x.Id);
+                    if (remark.HasNoValue)
+                        return new Maybe<Response>();
 
-                var photoStream = await remarkStorage.GetPhotoStreamAsync(remarkId);
-                if (photoStream.HasNoValue)
-                    return HttpStatusCode.NotFound;
+                    var stream = await remarkStorage.GetPhotoStreamAsync(x.Id);
 
-                var response = new StreamResponse(() => photoStream.Value, remark.Value.Photo.ContentType);
+                    return FromStream(stream, remark.Value.Photo.Name, remark.Value.Photo.ContentType);
+                }
+            ).HandleAsync());
 
-                return response.AsAttachment(remark.Value.Photo.Name);
-            });
-            Post("", async args =>
-            {
-                this.RequiresAuthentication();
-                var command = BindAuthenticatedCommand<CreateRemark>();
-                await CommandDispatcher.DispatchAsync(command);
-            });
-            Delete("", async args =>
-            {
-                this.RequiresAuthentication();
-                var command = BindAuthenticatedCommand<DeleteRemark>();
-                await CommandDispatcher.DispatchAsync(command);
-            });
+            Post("", async args => await For<CreateRemark>().DispatchAsync());
+
+            Delete("", async args => await For<DeleteRemark>().DispatchAsync());
         }
     }
 }

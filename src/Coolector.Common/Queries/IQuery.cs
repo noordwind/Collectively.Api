@@ -1,4 +1,4 @@
-﻿namespace Coolector.Common.Types
+﻿namespace Coolector.Common.Queries
 {
     //Marker
     public interface IQuery

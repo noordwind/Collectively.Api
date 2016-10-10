@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Threading.Tasks;
+using Coolector.Common.Queries;
 using Coolector.Common.Types;
 
 namespace Coolector.Core.Storages

@@ -1,4 +1,6 @@
-﻿namespace Coolector.Common.Types
+﻿using Coolector.Common.Queries;
+
+namespace Coolector.Common.Types
 {
     public abstract class PagedQueryBase : IPagedQuery
     {

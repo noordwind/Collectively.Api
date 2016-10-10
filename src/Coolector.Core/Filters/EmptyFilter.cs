@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Coolector.Common.Queries;
 using Coolector.Common.Types;
 
 namespace Coolector.Core.Filters

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Coolector.Common.Types;
+using Coolector.Core.Queries;
 using Coolector.Dto.Users;
 
 namespace Coolector.Core.Filters

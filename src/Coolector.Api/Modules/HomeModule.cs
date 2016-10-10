@@ -1,15 +1,12 @@
-﻿using Nancy;
-using NLog;
-
+﻿using Coolector.Core.Commands;
+using Nancy;
 namespace Coolector.Api.Modules
 {
-    public class HomeModule : NancyModule
+    public class HomeModule : ModuleBase
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
-        public HomeModule()
+        public HomeModule(ICommandDispatcher commandDispatcher) : base(commandDispatcher)
         {
-            Get("/", args => "Hello from Nancy running on CoreCLR");
+            Get("", args => "Hello from Nancy running on CoreCLR");
         }
     }
 }

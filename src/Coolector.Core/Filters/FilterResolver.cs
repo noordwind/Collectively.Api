@@ -1,4 +1,5 @@
 ﻿using Autofac;
+using Coolector.Common.Queries;
 using Coolector.Common.Types;
 
 namespace Coolector.Core.Filters

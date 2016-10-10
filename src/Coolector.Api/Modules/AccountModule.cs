@@ -1,8 +1,8 @@
-﻿using Coolector.Api.Modules.Base;
-using Coolector.Common.Commands.Users;
+﻿using Coolector.Common.Commands.Users;
 using Coolector.Core.Commands;
+using Coolector.Core.Queries;
 using Coolector.Core.Storages;
-using Nancy.Security;
+using Coolector.Dto.Users;
 
 namespace Coolector.Api.Modules
 {
@@ -11,31 +11,14 @@ namespace Coolector.Api.Modules
         public AccountModule(ICommandDispatcher commandDispatcher, IUserStorage userStorage)
             : base(commandDispatcher)
         {
-            this.RequiresAuthentication();
+            Get("account", async args => await Fetch<GetAccount, UserDto>
+                (async x => await userStorage.GetAsync(x.UserId)).HandleAsync());
 
-            Get("account", async args =>
-            {
-                var user = await userStorage.GetAsync(CurrentUserId);
-                return user.Value;
-            });
+            Post("sign-in", async args => await For<SignInUser>().DispatchAsync());
 
-            Post("sign-in", async args =>
-            {
-                var command = BindRequest<SignInUser>();
-                await CommandDispatcher.DispatchAsync(command);
-            });
+            Put("account/username", async args => await For<ChangeUserName>().DispatchAsync());
 
-            Put("account/username", async args =>
-            {
-                var command = BindAuthenticatedCommand<ChangeUserName>();
-                await CommandDispatcher.DispatchAsync(command);
-            });
-
-            Put("account/avatar", async args =>
-            {
-                var command = BindAuthenticatedCommand<ChangeAvatar>();
-                await CommandDispatcher.DispatchAsync(command);
-            });
+            Put("account/avatar", async args => await For<ChangeAvatar>().DispatchAsync());
         }
     }
 }

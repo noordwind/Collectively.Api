@@ -2,7 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Coolector.Common.Types;
-using Coolector.Core.Filters;
+using Coolector.Core.Queries;
 using Coolector.Dto.Remarks;
 
 namespace Coolector.Core.Storages
