@@ -63,6 +63,7 @@ namespace Coolector.Services.Storage.Framework
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
                 builder.RegisterType<FileHandler>().As<IFileHandler>();
                 builder.RegisterType<RemarkRepository>().As<IRemarkRepository>();
+                builder.RegisterType<RemarkCategoryRepository>().As<IRemarkCategoryRepository>();
                 builder.RegisterType<UserRepository>().As<IUserRepository>();
                 builder.RegisterType<CustomHttpClient>().As<IHttpClient>();
                 builder.RegisterType<ServiceClient>().As<IServiceClient>();

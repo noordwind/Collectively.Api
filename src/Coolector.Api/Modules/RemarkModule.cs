@@ -16,6 +16,9 @@ namespace Coolector.Api.Modules
             Get("", async args => await FetchCollection<BrowseRemarks, RemarkDto>
                 (async x => await remarkStorage.BrowseAsync(x)).HandleAsync());
 
+            Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategoryDto>
+                (async x => await remarkStorage.BrowseCategoriesAsync(x)).HandleAsync());
+
             Get("{id}", async args => await Fetch<GetRemark, RemarkDto>
                 (async x => await remarkStorage.GetAsync(x.Id)).HandleAsync());
 

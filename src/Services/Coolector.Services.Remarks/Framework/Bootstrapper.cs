@@ -2,13 +2,10 @@
 using System.Collections.Generic;
 using Autofac;
 using Coolector.Common.Commands;
-using Coolector.Common.Commands.Remarks;
 using Coolector.Common.Events;
-using Coolector.Common.Events.Users;
 using Coolector.Services.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Nancy;
-using Coolector.Services.Remarks.Handlers;
 using Coolector.Services.Remarks.Repositories;
 using Coolector.Services.Remarks.Services;
 using Microsoft.Extensions.Configuration;
@@ -61,6 +58,7 @@ namespace Coolector.Services.Remarks.Framework
                 builder.RegisterType<MongoDbInitializer>().As<IDatabaseInitializer>();
                 builder.RegisterType<DatabaseSeeder>().As<IDatabaseSeeder>();
                 builder.RegisterType<RemarkRepository>().As<IRemarkRepository>();
+                builder.RegisterType<CategoryRepository>().As<ICategoryRepository>();
                 builder.RegisterType<CategoryRepository>().As<ICategoryRepository>();
                 builder.RegisterType<UserRepository>().As<IUserRepository>();
                 builder.RegisterType<RemarkService>().As<IRemarkService>();

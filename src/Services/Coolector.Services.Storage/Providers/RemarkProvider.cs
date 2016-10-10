@@ -1,8 +1,6 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Coolector.Common.Types;
-using Coolector.Dto.Common;
 using Coolector.Dto.Remarks;
 using Coolector.Services.Storage.Files;
 using Coolector.Services.Storage.Queries;
@@ -14,16 +12,19 @@ namespace Coolector.Services.Storage.Providers
     public class RemarkProvider : IRemarkProvider
     {
         private readonly IRemarkRepository _remarkRepository;
+        private readonly IRemarkCategoryRepository _remarkCategoryRepository;
         private readonly IFileHandler _fileHandler;
         private readonly IProviderClient _providerClient;
         private readonly ProviderSettings _providerSettings;
 
         public RemarkProvider(IRemarkRepository remarkRepository,
+            IRemarkCategoryRepository remarkCategoryRepository,
             IFileHandler fileHandler,
             IProviderClient providerClient,
             ProviderSettings providerSettings)
         {
             _remarkRepository = remarkRepository;
+            _remarkCategoryRepository = remarkCategoryRepository;
             _fileHandler = fileHandler;
             _providerClient = providerClient;
             _providerSettings = providerSettings;
@@ -51,6 +52,12 @@ namespace Coolector.Services.Storage.Providers
             => await _providerClient.GetCollectionUsingStorageAsync(_providerSettings.RemarksApiUrl, "remarks",
                 async () => await _remarkRepository.BrowseAsync(query),
                 async remarks => await _remarkRepository.AddManyAsync(remarks.Items));
+
+        public async Task<Maybe<PagedResult<RemarkCategoryDto>>> BrowseCategoriesAsync(BrowseRemarkCategories query)
+            => await _providerClient.GetCollectionUsingStorageAsync(_providerSettings.RemarksApiUrl,
+                "remarks/categories",
+                async () => await _remarkCategoryRepository.BrowseAsync(query),
+                async remarks => await _remarkCategoryRepository.AddManyAsync(remarks.Items));
 
         public async Task<Maybe<FileStreamInfo>> GetPhotoAsync(Guid id)
             => await _fileHandler.GetFileStreamInfoAsync(id);

@@ -7,6 +7,9 @@ namespace Coolector.Common.Types
     {
         public IEnumerable<T> Items { get; }
 
+        public bool IsEmpty => Items == null || !Items.Any();
+        public bool IsNotEmpty => !IsEmpty;
+
         protected PagedResult()
         {
             Items = Enumerable.Empty<T>();

@@ -14,16 +14,18 @@ namespace Coolector.Services.Remarks.Services
     {
         private readonly IFileHandler _fileHandler;
         private readonly IRemarkRepository _remarkRepository;
-        private readonly IUserRepository _userRepository;
         private readonly ICategoryRepository _categoryRepository;
+        private readonly IUserRepository _userRepository;
 
-        public RemarkService(IFileHandler fileHandler, IRemarkRepository remarkRepository, 
-            IUserRepository userRepository, ICategoryRepository categoryRepository)
+        public RemarkService(IFileHandler fileHandler, 
+            IRemarkRepository remarkRepository, 
+            IUserRepository userRepository,
+            ICategoryRepository categoryRepository)
         {
             _fileHandler = fileHandler;
             _remarkRepository = remarkRepository;
-            _userRepository = userRepository;
             _categoryRepository = categoryRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<Maybe<Remark>> GetAsync(Guid id)
@@ -31,6 +33,9 @@ namespace Coolector.Services.Remarks.Services
 
         public async Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query)
             => await _remarkRepository.BrowseAsync(query);
+
+        public async Task<Maybe<PagedResult<Category>>> BrowseCategoriesAsync(BrowseCategories query)
+            => await _categoryRepository.BrowseAsync(query);
 
         public async Task<Maybe<FileStreamInfo>> GetPhotoAsync(Guid id)
             => await _fileHandler.GetFileStreamInfoAsync(id);
@@ -42,14 +47,9 @@ namespace Coolector.Services.Remarks.Services
             if (user.HasNoValue)
                 throw new ArgumentException($"User with id: {userId} has not been found.");
 
-            //TODO: Use this code if the different categories will be needed.
-            //var category = await _categoryRepository.GetByIdAsync(categoryId);
-            //if (category.HasNoValue)
-            //    throw new ArgumentException($"Category with id: {userId} has not been found.");
-
-            var category = await _categoryRepository.GetDefaultAsync();
+            var category = await _categoryRepository.GetByIdAsync(categoryId);
             if (category.HasNoValue)
-                throw new ArgumentException("Default category has not been found.");
+                throw new ArgumentException($"Category with id: {userId} has not been found.");
 
             var remarkPhoto = RemarkPhoto.Empty;
             var extension = photo.Name.Split('.').Last();

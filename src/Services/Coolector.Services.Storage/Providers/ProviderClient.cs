@@ -50,7 +50,7 @@ namespace Coolector.Services.Storage.Providers
             if (storageFetch != null)
             {
                 var data = await storageFetch();
-                if (data.HasValue)
+                if (data.HasValue && data.Value.IsNotEmpty)
                     return data;
             }
 
@@ -58,7 +58,7 @@ namespace Coolector.Services.Storage.Providers
             if (response.HasNoValue)
                 return response;
 
-            if (storageSave != null && response.Value.Items.Any())
+            if (storageSave != null && response.Value.IsNotEmpty)
                 await storageSave(response.Value);
 
             return response;

@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Coolector.Common.Extensions;
 using Coolector.Services.Mongo;
 using Coolector.Services.Remarks.Domain;
+using Coolector.Services.Remarks.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
@@ -27,6 +28,14 @@ namespace Coolector.Services.Remarks.Repositories.Queries
                 return null;
 
             return await categories.AsQueryable().FirstOrDefaultAsync(x => x.Name == name);
+        }
+
+        public static IMongoQueryable<Category> Query(this IMongoCollection<Category> categories,
+            BrowseCategories query)
+        {
+            var values = categories.AsQueryable();
+
+            return values;
         }
     }
 }

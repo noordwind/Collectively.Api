@@ -13,6 +13,7 @@ namespace Coolector.Tests.Services.Remarks.Services
     {
         protected static IRemarkService RemarkService;
         protected static Mock<IFileHandler> FileHandlerMock;
+        protected static Mock<ICategoryRepository> RemarkCategoryRepositoryMock;
         protected static Mock<IRemarkRepository> RemarkRepositoryMock;
         protected static Mock<IUserRepository> UserRepositoryMock;
         protected static Mock<ICategoryRepository> CategoryRepositoryMock;
@@ -26,11 +27,13 @@ namespace Coolector.Tests.Services.Remarks.Services
         {
             FileHandlerMock = new Mock<IFileHandler>();
             RemarkRepositoryMock = new Mock<IRemarkRepository>();
+            RemarkCategoryRepositoryMock = new Mock<ICategoryRepository>();
             UserRepositoryMock = new Mock<IUserRepository>();
             CategoryRepositoryMock = new Mock<ICategoryRepository>();
 
             RemarkService = new RemarkService(FileHandlerMock.Object, 
-                RemarkRepositoryMock.Object, UserRepositoryMock.Object,
+                RemarkRepositoryMock.Object, 
+                UserRepositoryMock.Object,
                 CategoryRepositoryMock.Object);
 
             var user = new User(UserId, "name");

@@ -18,6 +18,7 @@ namespace Coolector.Tests.Services.Storage.Providers
     {
         protected static IRemarkProvider RemarkProvider;
         protected static Mock<IRemarkRepository> RemarkRepositoryMock;
+        protected static Mock<IRemarkCategoryRepository> RemarkCategoryRepositoryMock;
         protected static Mock<IFileHandler> FileHandlerMock;
         protected static Mock<IProviderClient> ProviderClientMock;
         protected static ProviderSettings ProviderSettings;
@@ -25,13 +26,14 @@ namespace Coolector.Tests.Services.Storage.Providers
         protected static void Initialize()
         {
             RemarkRepositoryMock = new Mock<IRemarkRepository>();
+            RemarkCategoryRepositoryMock = new Mock<IRemarkCategoryRepository>();
             FileHandlerMock = new Mock<IFileHandler>();
             ProviderClientMock = new Mock<IProviderClient>();
             ProviderSettings = new ProviderSettings
             {
                 UsersApiUrl = "apiUrl"
             };
-            RemarkProvider = new RemarkProvider(RemarkRepositoryMock.Object,
+            RemarkProvider = new RemarkProvider(RemarkRepositoryMock.Object, RemarkCategoryRepositoryMock.Object,
                 FileHandlerMock.Object, ProviderClientMock.Object, ProviderSettings);
         }
     }

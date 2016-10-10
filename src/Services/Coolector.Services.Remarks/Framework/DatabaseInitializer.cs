@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Coolector.Services.Mongo;
 using Coolector.Services.Remarks.Domain;
-using Coolector.Services.Remarks.Queries;
 using Coolector.Services.Remarks.Repositories.Queries;
 using MongoDB.Driver;
 
@@ -19,6 +18,8 @@ namespace Coolector.Services.Remarks.Framework
         public async Task SeedAsync()
         {
             await _database.Categories().InsertOneAsync(new Category("litter"));
+            await _database.Categories().InsertOneAsync(new Category("damages"));
+            await _database.Categories().InsertOneAsync(new Category("accidents"));
         }
     }
 }
