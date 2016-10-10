@@ -5,6 +5,7 @@ using Coolector.Services.Users.Domain;
 using Coolector.Services.Users.Queries;
 using MongoDB.Driver;
 using Coolector.Services.Mongo;
+using Coolector.Services.Users.Repositories.Queries;
 
 namespace Coolector.Services.Users.Repositories
 {
@@ -26,14 +27,8 @@ namespace Coolector.Services.Users.Repositories
         public async Task<Maybe<User>> GetByNameAsync(string name)
             => await _database.Users().GetByNameAsync(name);
 
-        public async Task<Maybe<PagedResult<User>>> BrowseAsync(int page = 1, int results = 10)
+        public async Task<Maybe<PagedResult<User>>> BrowseAsync(BrowseUsers query)
         {
-            var query = new BrowseUsers
-            {
-                Page = page,
-                Results = results
-            };
-
             return await _database.Users()
                 .Query(query)
                 .PaginateAsync(query);

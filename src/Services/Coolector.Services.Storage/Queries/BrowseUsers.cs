@@ -4,6 +4,5 @@ namespace Coolector.Services.Storage.Queries
 {
     public class BrowseUsers : PagedQueryBase
     {
-        
     }
 }

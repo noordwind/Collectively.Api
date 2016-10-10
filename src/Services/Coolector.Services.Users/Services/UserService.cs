@@ -3,6 +3,7 @@ using Coolector.Common.Extensions;
 using Coolector.Common.Types;
 using Coolector.Services.Domain;
 using Coolector.Services.Users.Domain;
+using Coolector.Services.Users.Queries;
 using Coolector.Services.Users.Repositories;
 
 namespace Coolector.Services.Users.Services
@@ -19,8 +20,8 @@ namespace Coolector.Services.Users.Services
         public async Task<Maybe<User>> GetAsync(string userId)
             => await _userRepository.GetByUserIdAsync(userId);
 
-        public async Task<Maybe<PagedResult<User>>> BrowseAsync(int page = 1, int results = 10)
-            => await _userRepository.BrowseAsync(page, results);
+        public async Task<Maybe<PagedResult<User>>> BrowseAsync(BrowseUsers query)
+            => await _userRepository.BrowseAsync(query);
 
         public async Task CreateAsync(string userId, string email, string role,
             bool activate = true, string pictureUrl = null, string name = null)

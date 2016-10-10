@@ -1,8 +1,8 @@
 ﻿using Newtonsoft.Json;
 
-namespace Coolector.Dto.Users
+namespace Coolector.Services.Users.Auth0
 {
-    public class Auth0UserDto
+    public class Auth0User
     {
         [JsonProperty("user_id")]
         public string UserId { get; set; }

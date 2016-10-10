@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Coolector.Common.Types;
+using Coolector.Dto.Remarks;
 using Coolector.Services.Storage.Providers;
 using Coolector.Services.Storage.Queries;
 using Nancy;
-using Nancy.Responses;
 
 namespace Coolector.Services.Storage.Modules
 {
@@ -10,31 +10,24 @@ namespace Coolector.Services.Storage.Modules
     {
         public RemarkModule(IRemarkProvider remarkProvider) : base("remarks")
         {
-            Get("", async args =>
-            {
-                var query = BindRequest<BrowseRemarks>();
-                var remarks = await remarkProvider.BrowseAsync(query);
+            Get("", async args => await FetchCollection<BrowseRemarks, RemarkDto>
+                (async x => await remarkProvider.BrowseAsync(x)).HandleAsync());
 
-                return FromPagedResult(remarks);
-            });
-            Get("{id}", async args =>
-            {
-                var remark = await remarkProvider.GetAsync((Guid)args.id);
-                if (remark.HasValue)
-                    return remark.Value;
+            Get("{id}", async args => await Fetch<GetRemark, RemarkDto>
+                (async x => await remarkProvider.GetAsync(x.Id)).HandleAsync());
 
-                return HttpStatusCode.NotFound;
-            });
-            Get("{id}/photo", async args =>
+            Get("{id}/photo", async args => await Fetch<GetRemarkPhoto, Response>
+            (async x =>
             {
-                var stream = await remarkProvider.GetPhotoAsync((Guid)args.id);
+                var stream = await remarkProvider.GetPhotoAsync(x.Id);
                 if (stream.HasNoValue)
-                    return HttpStatusCode.NotFound;
+                    return new Maybe<Response>();
 
-                var response = new StreamResponse(() => stream.Value.Stream, stream.Value.ContentType);
+                var streamInfo = stream.Value;
 
-                return response.AsAttachment(stream.Value.Name);
-            });
+                return FromStream(streamInfo.Stream, streamInfo.Name, streamInfo.ContentType);
+            }
+            ).HandleAsync());
         }
     }
 }

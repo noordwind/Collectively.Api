@@ -6,7 +6,7 @@ namespace Coolector.Services.Users.Modules
     {
         public HomeModule()
         {
-            Get("/", args => Response.AsJson(new { name = "Coolector.Services.Users" }));
+            Get("", args => Response.AsJson(new { name = "Coolector.Services.Users" }));
         }
     }
 }

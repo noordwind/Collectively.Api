@@ -1,31 +1,18 @@
-﻿using Coolector.Services.Users.Queries;
+﻿using Coolector.Services.Users.Domain;
+using Coolector.Services.Users.Queries;
 using Coolector.Services.Users.Services;
-using Nancy;
 
 namespace Coolector.Services.Users.Modules
 {
     public class UserModule : ModuleBase
     {
-        private readonly IUserService _userService;
-
-        public UserModule(IUserService userService) : base("/users")
+        public UserModule(IUserService userService) : base("users")
         {
-            _userService = userService;
-            Get("/", async args =>
-            {
-                var query = BindRequest<BrowseUsers>();
-                var users = await _userService.BrowseAsync(query.Page, query.Results);
+            Get("", async args => await FetchCollection<BrowseUsers, User>
+                (async x => await userService.BrowseAsync(x)).HandleAsync());
 
-                return FromPagedResult(users);
-            });
-            Get("/{id}", async args =>
-            {
-                var user = await _userService.GetAsync((string)args.id);
-                if (user.HasValue)
-                    return user.Value;
-
-                return HttpStatusCode.NotFound;
-            });
+            Get("{id}", async args => await Fetch<GetUser, User>
+                (async x => await userService.GetAsync(x.Id)).HandleAsync());
         }
     }
 }

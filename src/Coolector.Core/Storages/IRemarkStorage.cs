@@ -11,6 +11,6 @@ namespace Coolector.Core.Storages
     {
         Task<Maybe<RemarkDto>> GetAsync(Guid id);
         Task<Maybe<PagedResult<RemarkDto>>> BrowseAsync(BrowseRemarks query);
-        Task<Maybe<Stream>> GetPhotoStreamAsync(Guid id);
+        Task<Maybe<Stream>> GetPhotoAsync(Guid id);
     }
 }

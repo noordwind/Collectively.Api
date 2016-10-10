@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Coolector.Common.Types;
+using Coolector.Services.Remarks.Domain;
 using Coolector.Services.Remarks.Queries;
 using Coolector.Services.Remarks.Services;
 using Nancy;
-using Nancy.Responses;
 
 namespace Coolector.Services.Remarks.Modules
 {
@@ -10,31 +10,24 @@ namespace Coolector.Services.Remarks.Modules
     {
         public RemarkModule(IRemarkService remarkService) : base("remarks")
         {
-            Get("", async args =>
-            {
-                var query = BindRequest<BrowseRemarks>();
-                var remarks = await remarkService.BrowseAsync(query);
+            Get("", async args => await FetchCollection<BrowseRemarks, Remark>
+                (async x => await remarkService.BrowseAsync(x)).HandleAsync());
 
-                return FromPagedResult(remarks);
-            });
-            Get("{id}", async args =>
-            {
-                var remark = await remarkService.GetAsync((Guid)args.id);
-                if (remark.HasValue)
-                    return remark.Value;
+            Get("{id}", async args => await Fetch<GetRemark, Remark>
+                (async x => await remarkService.GetAsync(x.Id)).HandleAsync());
 
-                return HttpStatusCode.NotFound;
-            });
-            Get("{id}/photo", async args =>
-            {
-                var stream = await remarkService.GetPhotoAsync((Guid) args.id);
-                if (stream.HasNoValue)
-                    return HttpStatusCode.NotFound;
+            Get("{id}/photo", async args => await Fetch<GetRemarkPhoto, Response>
+            (async x =>
+                {
+                    var stream = await remarkService.GetPhotoAsync(x.Id);
+                    if (stream.HasNoValue)
+                        return new Maybe<Response>();
 
-                var response = new StreamResponse(() => stream.Value.Stream, stream.Value.ContentType);
+                    var streamInfo = stream.Value;
 
-                return response.AsAttachment(stream.Value.Name);
-            });
+                    return FromStream(streamInfo.Stream, streamInfo.Name, streamInfo.ContentType);
+                }
+            ).HandleAsync());
         }
     }
 }

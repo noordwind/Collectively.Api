@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
-using Coolector.Services.Mongo;
 using Coolector.Common.Extensions;
 using Coolector.Dto.Users;
+using Coolector.Services.Mongo;
+using Coolector.Services.Storage.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
-namespace Coolector.Services.Storage.Queries
+namespace Coolector.Services.Storage.Repositories.Queries
 {
     public static class UserQueries
     {

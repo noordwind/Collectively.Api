@@ -2,20 +2,21 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Coolector.Dto.Remarks;
-using Coolector.Services.Mongo;
 using Coolector.Common.Extensions;
+using Coolector.Services.Mongo;
+using Coolector.Services.Remarks.Domain;
+using Coolector.Services.Remarks.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
 
-namespace Coolector.Services.Storage.Queries
+namespace Coolector.Services.Remarks.Repositories.Queries
 {
     public static class RemarkQueries
     {
-        public static IMongoCollection<RemarkDto> Remarks(this IMongoDatabase database)
-            => database.GetCollection<RemarkDto>();
+        public static IMongoCollection<Remark> Remarks(this IMongoDatabase database)
+            => database.GetCollection<Remark>();
 
-        public static async Task<RemarkDto> GetByIdAsync(this IMongoCollection<RemarkDto> remarks, Guid id)
+        public static async Task<Remark> GetByIdAsync(this IMongoCollection<Remark> remarks, Guid id)
         {
             if (id == Guid.Empty)
                 return null;
@@ -23,7 +24,7 @@ namespace Coolector.Services.Storage.Queries
             return await remarks.AsQueryable().FirstOrDefaultAsync(x => x.Id == id);
         }
 
-        public static async Task<string> GetPhotoIdAsync(this IMongoCollection<RemarkDto> remarks, Guid id)
+        public static async Task<string> GetPhotoIdAsync(this IMongoCollection<Remark> remarks, Guid id)
         {
             if (id == Guid.Empty)
                 return null;
@@ -33,13 +34,13 @@ namespace Coolector.Services.Storage.Queries
                 .FirstOrDefaultAsync(_ => true);
         }
 
-        public static async Task<IEnumerable<RemarkDto>> QueryAsync(this IMongoCollection<RemarkDto> remarks,
+        public static async Task<IEnumerable<Remark>> QueryAsync(this IMongoCollection<Remark> remarks,
             BrowseRemarks query)
         {
             if (Math.Abs(query.Latitude) <= 0.0000000001 || Math.Abs(query.Longitude) <= 0.0000000001 ||
                 query.Radius <= 0)
             {
-                return Enumerable.Empty<RemarkDto>();
+                return Enumerable.Empty<Remark>();
             }
 
             if (query.Page <= 0)
@@ -47,8 +48,8 @@ namespace Coolector.Services.Storage.Queries
             if (query.Results <= 0)
                 query.Results = 10;
 
-            var filterBuilder = new FilterDefinitionBuilder<RemarkDto>();
-            var filter = FilterDefinition<RemarkDto>.Empty;
+            var filterBuilder = new FilterDefinitionBuilder<Remark>();
+            var filter = FilterDefinition<Remark>.Empty;
             filter = filterBuilder.GeoWithinCenterSphere(x => x.Location,
                 query.Longitude, query.Latitude, query.Radius/1000/6.3781);
             if (!query.Description.Empty())
@@ -56,7 +57,7 @@ namespace Coolector.Services.Storage.Queries
 
             return await remarks.Find(filter)
                 .SortBy(x => x.CreatedAt)
-                .Skip(query.Results*(query.Page - 1))
+                .Skip(query.Results * (query.Page - 1))
                 .Limit(query.Results)
                 .ToListAsync();
         }

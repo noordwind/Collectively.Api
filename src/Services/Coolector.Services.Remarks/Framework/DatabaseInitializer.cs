@@ -2,6 +2,7 @@
 using Coolector.Services.Mongo;
 using Coolector.Services.Remarks.Domain;
 using Coolector.Services.Remarks.Queries;
+using Coolector.Services.Remarks.Repositories.Queries;
 using MongoDB.Driver;
 
 namespace Coolector.Services.Remarks.Framework

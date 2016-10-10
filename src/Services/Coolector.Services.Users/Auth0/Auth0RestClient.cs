@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Net.Http;
 using System.Threading.Tasks;
-using Coolector.Dto.Users;
 using Newtonsoft.Json;
 
 namespace Coolector.Services.Users.Auth0
@@ -20,13 +19,13 @@ namespace Coolector.Services.Users.Auth0
             _httpClient = new HttpClient { BaseAddress = new Uri(BaseAddress) };
         }
 
-        public async Task<Auth0UserDto> GetUserAsync(string userId)
+        public async Task<Auth0User> GetUserAsync(string userId)
             => await GetUserAsync($"api/v2/users/{userId}", _settings.ReadUsersToken);
 
-        public async Task<Auth0UserDto> GetUserByAccessTokenAsync(string accessToken)
+        public async Task<Auth0User> GetUserByAccessTokenAsync(string accessToken)
             => await GetUserAsync("userinfo", accessToken);
 
-        private async Task<Auth0UserDto> GetUserAsync(string endpoint, string token)
+        private async Task<Auth0User> GetUserAsync(string endpoint, string token)
         {
             if (_httpClient.DefaultRequestHeaders.Contains(AuthorizationHeader))
                 _httpClient.DefaultRequestHeaders.Remove(AuthorizationHeader);
@@ -34,10 +33,10 @@ namespace Coolector.Services.Users.Auth0
             _httpClient.DefaultRequestHeaders.Add(AuthorizationHeader, $"Bearer {token}");
             var response = await _httpClient.GetAsync(endpoint);
             if (!response.IsSuccessStatusCode)
-                return new Auth0UserDto();
+                return new Auth0User();
 
             var content = await response.Content.ReadAsStringAsync();
-            var user = JsonConvert.DeserializeObject<Auth0UserDto>(content);
+            var user = JsonConvert.DeserializeObject<Auth0User>(content);
 
             return user;
         }

@@ -15,13 +15,13 @@ using NLog;
 
 namespace Coolector.Api.Modules
 {
-    public class ModuleBase : NancyModule
+    public abstract class ModuleBase : NancyModule
     {
         protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         protected readonly ICommandDispatcher CommandDispatcher;
         private string _currentUserId;
 
-        public ModuleBase(ICommandDispatcher commandDispatcher, string modulePath = "")
+        protected ModuleBase(ICommandDispatcher commandDispatcher, string modulePath = "")
             : base(modulePath)
         {
             CommandDispatcher = commandDispatcher;

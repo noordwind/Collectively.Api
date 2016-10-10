@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Coolector.Common.Extensions;
+using Coolector.Services.Mongo;
 using Coolector.Services.Remarks.Domain;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using Coolector.Services.Mongo;
 
-namespace Coolector.Services.Remarks.Queries
+namespace Coolector.Services.Remarks.Repositories.Queries
 {
     public static class CategoryQueries
     {

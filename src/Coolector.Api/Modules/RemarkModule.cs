@@ -26,7 +26,7 @@ namespace Coolector.Api.Modules
                     if (remark.HasNoValue)
                         return new Maybe<Response>();
 
-                    var stream = await remarkStorage.GetPhotoStreamAsync(x.Id);
+                    var stream = await remarkStorage.GetPhotoAsync(x.Id);
 
                     return FromStream(stream, remark.Value.Photo.Name, remark.Value.Photo.ContentType);
                 }

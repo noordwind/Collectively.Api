@@ -6,7 +6,7 @@ namespace Coolector.Services.Remarks.Modules
     {
         public HomeModule()
         {
-            Get("/", args => Response.AsJson(new { name = "Coolector.Services.Remarks" }));
+            Get("", args => Response.AsJson(new { name = "Coolector.Services.Remarks" }));
         }
     }
 }

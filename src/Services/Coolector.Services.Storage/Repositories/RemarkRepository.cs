@@ -5,6 +5,7 @@ using Coolector.Common.Extensions;
 using Coolector.Common.Types;
 using Coolector.Dto.Remarks;
 using Coolector.Services.Storage.Queries;
+using Coolector.Services.Storage.Repositories.Queries;
 using MongoDB.Driver;
 
 namespace Coolector.Services.Storage.Repositories

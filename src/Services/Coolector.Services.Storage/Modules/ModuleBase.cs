@@ -1,26 +1,11 @@
-﻿using System.Collections.Generic;
-using Coolector.Common.Types;
-using Nancy;
-using Nancy.ModelBinding;
-using Newtonsoft.Json;
+﻿using Coolector.Services.Nancy;
 
 namespace Coolector.Services.Storage.Modules
 {
-    public class ModuleBase : NancyModule
+    public abstract class ModuleBase : ApiModuleBase
     {
-        public ModuleBase(string modulePath = "") : base(modulePath)
-        { 
-        }
-
-        protected T BindRequest<T>() where T : new()
+        protected ModuleBase(string modulePath = "") : base(modulePath)
         {
-            return Request.Body.Length == 0 && Request.Query == null ? new T() : this.Bind<T>();
-        }
-
-        //TODO: Add headers etc.
-        protected IEnumerable<T> FromPagedResult<T>(Maybe<PagedResult<T>> result)
-        {
-            return result.HasValue ? result.Value.Items : new List<T>();
         }
     }
 }

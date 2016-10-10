@@ -1,4 +1,5 @@
-﻿using Coolector.Services.Storage.Providers;
+﻿using Coolector.Dto.Users;
+using Coolector.Services.Storage.Providers;
 using Coolector.Services.Storage.Queries;
 using Nancy;
 
@@ -6,28 +7,13 @@ namespace Coolector.Services.Storage.Modules
 {
     public class UserModule : ModuleBase
     {
-        private readonly IUserProvider _userProvider;
-
         public UserModule(IUserProvider userProvider) : base("users")
         {
-            _userProvider = userProvider;
+            Get("", async args => await FetchCollection<BrowseUsers, UserDto>
+                (async x => await userProvider.BrowseAsync(x)).HandleAsync());
 
-            Get("/", async args =>
-            {
-                var query = BindRequest<BrowseUsers>();
-                var users = await _userProvider.BrowseAsync(query);
-
-                return FromPagedResult(users);
-            });
-
-            Get("/{id}", async args =>
-            {
-                var user = await _userProvider.GetAsync((string) args.Id);
-                if (user.HasValue)
-                    return user.Value;
-
-                return HttpStatusCode.NotFound;
-            });
+            Get("{id}", async args => await Fetch<GetUser, UserDto>
+                (async x => await userProvider.GetAsync(x.Id)).HandleAsync());
         }
     }
 }

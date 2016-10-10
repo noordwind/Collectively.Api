@@ -1,17 +1,17 @@
 ﻿using System.Threading.Tasks;
 using Coolector.Common.Extensions;
+using Coolector.Services.Mongo;
 using Coolector.Services.Users.Domain;
+using Coolector.Services.Users.Queries;
 using MongoDB.Driver;
 using MongoDB.Driver.Linq;
-using Coolector.Services.Mongo;
 
-namespace Coolector.Services.Users.Queries
+namespace Coolector.Services.Users.Repositories.Queries
 {
     public static class UserQueries
     {
         public static IMongoCollection<User> Users(this IMongoDatabase database)
             => database.GetCollection<User>();
-
 
         public static async Task<User> GetByUserIdAsync(this IMongoCollection<User> users, string userId)
         {
