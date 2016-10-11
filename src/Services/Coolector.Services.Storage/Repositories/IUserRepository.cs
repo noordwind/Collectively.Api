@@ -11,6 +11,7 @@ namespace Coolector.Services.Storage.Repositories
         Task<bool> ExisitsAsync(string id);
         Task<Maybe<PagedResult<UserDto>>> BrowseAsync(BrowseUsers query);
         Task<Maybe<UserDto>> GetByIdAsync(string id);
+        Task<Maybe<UserDto>> GetByNameAsync(string name);
         Task EditAsync(UserDto user);
         Task AddAsync(UserDto user);
         Task AddManyAsync(IEnumerable<UserDto> users);

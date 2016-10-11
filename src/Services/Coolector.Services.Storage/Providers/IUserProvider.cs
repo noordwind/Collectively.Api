@@ -9,5 +9,6 @@ namespace Coolector.Services.Storage.Providers
     {
         Task<Maybe<PagedResult<UserDto>>> BrowseAsync(BrowseUsers query); 
         Task<Maybe<UserDto>> GetAsync(string userId);
+        Task<Maybe<UserDto>> GetByNameAsync(string name);
     }
 }

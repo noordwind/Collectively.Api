@@ -8,6 +8,7 @@ namespace Coolector.Services.Users.Services
     public interface IUserService
     {
         Task<Maybe<User>> GetAsync(string userId);
+        Task<Maybe<User>> GetByNameAsync(string name);
         Task<Maybe<PagedResult<User>>> BrowseAsync(BrowseUsers query);
 
         Task CreateAsync(string userId, string email, string role, bool activate = true, string pictureUrl = null,

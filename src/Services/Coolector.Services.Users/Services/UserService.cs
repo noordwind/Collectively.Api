@@ -20,6 +20,9 @@ namespace Coolector.Services.Users.Services
         public async Task<Maybe<User>> GetAsync(string userId)
             => await _userRepository.GetByUserIdAsync(userId);
 
+        public async Task<Maybe<User>> GetByNameAsync(string name)
+            => await _userRepository.GetByNameAsync(name);
+
         public async Task<Maybe<PagedResult<User>>> BrowseAsync(BrowseUsers query)
             => await _userRepository.BrowseAsync(query);
 

@@ -16,8 +16,11 @@ namespace Coolector.Core.Storages
         }
 
         public async Task<Maybe<UserDto>> GetAsync(string id)
-            => await _storageClient.GetUsingCacheAsync<UserDto>($"users/{id}");
+            => await _storageClient.GetAsync<UserDto>($"users/{id}");
 
+        public async Task<Maybe<UserDto>> GetByNameAsync(string name)
+            => await _storageClient.GetAsync<UserDto>($"users/{name}/account");
+        
         public async Task<Maybe<PagedResult<UserDto>>> BrowseAsync(BrowseUsers query)
             => await _storageClient.GetFilteredCollectionUsingCacheAsync<UserDto, BrowseUsers>(query, "users");
     }
