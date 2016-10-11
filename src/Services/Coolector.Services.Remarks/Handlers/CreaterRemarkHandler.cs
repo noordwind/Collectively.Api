@@ -13,14 +13,17 @@ namespace Coolector.Services.Remarks.Handlers
     {
         private readonly IBusClient _bus;
         private readonly IFileResolver _fileResolver;
+        private readonly IFileValidator _fileValidator;
         private readonly IRemarkService _remarkService;
 
         public CreaterRemarkHandler(IBusClient bus, 
             IFileResolver fileResolver, 
+            IFileValidator fileValidator,
             IRemarkService remarkService)
         {
             _bus = bus;
             _fileResolver = fileResolver;
+            _fileValidator = fileValidator;
             _remarkService = remarkService;
         }
 
@@ -28,6 +31,10 @@ namespace Coolector.Services.Remarks.Handlers
         {
             var file = _fileResolver.FromBase64(command.Photo.Base64, command.Photo.Name, command.Photo.ContentType);
             if (file.HasNoValue)
+                return;
+
+            var isImage = _fileValidator.IsImage(file.Value);
+            if(!isImage)
                 return;
 
             var remarkId = Guid.NewGuid();

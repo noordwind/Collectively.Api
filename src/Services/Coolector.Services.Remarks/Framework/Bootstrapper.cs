@@ -63,8 +63,9 @@ namespace Coolector.Services.Remarks.Framework
                 builder.RegisterType<UserRepository>().As<IUserRepository>();
                 builder.RegisterType<RemarkService>().As<IRemarkService>();
                 builder.RegisterType<UserService>().As<IUserService>();
+                builder.RegisterType<FileValidator>().As<IFileValidator>().SingleInstance();
                 builder.RegisterType<FileHandler>().As<IFileHandler>();
-                builder.RegisterType<FileResolver>().As<IFileResolver>();
+                builder.RegisterType<FileResolver>().As<IFileResolver>().SingleInstance();
                 builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
 
                 var coreAssembly = typeof(Startup).GetTypeInfo().Assembly;
