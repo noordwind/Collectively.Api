@@ -37,10 +37,8 @@ namespace Coolector.Services.Remarks.Repositories.Queries
         public static async Task<IEnumerable<Remark>> QueryAsync(this IMongoCollection<Remark> remarks,
             BrowseRemarks query)
         {
-            if (IsLocationProvided(query) && query.AuthorId.Empty())
-            {
+            if (IsLocationProvided(query) && query.AuthorId.Empty() && !query.Latest)
                 return Enumerable.Empty<Remark>();
-            }
 
             if (query.Page <= 0)
                 query.Page = 1;
@@ -54,13 +52,15 @@ namespace Coolector.Services.Remarks.Repositories.Queries
                 filter = filterBuilder.GeoWithinCenterSphere(x => x.Location,
                     query.Longitude, query.Latitude, query.Radius / 1000 / 6.3781);
             }
+            if (query.Latest)
+                filter = filterBuilder.Where(x => x.Id != Guid.Empty);
             if (query.AuthorId.NotEmpty())
                 filter = filter & filterBuilder.Where(x => x.Author.UserId == query.AuthorId);
             if (!query.Description.Empty())
                 filter = filter & filterBuilder.Where(x => x.Description.Contains(query.Description));
 
             return await remarks.Find(filter)
-                .SortBy(x => x.CreatedAt)
+                .SortByDescending(x => x.CreatedAt)
                 .Skip(query.Results * (query.Page - 1))
                 .Limit(query.Results)
                 .ToListAsync();

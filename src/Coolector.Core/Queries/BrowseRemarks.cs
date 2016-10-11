@@ -9,5 +9,6 @@ namespace Coolector.Core.Queries
         public double Radius { get; set; }
         public string Description { get; set; }
         public string AuthorId { get; set; }
+        public bool Latest { get; set; }
     }
 }
