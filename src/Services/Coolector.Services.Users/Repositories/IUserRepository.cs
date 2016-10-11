@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Coolector.Common.Types;
-using Coolector.Services.Domain;
 using Coolector.Services.Users.Domain;
 using Coolector.Services.Users.Queries;
 

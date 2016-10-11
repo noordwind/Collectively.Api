@@ -1,4 +1,5 @@
-﻿using Coolector.Common.Commands.Users;
+﻿using Autofac.Core;
+using Coolector.Common.Commands.Users;
 using Coolector.Core.Commands;
 using Coolector.Core.Queries;
 using Coolector.Core.Storages;
@@ -13,6 +14,9 @@ namespace Coolector.Api.Modules
         {
             Get("account", async args => await Fetch<GetAccount, UserDto>
                 (async x => await userStorage.GetAsync(x.UserId)).HandleAsync());
+
+            Get("{name}/account", async args => await Fetch<GetAccoutByName, UserDto>
+                (async x => await userStorage.GetByNameAsync(x.Name)).HandleAsync());
 
             Post("sign-in", async args => await For<SignInUser>().DispatchAsync());
 

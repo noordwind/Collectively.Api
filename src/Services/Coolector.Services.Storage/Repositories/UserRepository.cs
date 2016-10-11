@@ -29,6 +29,9 @@ namespace Coolector.Services.Storage.Repositories
         public async Task<Maybe<UserDto>> GetByIdAsync(string id)
             => await _database.Users().GetByIdAsync(id);
 
+        public async Task<Maybe<UserDto>> GetByNameAsync(string name)
+            => await _database.Users().GetByNameAsync(name);
+
         public async Task EditAsync(UserDto user)
             => await _database.Users().ReplaceOneAsync(x => x.UserId == user.UserId, user);
 

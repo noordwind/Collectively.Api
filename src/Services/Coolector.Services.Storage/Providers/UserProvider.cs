@@ -31,5 +31,10 @@ namespace Coolector.Services.Storage.Providers
             => await _providerClient.GetUsingStorageAsync(_providerSettings.UsersApiUrl, $"users/{userId}",
                 async () =>  await _userRepository.GetByIdAsync(userId),
                 async user => await _userRepository.AddAsync(user));
+
+        public async Task<Maybe<UserDto>> GetByNameAsync(string name)
+            => await _providerClient.GetUsingStorageAsync(_providerSettings.UsersApiUrl, $"users/{name}/account",
+                async () => await _userRepository.GetByNameAsync(name),
+                async user => await _userRepository.AddAsync(user));
     }
 }

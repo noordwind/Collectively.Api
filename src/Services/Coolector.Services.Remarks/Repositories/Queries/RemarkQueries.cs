@@ -37,7 +37,7 @@ namespace Coolector.Services.Remarks.Repositories.Queries
         public static async Task<IEnumerable<Remark>> QueryAsync(this IMongoCollection<Remark> remarks,
             BrowseRemarks query)
         {
-            if (IsLocationProvided(query) && query.AuthorId.Empty() && !query.Latest)
+            if (!IsLocationProvided(query) && query.AuthorId.Empty() && !query.Latest)
                 return Enumerable.Empty<Remark>();
 
             if (query.Page <= 0)
@@ -69,6 +69,6 @@ namespace Coolector.Services.Remarks.Repositories.Queries
         private static bool IsLocationProvided(BrowseRemarks query)
             => (Math.Abs(query.Latitude) <= 0.0000000001
                 || Math.Abs(query.Longitude) <= 0.0000000001
-                || query.Radius <= 0);
+                || query.Radius <= 0) == false;
     }
 }

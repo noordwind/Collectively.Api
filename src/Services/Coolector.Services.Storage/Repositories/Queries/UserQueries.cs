@@ -24,6 +24,14 @@ namespace Coolector.Services.Storage.Repositories.Queries
             return await users.AsQueryable().FirstOrDefaultAsync(x => x.UserId == id);
         }
 
+        public static async Task<UserDto> GetByNameAsync(this IMongoCollection<UserDto> users, string name)
+        {
+            if (name.Empty())
+                return null;
+
+            return await users.AsQueryable().FirstOrDefaultAsync(x => x.Name == name);
+        }
+
         public static async Task<UserDto> GetByEmailAsync(this IMongoCollection<UserDto> users, string email)
         {
             if (email.Empty())

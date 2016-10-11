@@ -9,6 +9,7 @@ namespace Coolector.Core.Storages
     public interface IUserStorage
     {
         Task<Maybe<UserDto>> GetAsync(string id);
+        Task<Maybe<UserDto>> GetByNameAsync(string name);
         Task<Maybe<PagedResult<UserDto>>> BrowseAsync(BrowseUsers query);
     }
 }
