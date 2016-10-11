@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,6 +40,9 @@ namespace Coolector.Tests.EndToEnd.Framework
 
         public async Task<HttpResponseMessage> GetAsync(string endpoint)
             => await _httpClient.GetAsync(endpoint);
+
+        public async Task<Stream> GetStreamAsync(string endpoint)
+            => await _httpClient.GetStreamAsync(endpoint);
 
         public async Task<HttpResponseMessage> PostAsync(string endpoint, object data)
             => await _httpClient.PostAsync(endpoint, GetJsonContent(data));
