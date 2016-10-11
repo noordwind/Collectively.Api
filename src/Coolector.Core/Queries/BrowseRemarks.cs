@@ -8,5 +8,6 @@ namespace Coolector.Core.Queries
         public double Longitude { get; set; }
         public double Radius { get; set; }
         public string Description { get; set; }
+        public string AuthorId { get; set; }
     }
 }

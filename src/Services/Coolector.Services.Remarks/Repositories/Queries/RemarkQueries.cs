@@ -37,8 +37,7 @@ namespace Coolector.Services.Remarks.Repositories.Queries
         public static async Task<IEnumerable<Remark>> QueryAsync(this IMongoCollection<Remark> remarks,
             BrowseRemarks query)
         {
-            if (Math.Abs(query.Latitude) <= 0.0000000001 || Math.Abs(query.Longitude) <= 0.0000000001 ||
-                query.Radius <= 0)
+            if (IsLocationProvided(query) && query.AuthorId.Empty())
             {
                 return Enumerable.Empty<Remark>();
             }
@@ -50,8 +49,13 @@ namespace Coolector.Services.Remarks.Repositories.Queries
 
             var filterBuilder = new FilterDefinitionBuilder<Remark>();
             var filter = FilterDefinition<Remark>.Empty;
-            filter = filterBuilder.GeoWithinCenterSphere(x => x.Location,
-                query.Longitude, query.Latitude, query.Radius/1000/6.3781);
+            if (IsLocationProvided(query))
+            {
+                filter = filterBuilder.GeoWithinCenterSphere(x => x.Location,
+                    query.Longitude, query.Latitude, query.Radius / 1000 / 6.3781);
+            }
+            if (query.AuthorId.NotEmpty())
+                filter = filter & filterBuilder.Where(x => x.Author.UserId == query.AuthorId);
             if (!query.Description.Empty())
                 filter = filter & filterBuilder.Where(x => x.Description.Contains(query.Description));
 
@@ -61,5 +65,10 @@ namespace Coolector.Services.Remarks.Repositories.Queries
                 .Limit(query.Results)
                 .ToListAsync();
         }
+
+        private static bool IsLocationProvided(BrowseRemarks query)
+            => (Math.Abs(query.Latitude) <= 0.0000000001
+                || Math.Abs(query.Longitude) <= 0.0000000001
+                || query.Radius <= 0);
     }
 }
