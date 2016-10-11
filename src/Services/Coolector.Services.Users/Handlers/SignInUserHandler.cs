@@ -36,7 +36,7 @@ namespace Coolector.Services.Users.Handlers
                 user = await _userService.GetAsync(auth0User.UserId);
                 userId = user.Value.UserId;
                 await _bus.PublishAsync(new NewUserSignedIn(userId, user.Value.Email, user.Value.Name,
-                    auth0User.Picture, user.Value.Role, user.Value.CreatedAt));
+                    auth0User.Picture, user.Value.Role, user.Value.State, user.Value.CreatedAt));
 
                 return;
             }

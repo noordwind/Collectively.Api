@@ -25,6 +25,7 @@ namespace Coolector.Services.Storage.Handlers
                 UserId = @event.UserId,
                 Name = @event.Name,
                 Email = @event.Email,
+                State = @event.State,
                 CreatedAt = @event.CreatedAt,
                 PictureUrl = @event.PictureUrl,
                 Role = @event.Role

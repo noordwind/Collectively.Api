@@ -25,19 +25,16 @@ namespace Coolector.Tests.EndToEnd.API.Modules
                 .GetResult();
     }
 
-    [Subject(("Remarks collection"))]
+    [Subject("Remarks collection")]
     public class when_fetching_the_latest_remarks : RemarksModule_specs
     {
         static IEnumerable<RemarkDto> Remarks;
 
-        Establish context = () =>
-        {
-            Initialize();
-        };
+        Establish context = () => Initialize();
 
         Because of = () => Remarks = GetLatestRemarks();
 
-        private It should_return_non_empty_collection = () =>
+        It should_return_non_empty_collection = () =>
         {
             Remarks.ShouldNotBeEmpty();
             foreach (var remark in Remarks)
@@ -57,7 +54,7 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         };
     }
 
-    [Subject(("Remark details"))]
+    [Subject("Remark details")]
     public class when_fetching_the_remark : RemarksModule_specs
     {
         static IEnumerable<RemarkDto> Remarks;
@@ -65,10 +62,7 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         static RemarkDto Remark;
         static Stream Photo;
 
-        Establish context = () =>
-        {
-            Initialize();
-        };
+        Establish context = () => Initialize();
 
         Because of = () =>
         {
@@ -101,15 +95,12 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         };
     }
 
-    [Subject(("Remarks categories"))]
+    [Subject("Remarks categories")]
     public class when_fetching_remarks_categories : RemarksModule_specs
     {
         static IEnumerable<RemarkCategoryDto> Categories;
 
-        Establish context = () =>
-        {
-            Initialize();
-        };
+        Establish context = () => Initialize();
 
         Because of = () =>
         {

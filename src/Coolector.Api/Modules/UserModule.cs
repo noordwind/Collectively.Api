@@ -1,5 +1,4 @@
-﻿using Coolector.Common.Types;
-using Coolector.Core.Commands;
+﻿using Coolector.Core.Commands;
 using Coolector.Core.Queries;
 using Coolector.Core.Storages;
 using Coolector.Dto.Users;

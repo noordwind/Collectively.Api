@@ -39,7 +39,7 @@ namespace Coolector.Tests.Services.Storage.Handlers
         protected static void InitializeEvent()
         {
             Event = new NewUserSignedIn(User?.UserId, User?.Email, User?.Name,
-                User?.PictureUrl, User?.Role, User?.CreatedAt ?? DateTime.UtcNow);
+                User?.PictureUrl, User?.Role, User?.State, User?.CreatedAt ?? DateTime.UtcNow);
         }
     }
 
