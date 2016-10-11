@@ -32,10 +32,7 @@ namespace Coolector.Tests.EndToEnd.Framework
             if (!response.IsSuccessStatusCode)
                 return default(T);
 
-            var content = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<T>(content);
-
-            return result;
+            return await DeserializeAsync<T>(response);
         }
 
         public async Task<HttpResponseMessage> GetAsync(string endpoint)
@@ -47,11 +44,28 @@ namespace Coolector.Tests.EndToEnd.Framework
         public async Task<HttpResponseMessage> PostAsync(string endpoint, object data)
             => await _httpClient.PostAsync(endpoint, GetJsonContent(data));
 
+        public async Task<T> PostAsync<T>(string endpoint, object data)
+        {
+            var response = await PostAsync(endpoint, data);
+            if (!response.IsSuccessStatusCode)
+                return default(T);
+
+            return await DeserializeAsync<T>(response);
+        }
+
         public async Task<HttpResponseMessage> PutAsync(string endpoint, object data)
             => await _httpClient.PutAsync(endpoint, GetJsonContent(data));
 
         public async Task<HttpResponseMessage> DeleteAsync(string endpoint)
             => await _httpClient.DeleteAsync(endpoint);
+
+        private static async Task<T> DeserializeAsync<T>(HttpResponseMessage response)
+        {
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonConvert.DeserializeObject<T>(content);
+
+            return result;
+        }
 
         private static StringContent GetJsonContent(object data)
         {

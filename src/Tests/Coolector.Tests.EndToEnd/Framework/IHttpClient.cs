@@ -12,6 +12,7 @@ namespace Coolector.Tests.EndToEnd.Framework
         Task<HttpResponseMessage> GetAsync(string endpoint);
         Task<Stream> GetStreamAsync(string endpoint);
         Task<HttpResponseMessage> PostAsync(string endpoint, object data);
+        Task<T> PostAsync<T>(string endpoint, object data);
         Task<HttpResponseMessage> PutAsync(string endpoint, object data);
         Task<HttpResponseMessage> DeleteAsync(string endpoint);
     }

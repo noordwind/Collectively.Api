@@ -1,5 +1,4 @@
-﻿using Autofac.Core;
-using Coolector.Common.Commands.Users;
+﻿using Coolector.Common.Commands.Users;
 using Coolector.Core.Commands;
 using Coolector.Core.Queries;
 using Coolector.Core.Storages;

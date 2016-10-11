@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using Coolector.Dto.Remarks;
 using Coolector.Dto.Users;
-using FluentAssertions;
 using Machine.Specifications;
 
 namespace Coolector.Tests.EndToEnd.API.Modules
