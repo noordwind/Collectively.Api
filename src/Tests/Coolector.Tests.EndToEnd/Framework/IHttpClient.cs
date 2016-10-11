@@ -15,5 +15,6 @@ namespace Coolector.Tests.EndToEnd.Framework
         Task<T> PostAsync<T>(string endpoint, object data);
         Task<HttpResponseMessage> PutAsync(string endpoint, object data);
         Task<HttpResponseMessage> DeleteAsync(string endpoint);
+        void SetHeader(string name, string value);
     }
 }

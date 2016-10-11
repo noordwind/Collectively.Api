@@ -1,5 +1,7 @@
-﻿using System.Net.Http;
+﻿using System;
+using System.Net.Http;
 using System.Threading.Tasks;
+using Coolector.Dto.Users;
 using Coolector.Tests.EndToEnd.Framework;
 using Machine.Specifications;
 
@@ -7,19 +9,13 @@ namespace Coolector.Tests.EndToEnd.API.Modules
 {
     public abstract class AccountModule_specs : ModuleBase_specs
     {
-        protected static Auth0SignInResponse Auth0SignInResponse;
         protected static HttpResponseMessage ApiSignInResponse;
 
         protected static void Initialize()
         {
         }
 
-        protected static async Task SignInToAuth0Async()
-        {
-            Auth0SignInResponse = await GetAuth0SignInResponseAsync();
-        }
-
-        protected static async Task SignInToApiAsync()
+        protected static async Task SignInAsync()
         {
             await SignInToAuth0Async();
             ApiSignInResponse = await HttpClient.PostAsync("sign-in", new
@@ -29,7 +25,7 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         }
     }
 
-    [Subject("Account auth0 sign in")]
+    [Subject("Auth0 sign in")]
     public class when_signing_in_to_auth0 : AccountModule_specs
     {
         Establish context = () => Initialize();
@@ -45,19 +41,38 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         };
     }
 
-    [Subject("Account API sign in")]
+    [Subject("Account sign in")]
     public class when_signing_in_to_api : AccountModule_specs
     {
         Establish context = () => Initialize();
 
-        Because of = () =>
-        {
-            SignInToApiAsync().GetAwaiter().GetResult();
-        };
+        Because of = () => SignInAsync().GetAwaiter().GetResult();
 
         It should_return_successful_api_sign_in_response = () =>
         {
             ApiSignInResponse.IsSuccessStatusCode.ShouldBeTrue();
+        };
+    }
+
+    [Subject("Account fetch")]
+    public class when_fetching_account : AccountModule_specs
+    {
+        static UserDto User;
+
+        Establish context = () => Initialize();
+
+        Because of = () => User = RequestAuthenticatedAsync(c => c.GetAsync<UserDto>("account"))
+            .GetAwaiter()
+            .GetResult();
+
+        It should_return_user_account = () =>
+        {
+            User.ShouldNotBeNull();
+            User.Id.ShouldNotEqual(Guid.Empty);
+            User.Name.ShouldNotBeEmpty();
+            User.Role.ShouldNotBeEmpty();
+            User.State.ShouldNotBeEmpty();
+            User.CreatedAt.ShouldNotEqual(DateTime.UtcNow);
         };
     }
 }

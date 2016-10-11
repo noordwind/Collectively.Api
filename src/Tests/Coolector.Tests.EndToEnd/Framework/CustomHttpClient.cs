@@ -59,6 +59,14 @@ namespace Coolector.Tests.EndToEnd.Framework
         public async Task<HttpResponseMessage> DeleteAsync(string endpoint)
             => await _httpClient.DeleteAsync(endpoint);
 
+        public void SetHeader(string name, string value)
+        {
+            if (_httpClient.DefaultRequestHeaders.Contains(name))
+                _httpClient.DefaultRequestHeaders.Remove(name);
+
+            _httpClient.DefaultRequestHeaders.Add(name, value);
+        }
+
         private static async Task<T> DeserializeAsync<T>(HttpResponseMessage response)
         {
             var content = await response.Content.ReadAsStringAsync();
