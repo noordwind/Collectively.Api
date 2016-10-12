@@ -37,8 +37,7 @@ namespace Coolector.Services.Users.Services
             if (activate)
                 user.Value.Activate();
 
-            if(name.Empty())
-                user.Value.SetName($"user-{user.Value.Id:N}");
+            user.Value.SetName(name.Empty() ? $"user-{user.Value.Id:N}" : name);
 
             await _userRepository.AddAsync(user.Value);
         }

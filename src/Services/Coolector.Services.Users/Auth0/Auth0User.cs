@@ -10,5 +10,8 @@ namespace Coolector.Services.Users.Auth0
         public string Email { get; set; }
 
         public string Picture { get; set; }
+
+        [JsonProperty("username")]
+        public string Name { get; set; }
     }
 }

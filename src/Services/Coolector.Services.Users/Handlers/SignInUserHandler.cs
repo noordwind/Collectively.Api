@@ -32,7 +32,7 @@ namespace Coolector.Services.Users.Handlers
             if (user.HasNoValue)
             {
                 await _userService.CreateAsync(auth0User.UserId, auth0User.Email, Roles.User,
-                    pictureUrl: auth0User.Picture);
+                    name: auth0User.Name, pictureUrl: auth0User.Picture);
                 user = await _userService.GetAsync(auth0User.UserId);
                 userId = user.Value.UserId;
                 await _bus.PublishAsync(new NewUserSignedIn(userId, user.Value.Email, user.Value.Name,
