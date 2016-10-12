@@ -1,7 +1,4 @@
-﻿using System;
-using System.Net.Http;
-using System.Threading.Tasks;
-using Coolector.Common.Extensions;
+﻿using System.Threading.Tasks;
 using Coolector.Tests.EndToEnd.Framework;
 
 namespace Coolector.Tests.EndToEnd.API
@@ -14,26 +11,22 @@ namespace Coolector.Tests.EndToEnd.API
         protected static IAuth0Client Auth0Client = new Auth0Client("noordwind-dev.eu.auth0.com",
             "eYnnpDd1k61vxXQCbFwWtX45yX3PxFDA");
 
+        protected static void Initialize(bool authenticate = false)
+        {
+            if (authenticate)
+                Authenticate();
+        }
+
         protected static Task<Auth0SignInResponse> GetAuth0SignInResponseAsync()
             => Auth0Client.SignInAsync("noordwind-test1@mailinator.com", "test");
 
-        protected static async Task SignInToAuth0Async()
+        protected static void SignInToAuth0()
+            => Auth0SignInResponse = GetAuth0SignInResponseAsync().WaitForResult();
+
+        protected static void Authenticate()
         {
-            Auth0SignInResponse = await GetAuth0SignInResponseAsync();
-        }
-
-        protected static async Task<HttpResponseMessage> RequestAuthenticatedAsync(
-                Func<IHttpClient, Task<HttpResponseMessage>> request)
-            => await RequestAuthenticatedAsync<HttpResponseMessage>(request);
-
-        protected static async Task<T> RequestAuthenticatedAsync<T>(Func<IHttpClient, Task<T>> request)
-        {
-            if (Auth0SignInResponse == null || Auth0SignInResponse.AccessToken.Empty())
-                await SignInToAuth0Async();
-
+            SignInToAuth0();
             HttpClient.SetHeader("Authorization", $"Bearer {Auth0SignInResponse.IdToken}");
-
-            return await request(HttpClient);
         }
     }
 }

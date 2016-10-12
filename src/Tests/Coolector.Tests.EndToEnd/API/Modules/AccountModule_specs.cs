@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net.Http;
-using System.Threading.Tasks;
 using Coolector.Dto.Users;
 using Coolector.Tests.EndToEnd.Framework;
 using Machine.Specifications;
@@ -9,20 +8,14 @@ namespace Coolector.Tests.EndToEnd.API.Modules
 {
     public abstract class AccountModule_specs : ModuleBase_specs
     {
-        protected static HttpResponseMessage ApiSignInResponse;
-
-        protected static void Initialize()
-        {
-        }
-
-        protected static async Task SignInAsync()
-        {
-            await SignInToAuth0Async();
-            ApiSignInResponse = await HttpClient.PostAsync("sign-in", new
+        protected static HttpResponseMessage SignIn() =>
+            HttpClient.PostAsync("sign-in", new
             {
                 AccessToken = Auth0SignInResponse.AccessToken
-            });
-        }
+            }).WaitForResult();
+
+        protected static UserDto GetAccount()
+            => HttpClient.GetAsync<UserDto>("account").WaitForResult();
     }
 
     [Subject("Auth0 sign in")]
@@ -30,7 +23,7 @@ namespace Coolector.Tests.EndToEnd.API.Modules
     {
         Establish context = () => Initialize();
 
-        Because of = () => SignInToAuth0Async().GetAwaiter().GetResult();
+        Because of = () => SignInToAuth0();
 
         It should_return_successful_auth0_sign_in_response = () =>
         {
@@ -44,14 +37,13 @@ namespace Coolector.Tests.EndToEnd.API.Modules
     [Subject("Account sign in")]
     public class when_signing_in_to_api : AccountModule_specs
     {
-        Establish context = () => Initialize();
+        static HttpResponseMessage Response;
 
-        Because of = () => SignInAsync().GetAwaiter().GetResult();
+        Establish context = () => Initialize(authenticate: true);
 
-        It should_return_successful_api_sign_in_response = () =>
-        {
-            ApiSignInResponse.IsSuccessStatusCode.ShouldBeTrue();
-        };
+        Because of = () => Response = SignIn();
+
+        It should_return_successful_response = () => Response.IsSuccessStatusCode.ShouldBeTrue();
     }
 
     [Subject("Account fetch")]
@@ -59,11 +51,9 @@ namespace Coolector.Tests.EndToEnd.API.Modules
     {
         static UserDto User;
 
-        Establish context = () => Initialize();
+        Establish context = () => Initialize(authenticate: true);
 
-        Because of = () => User = RequestAuthenticatedAsync(c => c.GetAsync<UserDto>("account"))
-            .GetAwaiter()
-            .GetResult();
+        Because of = () => User = GetAccount();
 
         It should_return_user_account = () =>
         {

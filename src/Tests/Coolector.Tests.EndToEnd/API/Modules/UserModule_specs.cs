@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using Coolector.Dto.Users;
+using Coolector.Tests.EndToEnd.Framework;
 using Machine.Specifications;
 
 namespace Coolector.Tests.EndToEnd.API.Modules
 {
     public abstract class UserModule_specs : ModuleBase_specs
     {
-        protected static void Initialize()
-        {
-        }
-
         protected static IEnumerable<UserDto> GetUsers()
-            => HttpClient.GetCollectionAsync<UserDto>("users")
-                .GetAwaiter()
-                .GetResult();
+            => HttpClient.GetCollectionAsync<UserDto>("users").WaitForResult();
     }
 
     [Subject("Users collection")]

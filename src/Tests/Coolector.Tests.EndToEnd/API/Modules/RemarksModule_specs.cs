@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Coolector.Dto.Remarks;
+using Coolector.Tests.EndToEnd.Framework;
 using FluentAssertions;
 using Machine.Specifications;
 
@@ -10,23 +11,21 @@ namespace Coolector.Tests.EndToEnd.API.Modules
 {
     public abstract class RemarksModule_specs : ModuleBase_specs
     {
-        protected static void Initialize()
-        {
-        }
+        protected static RemarkDto GetRemark(Guid id)
+            => HttpClient.GetAsync<RemarkDto>($"remarks/{id}").WaitForResult();
 
         protected static IEnumerable<RemarkDto> GetLatestRemarks()
-            => HttpClient.GetCollectionAsync<RemarkDto>("remarks?latest=true")
-                .GetAwaiter()
-                .GetResult();
+            => HttpClient.GetCollectionAsync<RemarkDto>("remarks?latest=true").WaitForResult();
 
         protected static IEnumerable<RemarkCategoryDto> GetCategories()
-            => HttpClient.GetCollectionAsync<RemarkCategoryDto>("remarks/categories")
-                .GetAwaiter()
-                .GetResult();
+            => HttpClient.GetCollectionAsync<RemarkCategoryDto>("remarks/categories").WaitForResult();
+
+        protected static Stream GetPhoto(Guid id)
+            => HttpClient.GetStreamAsync($"remarks/{id}/photo").WaitForResult();
     }
 
     [Subject("Remarks collection")]
-    public class when_fetching_the_latest_remarks : RemarksModule_specs
+    public class when_fetching_latest_remarks : RemarksModule_specs
     {
         static IEnumerable<RemarkDto> Remarks;
 
@@ -55,7 +54,7 @@ namespace Coolector.Tests.EndToEnd.API.Modules
     }
 
     [Subject("Remark details")]
-    public class when_fetching_the_remark : RemarksModule_specs
+    public class when_fetching_remark : RemarksModule_specs
     {
         static IEnumerable<RemarkDto> Remarks;
         static RemarkDto SelectedRemark;
@@ -68,14 +67,8 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         {
             Remarks = GetLatestRemarks();
             SelectedRemark = Remarks.First();
-            Remark = HttpClient
-                .GetAsync<RemarkDto>($"remarks/{SelectedRemark.Id}")
-                .GetAwaiter()
-                .GetResult();
-            Photo = HttpClient
-                .GetStreamAsync($"remarks/{SelectedRemark.Id}/photo")
-                .GetAwaiter()
-                .GetResult();
+            Remark = GetRemark(SelectedRemark.Id);
+            Photo = GetPhoto(SelectedRemark.Id);
         };
 
         It should_return_remark = () =>
@@ -100,12 +93,9 @@ namespace Coolector.Tests.EndToEnd.API.Modules
     {
         static IEnumerable<RemarkCategoryDto> Categories;
 
-        Establish context = () => Initialize();
+        Establish context = () => Initialize(authenticate: false);
 
-        Because of = () =>
-        {
-            Categories = GetCategories();
-        };
+        Because of = () => Categories = GetCategories();
 
         It should_return_non_empty_collection = () =>
         {
