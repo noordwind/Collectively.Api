@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using Coolector.Dto.Remarks;
 using Coolector.Tests.EndToEnd.Framework;
 using FluentAssertions;
@@ -22,6 +25,40 @@ namespace Coolector.Tests.EndToEnd.API.Modules
 
         protected static Stream GetPhoto(Guid id)
             => HttpClient.GetStreamAsync($"remarks/{id}/photo").WaitForResult();
+
+        protected static HttpResponseMessage CreateRemark()
+        {
+            var categories = GetCategories();
+            var photo = GeneratePhoto();
+
+            return HttpClient.PostAsync("remarks", new
+            {
+                Address = "",
+                CategoryId = categories.First().Id,
+                Description = "test",
+                Latitude = 1.0,
+                Longitude = 1.0,
+                Photo = photo
+            }).WaitForResult();
+        }
+
+        protected static HttpResponseMessage DeleteRemark(Guid remarkId)
+            => HttpClient.DeleteAsync($"remarks/{remarkId}").WaitForResult();
+
+        protected static object GeneratePhoto()
+        {
+            var bitmap = new Bitmap(10,10);
+            var stream = new MemoryStream();
+            bitmap.Save(stream, ImageFormat.Bmp);
+            var base64 = Convert.ToBase64String(stream.ToArray());
+
+            return new
+            {
+                Base64 = base64,
+                ContentType = "image/bmp",
+                Name = "remark.bmp"
+            };
+        }
     }
 
     [Subject("Remarks collection")]
@@ -29,7 +66,12 @@ namespace Coolector.Tests.EndToEnd.API.Modules
     {
         static IEnumerable<RemarkDto> Remarks;
 
-        Establish context = () => Initialize();
+        Establish context = () =>
+        {
+            Initialize(true);
+            CreateRemark();
+            Wait();
+        };
 
         Because of = () => Remarks = GetLatestRemarks();
 
@@ -61,7 +103,12 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         static RemarkDto Remark;
         static Stream Photo;
 
-        Establish context = () => Initialize();
+        Establish context = () =>
+        {
+            Initialize(true);
+            CreateRemark();
+            Wait();
+        };
 
         Because of = () =>
         {
@@ -105,6 +152,45 @@ namespace Coolector.Tests.EndToEnd.API.Modules
                 category.Id.ShouldNotEqual(Guid.Empty);
                 category.Name.ShouldNotBeEmpty();
             }
+        };
+    }
+
+    [Subject("Remarks create")]
+    public class when_creating_remark : RemarksModule_specs
+    {
+        protected static HttpResponseMessage Result;
+
+        Establish context = () => Initialize(true);
+
+        Because of = () => Result = CreateRemark();
+
+        It should_return_success_status_code = () =>
+        {
+            Result.IsSuccessStatusCode.ShouldBeTrue();
+        };
+    }
+
+    [Subject("Remarks delete")]
+    public class when_deleting_remark : RemarksModule_specs
+    {
+        protected static HttpResponseMessage Result;
+        static RemarkDto SelectedRemark;
+        static IEnumerable<RemarkDto> Remarks;
+
+        Establish context = () =>
+        {
+            Initialize(true);
+            CreateRemark();
+            Wait();
+            Remarks = GetLatestRemarks();
+            SelectedRemark = Remarks.First();
+        };
+
+        Because of = () => Result = DeleteRemark(SelectedRemark.Id);
+
+        It should_return_success_status_code = () =>
+        {
+            Result.IsSuccessStatusCode.ShouldBeTrue();
         };
     }
 }

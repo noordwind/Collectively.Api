@@ -1,4 +1,6 @@
-﻿using Coolector.Tests.EndToEnd.Framework;
+﻿using System;
+using System.Threading.Tasks;
+using Coolector.Tests.EndToEnd.Framework;
 
 namespace Coolector.Tests.EndToEnd.API
 {
@@ -7,6 +9,7 @@ namespace Coolector.Tests.EndToEnd.API
         private static bool _authenticated;
         protected static Auth0SignInResponse Auth0SignInResponse;
         protected static IHttpClient HttpClient = new CustomHttpClient("http://localhost:5000");
+        protected static string TestUserName = "noordwind_e2e";
 
         protected static IAuth0Client Auth0Client = new Auth0Client("noordwind-dev.eu.auth0.com",
             "eYnnpDd1k61vxXQCbFwWtX45yX3PxFDA");
@@ -21,7 +24,7 @@ namespace Coolector.Tests.EndToEnd.API
             => Auth0SignInResponse = GetAuth0SignInResponse();
 
         protected static Auth0SignInResponse GetAuth0SignInResponse()
-            => Auth0Client.SignInAsync("noordwind-test1@mailinator.com", "test").WaitForResult();
+            => Auth0Client.SignInAsync("noordwind-e2e-test@malinator.com", "test").WaitForResult();
 
         protected static void Authenticate()
         {
@@ -31,6 +34,11 @@ namespace Coolector.Tests.EndToEnd.API
             SignInToAuth0();
             HttpClient.SetHeader("Authorization", $"Bearer {Auth0SignInResponse.IdToken}");
             _authenticated = true;
+        }
+
+        protected static void Wait(TimeSpan? timespan = null)
+        {
+            Task.Delay(timespan.GetValueOrDefault(TimeSpan.FromSeconds(1.0))).WaitForResult();
         }
     }
 }

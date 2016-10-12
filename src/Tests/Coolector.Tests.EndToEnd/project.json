@@ -9,7 +9,8 @@
     "Coolector.Api": "1.0.0-*",
     "Coolector.Core": "1.0.0-*",
     "Coolector.Common": "1.0.0-*",
-    "Coolector.Dto": "1.0.0-*"
+    "Coolector.Dto": "1.0.0-*",
+    "System.Drawing": "1.0.0-beta004"
   },
   "testRunner": "mspec",
   "frameworks": {

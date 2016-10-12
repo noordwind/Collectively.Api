@@ -16,6 +16,9 @@ namespace Coolector.Tests.EndToEnd.API.Modules
 
         protected static UserDto GetAccount()
             => HttpClient.GetAsync<UserDto>("account").WaitForResult();
+
+        protected static UserDto GetAccountByName(string name)
+            => HttpClient.GetAsync<UserDto>($"{name}/account").WaitForResult();
     }
 
     [Subject("Auth0 sign in")]
@@ -60,6 +63,26 @@ namespace Coolector.Tests.EndToEnd.API.Modules
             User.ShouldNotBeNull();
             User.Id.ShouldNotEqual(Guid.Empty);
             User.Name.ShouldNotBeEmpty();
+            User.Role.ShouldNotBeEmpty();
+            User.State.ShouldNotBeEmpty();
+            User.CreatedAt.ShouldNotEqual(DateTime.UtcNow);
+        };
+    }
+
+    [Subject("Account fetch by name")]
+    public class when_fetching_account_by_name : AccountModule_specs
+    {
+        static UserDto User;
+
+        Establish context = () => Initialize(true);
+
+        Because of = () => User = GetAccountByName(TestUserName);
+
+        It should_return_user_account = () =>
+        {
+            User.ShouldNotBeNull();
+            User.Id.ShouldNotEqual(Guid.Empty);
+            User.Name.ShouldEqual(TestUserName);
             User.Role.ShouldNotBeEmpty();
             User.State.ShouldNotBeEmpty();
             User.CreatedAt.ShouldNotEqual(DateTime.UtcNow);
