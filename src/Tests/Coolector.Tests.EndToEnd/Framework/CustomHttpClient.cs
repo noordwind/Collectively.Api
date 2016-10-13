@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Net.Http;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using System.Linq;
 
 namespace Coolector.Tests.EndToEnd.Framework
 {
@@ -70,7 +73,10 @@ namespace Coolector.Tests.EndToEnd.Framework
         private static async Task<T> DeserializeAsync<T>(HttpResponseMessage response)
         {
             var content = await response.Content.ReadAsStringAsync();
-            var result = JsonConvert.DeserializeObject<T>(content);
+            var result = JsonConvert.DeserializeObject<T>(content, new JsonSerializerSettings
+            {
+                ContractResolver = new MyContractResolver()
+            });
 
             return result;
         }
@@ -80,6 +86,20 @@ namespace Coolector.Tests.EndToEnd.Framework
             var json = JsonConvert.SerializeObject(data);
 
             return new StringContent(json, Encoding.UTF8, "application/json");
+        }
+
+        private class MyContractResolver : DefaultContractResolver
+        {
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                                .Select(p => base.CreateProperty(p, memberSerialization))
+                            .Union(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                                       .Select(f => base.CreateProperty(f, memberSerialization)))
+                            .ToList();
+                props.ForEach(p => { p.Writable = true; p.Readable = true; });
+                return props;
+            }
         }
     }
 }
