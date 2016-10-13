@@ -50,7 +50,7 @@ namespace Coolector.Services.Remarks.Repositories.Queries
             if (IsLocationProvided(query))
             {
                 filter = filterBuilder.GeoWithinCenterSphere(x => x.Location,
-                    query.Longitude, query.Latitude, query.Radius / 1000 / 6.3781);
+                    query.Longitude, query.Latitude, query.Radius / 1000 / 6378.1);
             }
             if (query.Latest)
                 filter = filterBuilder.Where(x => x.Id != Guid.Empty);
