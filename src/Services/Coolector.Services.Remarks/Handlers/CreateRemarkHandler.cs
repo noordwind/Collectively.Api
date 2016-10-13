@@ -9,14 +9,14 @@ using RawRabbit;
 
 namespace Coolector.Services.Remarks.Handlers
 {
-    public class CreaterRemarkHandler : ICommandHandler<CreateRemark>
+    public class CreateRemarkHandler : ICommandHandler<CreateRemark>
     {
         private readonly IBusClient _bus;
         private readonly IFileResolver _fileResolver;
         private readonly IFileValidator _fileValidator;
         private readonly IRemarkService _remarkService;
 
-        public CreaterRemarkHandler(IBusClient bus, 
+        public CreateRemarkHandler(IBusClient bus, 
             IFileResolver fileResolver, 
             IFileValidator fileValidator,
             IRemarkService remarkService)

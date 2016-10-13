@@ -12,12 +12,11 @@ using It = Machine.Specifications.It;
 
 namespace Coolector.Tests.Services.Remarks.Handlers
 {
-    public class DeleteRemarkHandler_specs
+    public abstract class DeleteRemarkHandler_specs
     {
         protected static DeleteRemarkHandler Handler;
         protected static Mock<IBusClient> BusClientMock;
         protected static Mock<IRemarkService> RemarkServiceMock;
-
         protected static DeleteRemark Command;
         protected static Exception Exception;
 
@@ -25,13 +24,11 @@ namespace Coolector.Tests.Services.Remarks.Handlers
         {
             BusClientMock = new Mock<IBusClient>();
             RemarkServiceMock = new Mock<IRemarkService>();
-
             Command = new DeleteRemark
             {
                 UserId = "userId",
                 RemarkId = Guid.NewGuid()
             };
-
             Handler = new DeleteRemarkHandler(BusClientMock.Object, RemarkServiceMock.Object);
         }
     }
@@ -48,7 +45,7 @@ namespace Coolector.Tests.Services.Remarks.Handlers
 
         It should_call_delete_async_on_remark_service = () =>
         {
-            RemarkServiceMock.Verify(x => x.DeleteAsync(Moq.It.IsAny<Guid>(), Moq.It.IsAny<string>()), Times.Once);
+            RemarkServiceMock.Verify(x => x.DeleteAsync(Command.RemarkId, Command.UserId), Times.Once);
         };
 
         It should_publish_remark_deleted_event = () =>
@@ -66,7 +63,7 @@ namespace Coolector.Tests.Services.Remarks.Handlers
         Establish context = () =>
         {
             Initialize();
-            RemarkServiceMock.Setup(x => x.DeleteAsync(Moq.It.IsAny<Guid>(), Moq.It.IsAny<string>()))
+            RemarkServiceMock.Setup(x => x.DeleteAsync(Command.RemarkId, Command.UserId))
                 .Throws<ServiceException>();
         };
 
@@ -74,7 +71,7 @@ namespace Coolector.Tests.Services.Remarks.Handlers
 
         It should_call_delete_async_on_remark_service = () =>
         {
-            RemarkServiceMock.Verify(x => x.DeleteAsync(Moq.It.IsAny<Guid>(), Moq.It.IsAny<string>()), Times.Once);
+            RemarkServiceMock.Verify(x => x.DeleteAsync(Command.RemarkId, Command.UserId), Times.Once);
         };
 
         It should_not_publish_remark_deleted_event = () =>
