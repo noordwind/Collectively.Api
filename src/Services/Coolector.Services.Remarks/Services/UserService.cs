@@ -13,7 +13,7 @@ namespace Coolector.Services.Remarks.Services
             _userRepository = userRepository;
         }
 
-        public async Task CreateAsyncIfNotFound(string userId, string name)
+        public async Task CreateIfNotFoundAsync(string userId, string name)
         {
             var user = await _userRepository.GetByUserIdAsync(userId);
             if (user.HasValue)

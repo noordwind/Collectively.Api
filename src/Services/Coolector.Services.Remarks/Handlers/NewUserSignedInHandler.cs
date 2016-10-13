@@ -16,7 +16,7 @@ namespace Coolector.Services.Remarks.Handlers
 
         public async Task HandleAsync(NewUserSignedIn @event)
         {
-            await _userService.CreateAsyncIfNotFound(@event.UserId, @event.Name);
+            await _userService.CreateIfNotFoundAsync(@event.UserId, @event.Name);
         }
     }
 }
