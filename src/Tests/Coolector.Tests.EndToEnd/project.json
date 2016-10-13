@@ -10,7 +10,8 @@
     "Coolector.Core": "1.0.0-*",
     "Coolector.Common": "1.0.0-*",
     "Coolector.Dto": "1.0.0-*",
-    "System.Drawing": "1.0.0-beta004"
+    "System.Drawing": "1.0.0-beta004",
+    "Coolector.Services.Users": "1.0.0-*"
   },
   "testRunner": "mspec",
   "frameworks": {

@@ -6,7 +6,7 @@ namespace Coolector.Services.Users.Domain
 {
     public class User : IdentifiableEntity, ITimestampable
     {
-        public string UserId { get; set; }
+        public string UserId { get; protected set; }
         public string Email { get; protected set; }
         public string Name { get; protected set; }
         public string PictureUrl { get; protected set; }
