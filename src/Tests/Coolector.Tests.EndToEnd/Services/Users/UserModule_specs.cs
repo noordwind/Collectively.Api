@@ -4,7 +4,6 @@ using System.Linq;
 using Coolector.Services.Users.Domain;
 using Coolector.Tests.EndToEnd.Framework;
 using Machine.Specifications;
-using Newtonsoft.Json;
 
 namespace Coolector.Tests.EndToEnd.Services.Users
 {
