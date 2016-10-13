@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using Autofac;
 using Coolector.Services.Extensions;
@@ -24,6 +25,8 @@ namespace Coolector.Services.Storage.Framework
     public class Bootstrapper : AutofacNancyBootstrapper
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly string DecimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+        private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
         private readonly IConfiguration _configuration;
 
         public static ILifetimeScope LifeTimeScope { get; private set; }
@@ -107,12 +110,12 @@ namespace Coolector.Services.Storage.Framework
             foreach (var key in ctx.Request.Query)
             {
                 var value = ctx.Request.Query[key].ToString();
-                if (!value.Contains("."))
+                if (!value.Contains(InvalidDecimalSeparator))
                     continue;
 
                 var number = 0;
-                if (int.TryParse(value.Split('.')[0], out number))
-                    fixedNumbers[key] = double.Parse(value.Replace(".", ","));
+                if (int.TryParse(value.Split(InvalidDecimalSeparator[0])[0], out number))
+                    fixedNumbers[key] = double.Parse(value.Replace(InvalidDecimalSeparator, DecimalSeparator));
             }
             foreach (var fixedNumber in fixedNumbers)
             {

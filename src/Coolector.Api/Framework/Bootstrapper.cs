@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Globalization;
 using Autofac;
 using Coolector.Core.IoC;
 using Coolector.Core.Storages;
@@ -13,12 +14,14 @@ using RawRabbit.vNext;
 
 namespace Coolector.Api.Framework
 {
-    public class CoolectorBootstrapper : AutofacNancyBootstrapper
+    public class Bootstrapper : AutofacNancyBootstrapper
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly string DecimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+        private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
         private readonly IConfiguration _configuration;
 
-        public CoolectorBootstrapper(IConfiguration configuration)
+        public Bootstrapper(IConfiguration configuration)
         {
             _configuration = configuration;
         }
@@ -91,16 +94,16 @@ namespace Coolector.Api.Framework
             if (ctx.Request.Query == null)
                 return;
 
-            var fixedNumbers = new Dictionary<string, string>();
+            var fixedNumbers = new Dictionary<string, double>();
             foreach (var key in ctx.Request.Query)
             {
                 var value = ctx.Request.Query[key].ToString();
-                if (!value.Contains("."))
+                if (!value.Contains(InvalidDecimalSeparator))
                     continue;
 
                 var number = 0;
-                if (int.TryParse(value.Split('.')[0], out number))
-                    fixedNumbers[key] = value.Replace(".", ",");
+                if (int.TryParse(value.Split(InvalidDecimalSeparator[0])[0], out number))
+                    fixedNumbers[key] = double.Parse(value.Replace(InvalidDecimalSeparator, DecimalSeparator));
             }
             foreach (var fixedNumber in fixedNumbers)
             {

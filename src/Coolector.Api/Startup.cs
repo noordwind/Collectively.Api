@@ -57,7 +57,7 @@ namespace Coolector.Api
                 .AllowAnyOrigin()
                 .AllowCredentials());
             app.UseJwtBearerAuthentication(options);
-            app.UseOwin().UseNancy(x => x.Bootstrapper = new CoolectorBootstrapper(Configuration));
+            app.UseOwin().UseNancy(x => x.Bootstrapper = new Bootstrapper(Configuration));
         }
 
         protected static IContainer GetServiceContainer(IEnumerable<ServiceDescriptor> services)

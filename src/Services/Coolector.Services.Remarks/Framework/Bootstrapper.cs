@@ -1,5 +1,6 @@
 ﻿using System.Reflection;
 using System.Collections.Generic;
+using System.Globalization;
 using Autofac;
 using Coolector.Common.Commands;
 using Coolector.Common.Events;
@@ -24,6 +25,8 @@ namespace Coolector.Services.Remarks.Framework
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private readonly IConfiguration _configuration;
+        private static readonly string DecimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
+        private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
         public static ILifetimeScope LifetimeScope { get; private set; }
 
         public Bootstrapper(IConfiguration configuration)
@@ -47,14 +50,14 @@ namespace Coolector.Services.Remarks.Framework
                 builder.RegisterInstance(_configuration.GetSettings<MongoDbSettings>());
                 builder.RegisterModule<MongoDbModule>();
                 builder.Register(c =>
-                {
-                    var database = c.Resolve<IMongoDatabase>();
-                    var bucket = new GridFSBucket(database);
+                    {
+                        var database = c.Resolve<IMongoDatabase>();
+                        var bucket = new GridFSBucket(database);
 
-                    return bucket;
-                })
-                .As<IGridFSBucket>()
-                .SingleInstance();
+                        return bucket;
+                    })
+                    .As<IGridFSBucket>()
+                    .SingleInstance();
                 builder.RegisterType<MongoDbInitializer>().As<IDatabaseInitializer>();
                 builder.RegisterType<DatabaseSeeder>().As<IDatabaseSeeder>();
                 builder.RegisterType<RemarkRepository>().As<IRemarkRepository>();
@@ -96,7 +99,8 @@ namespace Coolector.Services.Remarks.Framework
             {
                 ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
                 ctx.Response.Headers.Add("Access-Control-Allow-Methods", "POST,PUT,GET,OPTIONS,DELETE");
-                ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
+                ctx.Response.Headers.Add("Access-Control-Allow-Headers",
+                    "Authorization, Origin, X-Requested-With, Content-Type, Accept");
             };
             Logger.Info("Coolector.Services.Remarks API Started");
         }
@@ -110,12 +114,12 @@ namespace Coolector.Services.Remarks.Framework
             foreach (var key in ctx.Request.Query)
             {
                 var value = ctx.Request.Query[key].ToString();
-                if (!value.Contains("."))
+                if (!value.Contains(InvalidDecimalSeparator))
                     continue;
 
                 var number = 0;
-                if (int.TryParse(value.Split('.')[0], out number))
-                    fixedNumbers[key] = double.Parse(value.Replace(".", ","));
+                if (int.TryParse(value.Split(InvalidDecimalSeparator[0])[0], out number))
+                    fixedNumbers[key] = double.Parse(value.Replace(InvalidDecimalSeparator, DecimalSeparator));
             }
             foreach (var fixedNumber in fixedNumbers)
             {
