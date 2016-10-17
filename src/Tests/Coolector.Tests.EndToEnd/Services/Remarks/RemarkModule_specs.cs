@@ -46,7 +46,7 @@ namespace Coolector.Tests.EndToEnd.Services.Remarks
     }
 
     [Subject("RemarkService fetch single remark")]
-    public class when_fetch_signle_remark : RemarkModule_specs
+    public class when_fetching_single_remark : RemarkModule_specs
     {
         Establish context = () => InitializeAndFetch();
 

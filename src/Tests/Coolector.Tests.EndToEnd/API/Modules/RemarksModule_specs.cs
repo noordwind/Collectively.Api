@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -14,6 +12,8 @@ namespace Coolector.Tests.EndToEnd.API.Modules
 {
     public abstract class RemarksModule_specs : ModuleBase_specs
     {
+        protected static IPhotoGenerator PhotoGenerator = new PhotoGenerator(); 
+
         protected static RemarkDto GetRemark(Guid id)
             => HttpClient.GetAsync<RemarkDto>($"remarks/{id}").WaitForResult();
 
@@ -45,20 +45,7 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         protected static HttpResponseMessage DeleteRemark(Guid remarkId)
             => HttpClient.DeleteAsync($"remarks/{remarkId}").WaitForResult();
 
-        protected static object GeneratePhoto()
-        {
-            var bitmap = new Bitmap(10,10);
-            var stream = new MemoryStream();
-            bitmap.Save(stream, ImageFormat.Bmp);
-            var base64 = Convert.ToBase64String(stream.ToArray());
-
-            return new
-            {
-                Base64 = base64,
-                ContentType = "image/bmp",
-                Name = "remark.bmp"
-            };
-        }
+        protected static object GeneratePhoto() => PhotoGenerator.GetDefault();
     }
 
     [Subject("Remarks collection")]

@@ -12,6 +12,7 @@
     "Coolector.Common": "1.0.0-*",
     "Coolector.Services": "1.0.0-*",
     "Autofac": "4.1.0",
+    "structure.sketching": "0.1.47",
     "Nancy": "2.0.0-barneyrubble",
     "NLog.Extensions.Logging": "1.0.0-*",
     "MongoDB.Driver": "2.3.0-rc1",
@@ -24,8 +25,7 @@
     "Microsoft.AspNetCore.Owin": "1.0.0",
     "RawRabbit": "1.10.0",
     "RawRabbit.vNext": "1.10.0",
-    "Newtonsoft.Json": "9.0.1",
-    "System.Drawing": "1.0.0-beta004" 
+    "Newtonsoft.Json": "9.0.1"
   },
   "frameworks": {
     "netcoreapp1.0": {
