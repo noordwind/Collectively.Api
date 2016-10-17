@@ -1,4 +1,5 @@
 ﻿using System;
+using Coolector.Common.Events.Remarks.Models;
 
 namespace Coolector.Common.Events.Remarks
 {
@@ -25,27 +26,6 @@ namespace Coolector.Common.Events.Remarks
             Location = location;
             Photo = photo;
             Description = description;
-        }
-
-        public class RemarkFile
-        {
-            public string InternalId { get; }
-            public byte[] Bytes { get; }
-            public string Name { get; }
-            public string ContentType { get; }
-
-            protected RemarkFile()
-            {
-            }
-
-            public RemarkFile(string internalId, byte[] bytes,
-                string name, string contentType)
-            {
-                InternalId = internalId;
-                Bytes = bytes;
-                Name = name;
-                ContentType = contentType;
-            }
         }
 
         public class RemarkCategory

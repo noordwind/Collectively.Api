@@ -25,7 +25,8 @@
     "Microsoft.AspNetCore.Owin": "1.0.0",
     "RawRabbit": "1.10.0",
     "RawRabbit.vNext": "1.10.0",
-    "Newtonsoft.Json": "9.0.1"
+    "Newtonsoft.Json": "9.0.1",
+    "System.Runtime.Extensions": "4.1.0"
   },
   "frameworks": {
     "netcoreapp1.0": {

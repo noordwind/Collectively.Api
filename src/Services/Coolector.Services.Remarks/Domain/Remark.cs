@@ -14,6 +14,7 @@ namespace Coolector.Services.Remarks.Domain
         public DateTime CreatedAt { get; protected set; }
         public RemarkAuthor Resolver { get; protected set; }
         public DateTime? ResolvedAt { get; protected set; }
+        public RemarkPhoto ResolvedPhoto { get; protected set; }
         public bool Resolved => Resolver != null;
 
         protected Remark()
@@ -67,7 +68,7 @@ namespace Coolector.Services.Remarks.Domain
             Photo = photo;
         }
 
-        public void Resolve(User resolver)
+        public void Resolve(User resolver, RemarkPhoto photo)
         {
             if (Resolved)
             {
@@ -76,6 +77,7 @@ namespace Coolector.Services.Remarks.Domain
             }
             Resolver = RemarkAuthor.Create(resolver);
             ResolvedAt = DateTime.UtcNow;
+            ResolvedPhoto = photo;
         }
 
         public void SetDescription(string description)

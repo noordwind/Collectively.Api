@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using Coolector.Common.Events.Remarks;
+using Coolector.Common.Events.Remarks.Models;
 using Coolector.Dto.Remarks;
 using Coolector.Dto.Users;
 using Coolector.Services.Storage.Files;
@@ -20,7 +21,7 @@ namespace Coolector.Tests.Services.Storage.Handlers
         protected static Mock<IUserRepository> UserRepositoryMock;
         protected static RemarkCreated Event;
         protected static UserDto User;
-        protected static RemarkCreated.RemarkFile Photo;
+        protected static RemarkFile Photo;
         protected static Exception Exception;
 
         protected static void Initialize(Action setup)
@@ -47,7 +48,7 @@ namespace Coolector.Tests.Services.Storage.Handlers
 
         protected static void InitializePhoto()
         {
-            Photo = new RemarkCreated.RemarkFile(Guid.NewGuid().ToString(), new byte[] { 0x0 }, "photo.png", "image/png");
+            Photo = new RemarkFile(Guid.NewGuid().ToString(), new byte[] { 0x0 }, "photo.png", "image/png");
         }
 
         protected static void InitializeEvent()

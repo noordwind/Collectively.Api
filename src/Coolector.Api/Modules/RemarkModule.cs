@@ -37,6 +37,8 @@ namespace Coolector.Api.Modules
 
             Post("", async args => await For<CreateRemark>().DispatchAsync());
 
+            Put("", async args => await For<ResolveRemark>().DispatchAsync());
+
             Delete("{remarkId}", async args => await For<DeleteRemark>().DispatchAsync());
         }
     }

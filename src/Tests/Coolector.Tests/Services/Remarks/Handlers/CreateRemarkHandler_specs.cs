@@ -1,5 +1,6 @@
 ﻿using System;
 using Coolector.Common.Commands.Remarks;
+using Coolector.Common.Commands.Remarks.Models;
 using Coolector.Common.Events.Remarks;
 using Coolector.Common.Types;
 using Coolector.Services.Remarks.Domain;
@@ -37,7 +38,7 @@ namespace Coolector.Tests.Services.Remarks.Handlers
                 Latitude = 1,
                 Description = "test",
                 Address = "address",
-                Photo = new CreateRemark.RemarkFile
+                Photo = new RemarkFile
                 {
                     Base64 = "base64",
                     Name = "file.png",

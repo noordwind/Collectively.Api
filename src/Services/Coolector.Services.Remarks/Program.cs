@@ -15,6 +15,7 @@ namespace Coolector.Services.Remarks
                 .UseRabbitMq()
                 .SubscribeToCommand<CreateRemark>()
                 .SubscribeToCommand<DeleteRemark>()
+                .SubscribeToCommand<ResolveRemark>()
                 .SubscribeToEvent<NewUserSignedIn>()
                 .Build()
                 .Run();
