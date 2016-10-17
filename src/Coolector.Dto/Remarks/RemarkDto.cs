@@ -14,6 +14,7 @@ namespace Coolector.Dto.Remarks
         public DateTime CreatedAt { get; set; }
         public RemarkAuthorDto Resolver { get; set; }
         public DateTime? ResolvedAt { get; set; }
+        public FileDto ResolvedPhoto { get; set; }
         public bool Resolved { get; set; }
     }
 }
