@@ -45,6 +45,15 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         protected static HttpResponseMessage DeleteRemark(Guid remarkId)
             => HttpClient.DeleteAsync($"remarks/{remarkId}").WaitForResult();
 
+        protected static HttpResponseMessage ResolveRemark(Guid remarkId)
+            => HttpClient.PutAsync("remarks", new
+            {
+                RemarkId = remarkId,
+                Photo = GeneratePhoto(),
+                Latitude = 1.0,
+                Longitude = 1.0 
+            }).WaitForResult();
+
         protected static object GeneratePhoto() => PhotoGenerator.GetDefault();
     }
 
@@ -178,6 +187,37 @@ namespace Coolector.Tests.EndToEnd.API.Modules
         It should_return_success_status_code = () =>
         {
             Result.IsSuccessStatusCode.ShouldBeTrue();
+        };
+    }
+
+    [Subject("Remarks resolve")]
+    public class when_resolving_remark : RemarksModule_specs
+    {
+        protected static HttpResponseMessage Result;
+        static RemarkDto SelectedRemark;
+        static IEnumerable<RemarkDto> Remarks;
+
+        Establish context = () =>
+        {
+            Initialize(true);
+            CreateRemark();
+            Wait();
+            Remarks = GetLatestRemarks();
+            SelectedRemark = Remarks.First(x => x.Resolved == false);
+        };
+
+        Because of = () => Result = ResolveRemark(SelectedRemark.Id);
+
+        It should_return_success_status_code = () =>
+        {
+            Result.IsSuccessStatusCode.ShouldBeTrue();
+        };
+
+        It should_be_resolved = () =>
+        {
+            Wait();
+            var remark = GetRemark(SelectedRemark.Id);
+            remark.Resolved.ShouldBeTrue();
         };
     }
 }

@@ -9,6 +9,8 @@ namespace Coolector.Services.Remarks.Domain
         public string UserId { get; protected set; }
         public string Name { get; protected set; }
 
+        protected RemarkAuthor() {}
+
         protected RemarkAuthor(string userId, string name)
         {
             if (userId.Empty())

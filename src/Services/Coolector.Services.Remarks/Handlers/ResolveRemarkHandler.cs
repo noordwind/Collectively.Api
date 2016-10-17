@@ -29,7 +29,7 @@ namespace Coolector.Services.Remarks.Handlers
 
         public async Task HandleAsync(ResolveRemark command)
         {
-            var file = _fileResolver.FromBase64(command.File.Base64, command.File.Name, command.File.ContentType);
+            var file = _fileResolver.FromBase64(command.Photo.Base64, command.Photo.Name, command.Photo.ContentType);
             if (file.HasNoValue)
                 return;
 
