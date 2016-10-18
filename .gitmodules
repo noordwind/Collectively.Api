@@ -16,3 +16,6 @@
 [submodule "src/Services/Coolector.Services.Storage"]
 	path = src/Services/Coolector.Services.Storage
 	url = https://github.com/noordwind/Coolector.Services.Storage.git
+[submodule "src/Coolector.Core"]
+	path = src/Coolector.Core
+	url = https://github.com/noordwind/Coolector.Core
