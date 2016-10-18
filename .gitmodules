@@ -1,0 +1,9 @@
+[submodule "src/Coolector.Common"]
+	path = src/Coolector.Common
+	url = https://github.com/noordwind/Coolector.Common.git
+[submodule "src/Coolector.Dto"]
+	path = src/Coolector.Dto
+	url = https://github.com/noordwind/Coolector.Dto.git
+[submodule "src/Services/Coolector.Services"]
+	path = src/Services/Coolector.Services
+	url = https://github.com/noordwind/Coolector.Services.git
