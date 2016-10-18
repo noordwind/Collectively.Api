@@ -17,16 +17,16 @@ namespace Coolector.Services.Remarks.Extensions
 
         public static double DistanceInKilometers(this Location source, Location target)
         {
-            double dlong = (target.Longitude - source.Longitude) * DistanceToRadians;
-            double dlat = (target.Latitude - source.Latitude) * DistanceToRadians;
-            double a = Math.Pow(Math.Sin(dlat / 2.0), 2.0) 
+            var longitudeDifferenceInRadians = (target.Longitude - source.Longitude) * DistanceToRadians;
+            var latitudeDifferenceInRadians = (target.Latitude - source.Latitude) * DistanceToRadians;
+            var a = Math.Pow(Math.Sin(latitudeDifferenceInRadians / 2.0), 2.0) 
                 + Math.Cos(source.Latitude * DistanceToRadians) 
                 * Math.Cos(target.Latitude * DistanceToRadians) 
-                * Math.Pow(Math.Sin(dlong / 2.0), 2.0);
-            double c = 2.0 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1.0 - a));
-            double d = EarthRadius * c;
+                * Math.Pow(Math.Sin(longitudeDifferenceInRadians / 2.0), 2.0);
+            var c = 2.0 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1.0 - a));
+            var distanceInKilometers = EarthRadius * c;
 
-            return d;
+            return distanceInKilometers;
         }
     }
 }
