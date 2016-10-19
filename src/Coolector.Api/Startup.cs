@@ -12,19 +12,22 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Nancy.Owin;
 using NLog.Extensions.Logging;
+using RawRabbit.vNext;
 
 namespace Coolector.Api
 {
     public class Startup
     {
+        public string EnvironmentName {get;set;}
         public IConfiguration Configuration { get; set; }
         public IContainer ApplicationContainer { get; set; }
 
         public Startup(IHostingEnvironment env)
         {
+            EnvironmentName = env.EnvironmentName.ToLowerInvariant();
             var builder = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true)
+                .AddJsonFile($"appsettings.{EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables()
                 .SetBasePath(env.ContentRootPath);
 

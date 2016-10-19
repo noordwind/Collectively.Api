@@ -10,6 +10,7 @@ using Nancy.Bootstrapper;
 using Nancy.Configuration;
 using NLog;
 using RawRabbit;
+using RawRabbit.Configuration;
 using RawRabbit.vNext;
 
 namespace Coolector.Api.Framework
@@ -59,7 +60,9 @@ namespace Coolector.Api.Framework
             container.Update(builder =>
             {
                 builder.RegisterInstance(GetConfigurationValue<StorageSettings>()).SingleInstance();
-                builder.RegisterInstance(BusClientFactory.CreateDefault()).As<IBusClient>();
+                var rawRabbitConfiguration = GetConfigurationValue<RawRabbitConfiguration>();
+                builder.RegisterInstance(rawRabbitConfiguration).SingleInstance();
+                builder.RegisterInstance(BusClientFactory.CreateDefault(rawRabbitConfiguration)).As<IBusClient>();
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterModule<ModuleContainer>();
             });
@@ -80,7 +83,7 @@ namespace Coolector.Api.Framework
         {
             if (string.IsNullOrWhiteSpace(section))
             {
-                section = typeof(T).Name.Replace("Settings", string.Empty);
+                section = typeof(T).Name.Replace("Settings", string.Empty).Replace("Configuration", string.Empty);
             }
 
             var configurationValue = new T();
