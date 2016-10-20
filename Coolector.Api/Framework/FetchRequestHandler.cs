@@ -6,11 +6,14 @@ using Coolector.Common.Queries;
 using Coolector.Common.Types;
 using Nancy;
 using Nancy.Responses.Negotiation;
+using NLog;
 
 namespace Coolector.Api.Framework
 {
     public class FetchRequestHandler<TQuery, TResult> where TQuery : IQuery, new() where TResult : class
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly string PageParameter = "page";
         private readonly TQuery _query;
         private readonly Func<TQuery, Task<Maybe<TResult>>> _fetch;
@@ -41,6 +44,7 @@ namespace Coolector.Api.Framework
 
         private async Task<Negotiator> HandleResultAsync()
         {
+            Logger.Debug($"Fetch: {_query.GetType().Name}");
             var result = await _fetch(_query);
             if (result.HasNoValue)
                 return _negotiator.WithStatusCode(HttpStatusCode.NotFound);
@@ -54,6 +58,7 @@ namespace Coolector.Api.Framework
 
         private async Task<Negotiator> HandleCollectionAsync()
         {
+            Logger.Debug($"Fetch collection: {_query.GetType().Name}");
             var result = await _fetchCollection(_query);
 
             return FromPagedResult(result);
@@ -62,7 +67,11 @@ namespace Coolector.Api.Framework
         private Negotiator FromResult(Maybe<TResult> result)
         {
             if (result.HasNoValue)
+            {
+                Logger.Debug($"Result of {_query.GetType().Name} has no value {typeof(TResult).Name}");
                 return _negotiator.WithStatusCode(HttpStatusCode.NotFound);
+            }
+            Logger.Debug($"Result of {_query.GetType().Name} contains {typeof(TResult).Name} object");
 
             return _negotiator.WithModel(result.Value);
         }
@@ -70,7 +79,11 @@ namespace Coolector.Api.Framework
         private Negotiator FromPagedResult(Maybe<PagedResult<TResult>> result)
         {
             if (result.HasNoValue)
+            {
+                Logger.Debug($"Result of {_query.GetType().Name} has no value {typeof(TResult).Name}");
                 return _negotiator.WithModel(new List<object>());
+            }
+            Logger.Debug($"Result of {_query.GetType().Name} contains {result.Value.TotalResults} {typeof(TResult).Name} elements");  
 
             return _negotiator.WithModel(result.Value.Items)
                 .WithHeader("Link", GetLinkHeader(result.Value))

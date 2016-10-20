@@ -4,12 +4,15 @@ using System.Threading.Tasks;
 using Coolector.Common.Commands;
 using Nancy;
 using Coolector.Common.Extensions;
+using NLog;
 using ICommandDispatcher = Coolector.Api.Commands.ICommandDispatcher;
 
 namespace Coolector.Api.Framework
 {
     public class CommandRequestHandler<T> where T : ICommand
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly ICommandDispatcher _dispatcher;
         private readonly T _command;
         private readonly IResponseFormatter _responseFormatter;
@@ -78,6 +81,7 @@ namespace Coolector.Api.Framework
 
         public async Task<object> DispatchAsync()
         {
+            Logger.Debug($"Dispatching command: {_command.GetType().Name}");
             object response = null;
             await _dispatcher.DispatchAsync(_command);
 

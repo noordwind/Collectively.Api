@@ -93,8 +93,11 @@ namespace Coolector.Api.Modules
         protected Response FromStream(Maybe<Stream> stream, string fileName, string contentType)
         {
             if (stream.HasNoValue)
+            {
+                Logger.Warn($"Stream result has no value, fileName: {fileName}, contentType: {contentType}");
                 return HttpStatusCode.NotFound;
-
+            }
+            Logger.Debug($"File received successfully, fileName: {fileName}, contentType: {contentType}");
             var response = new StreamResponse(() => stream.Value, contentType);
 
             return response.AsAttachment(fileName);

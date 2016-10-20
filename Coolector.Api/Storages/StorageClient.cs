@@ -10,11 +10,14 @@ using Coolector.Common.Extensions;
 using Newtonsoft.Json;
 using System.Linq;
 using System.Reflection;
+using NLog;
 
 namespace Coolector.Api.Storages
 {
     public class StorageClient : IStorageClient
     {
+        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+
         private readonly ICache _cache;
         private readonly IFilterResolver _filterResolver;
         private readonly StorageSettings _settings;
@@ -35,6 +38,7 @@ namespace Coolector.Api.Storages
 
         public async Task<Maybe<T>> GetAsync<T>(string endpoint) where T : class
         {
+            Logger.Debug($"Get data from storage, endpoint: {endpoint}");
             var response = await GetResponseAsync(endpoint);
             if(response.HasNoValue)
                 return new Maybe<T>();
@@ -49,14 +53,17 @@ namespace Coolector.Api.Storages
             TimeSpan? expiry = null)
             where T : class
         {
+            Logger.Debug($"Get data from cache... endpoint: {endpoint}, cacheKey: {cacheKey}");
             var result = await GetFromCacheAsync<T>(endpoint, cacheKey);
             if (result.HasValue)
                 return result;
 
+            Logger.Debug($"No data in cache, try get data from storage... endpoint: {endpoint}");
             result = await GetAsync<T>(endpoint);
             if (result.HasNoValue)
                 return new Maybe<T>();
 
+            Logger.Debug($"Store missing data in cache, endpoint: {endpoint}, cacheKey: {cacheKey}, expiry: {expiry}, type: {typeof(T).Name}");
             await StoreInCacheAsync(result, endpoint, cacheKey, expiry);
 
             return result;
@@ -64,6 +71,7 @@ namespace Coolector.Api.Storages
 
         public async Task<Maybe<Stream>> GetStreamAsync(string endpoint)
         {
+            Logger.Debug($"Get stream from endpoint: {endpoint}");
             var response = await GetResponseAsync(endpoint);
             if (response.HasNoValue)
                 return new Maybe<Stream>();
@@ -74,14 +82,17 @@ namespace Coolector.Api.Storages
         public async Task<Maybe<PagedResult<T>>> GetCollectionUsingCacheAsync<T>(string endpoint, string cacheKey = null,
             TimeSpan? expiry = null) where T : class
         {
+            Logger.Debug($"Get collection of data from cache... endpoint: {endpoint}, cacheKey: {cacheKey}");
             var results = await GetFromCacheAsync<IEnumerable<T>>(endpoint, cacheKey);
             if (results.HasValue && results.Value.Any())
                 return results.Value.PaginateWithoutLimit();
 
+            Logger.Debug($"No data in cache, try get collection of data from storage... endpoint: {endpoint}");
             results = await GetAsync<IEnumerable<T>>(endpoint);
             if (results.HasNoValue || !results.Value.Any())
                 return new Maybe<PagedResult<T>>();
 
+            Logger.Debug($"Store missing collection in cache, endpoint: {endpoint}, cacheKey: {cacheKey}, expiry: {expiry}, type: {typeof(T).Name}");
             await StoreInCacheAsync(results, endpoint, cacheKey, expiry);
 
             return results.Value.PaginateWithoutLimit();
@@ -90,6 +101,7 @@ namespace Coolector.Api.Storages
         public async Task<Maybe<PagedResult<TResult>>> GetFilteredCollectionAsync<TResult, TQuery>(TQuery query,
             string endpoint) where TResult : class where TQuery : class, IPagedQuery
         {
+            Logger.Debug($"Get filtered data from storage, endpoint: {endpoint}, queryType: {typeof(TQuery).Name}");
             var results = await GetAsync<IEnumerable<TResult>>(GetEndpointWithQuery(endpoint, query));
             if (results.HasNoValue || !results.Value.Any())
                 return PagedResult<TResult>.Empty;
@@ -101,15 +113,18 @@ namespace Coolector.Api.Storages
             TQuery query, string endpoint, string cacheKey = null, TimeSpan? expiry = null) where TResult : class
             where TQuery : class, IPagedQuery
         {
+            Logger.Debug($"Get filtered collection of data from cache... endpoint: {endpoint}, cacheKey: {cacheKey}, queryType: {typeof(TQuery).Name}");
             var filter = _filterResolver.Resolve<TResult, TQuery>();
             var results = await GetFromCacheAsync<IEnumerable<TResult>>(endpoint, cacheKey);
             if (results.HasValue && results.Value.Any())
                 return FilterAndPaginateResults(filter, results, query);
 
+            Logger.Debug($"Get filtered collection of data from storage, endpoint: {endpoint}, queryType: {typeof(TQuery).Name}");
             results = await GetAsync<IEnumerable<TResult>>(GetEndpointWithQuery(endpoint, query));
             if (results.HasNoValue || !results.Value.Any())
                 return PagedResult<TResult>.Empty;
 
+            Logger.Debug($"Store missing collection in cache, endpoint: {endpoint}, cacheKey: {cacheKey}, expiry: {expiry}, type: {typeof(TResult).Name}");
             await StoreInCacheAsync(results, endpoint, cacheKey, expiry);
 
             return FilterAndPaginateResults(filter, results, query);
@@ -122,12 +137,14 @@ namespace Coolector.Api.Storages
 
             try
             {
+                Logger.Debug($"Fetch data from http endpoint: {endpoint}");
                 var response = await _httpClient.GetAsync(endpoint);
                 if (response.IsSuccessStatusCode)
                     return response;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                Logger.Error(ex, $"Exception occured while fetching data from endpoint: {endpoint}");
             }
 
             return new Maybe<HttpResponseMessage>();
@@ -159,6 +176,7 @@ namespace Coolector.Api.Storages
             if (endpoint.Empty())
                 throw new ArgumentException("Endpoint can not be empty.");
 
+            Logger.Debug($"Fetch data from cache, type: {typeof(T).Name}, endpoint: {endpoint}, cacheKey: {cacheKey}");
             cacheKey = GetCacheKey(endpoint, cacheKey);
             var result = await _cache.GetAsync<T>(cacheKey);
 
@@ -175,6 +193,7 @@ namespace Coolector.Api.Storages
 
             cacheKey = GetCacheKey(endpoint, cacheKey);
             var cacheExpiry = expiry ?? _settings.CacheExpiry;
+            Logger.Debug($"Store data in cache, type: {typeof(T).Name}, endpoint: {endpoint}, cacheKey: {cacheKey}, expiry: {expiry}");
             await _cache.AddAsync(cacheKey, value.Value, cacheExpiry);
         }
 
