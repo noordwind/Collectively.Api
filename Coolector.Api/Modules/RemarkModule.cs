@@ -1,4 +1,5 @@
-﻿using Coolector.Common.Commands.Remarks;
+﻿using System.Linq;
+using Coolector.Common.Commands.Remarks;
 using Coolector.Common.Types;
 using Coolector.Dto.Remarks;
 using Nancy;
@@ -25,18 +26,20 @@ namespace Coolector.Api.Modules
             Get("{id}", async args => await Fetch<GetRemark, RemarkDto>
                 (async x => await remarkStorage.GetAsync(x.Id)).HandleAsync());
 
-            Get("{id}/photo", async args => await Fetch<GetRemarkPhoto, Response>
-            (async x =>
-                {
-                    var remark = await remarkStorage.GetAsync(x.Id);
-                    if (remark.HasNoValue)
-                        return new Maybe<Response>();
+            //TODO move to fileModule
+            //Get("{id}/photo", async args => await Fetch<GetRemarkPhoto, Response>
+            //(async x =>
+            //    {
+            //        var remark = await remarkStorage.GetAsync(x.Id);
+            //        if (remark.HasNoValue)
+            //            return new Maybe<Response>();
 
-                    var stream = await remarkStorage.GetPhotoAsync(x.Id);
+            //        var stream = await remarkStorage.GetPhotoAsync(x.Id, x.Size);
+            //        var photo = remark.Value.Photos.FirstOrDefault(p => p.Size == x.Size);
 
-                    return FromStream(stream, remark.Value.Photo.Name, remark.Value.Photo.ContentType);
-                }
-            ).HandleAsync());
+            //        return FromStream(stream, photo., remark.Value.Photo.ContentType);
+            //    }
+            //).HandleAsync());
 
             Post("", async args => await For<CreateRemark>().DispatchAsync());
 

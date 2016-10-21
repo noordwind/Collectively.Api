@@ -84,9 +84,6 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
-                remark.Photo.Name.ShouldNotBeEmpty();
-                remark.Photo.FileId.ShouldNotBeEmpty();
-                remark.Photo.ContentType.ShouldNotBeEmpty();
             }
         };
     }
@@ -121,7 +118,6 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             Remark.Category.Id.ShouldBeEquivalentTo(SelectedRemark.Category.Id);
             Remark.Author.UserId.ShouldBeEquivalentTo(SelectedRemark.Author.UserId);
             Remark.Description.ShouldBeEquivalentTo(SelectedRemark.Description);
-            Remark.Photo.FileId.ShouldBeEquivalentTo(SelectedRemark.Photo.FileId);
         };
 
         It should_have_photo = () =>

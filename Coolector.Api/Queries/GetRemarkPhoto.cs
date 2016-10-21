@@ -6,5 +6,6 @@ namespace Coolector.Api.Queries
     public class GetRemarkPhoto : IQuery
     {
         public Guid Id { get; set; }
+        public string Size { get; set; }
     }
 }

@@ -26,7 +26,7 @@ namespace Coolector.Api.Storages
             => await _storageClient.GetFilteredCollectionAsync<RemarkCategoryDto, BrowseRemarkCategories>
                 (query, "remarks/categories");
 
-        public async Task<Maybe<Stream>> GetPhotoAsync(Guid id)
-            => await _storageClient.GetStreamAsync($"remarks/{id}/photo");
+        public async Task<Maybe<Stream>> GetPhotoAsync(Guid id, string size)
+            => await _storageClient.GetStreamAsync($"remarks/{id}/photo?size={size}");
     }
 }
