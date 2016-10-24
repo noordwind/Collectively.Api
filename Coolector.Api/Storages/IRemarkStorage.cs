@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Coolector.Api.Queries;
 using Coolector.Common.Types;
@@ -12,6 +11,5 @@ namespace Coolector.Api.Storages
         Task<Maybe<RemarkDto>> GetAsync(Guid id);
         Task<Maybe<PagedResult<RemarkDto>>> BrowseAsync(BrowseRemarks query);
         Task<Maybe<PagedResult<RemarkCategoryDto>>> BrowseCategoriesAsync(BrowseRemarkCategories query);
-        Task<Maybe<Stream>> GetPhotoAsync(Guid id, string size);
     }
 }
