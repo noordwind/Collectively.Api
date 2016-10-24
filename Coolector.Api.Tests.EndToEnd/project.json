@@ -7,8 +7,8 @@
     "Machine.Specifications.Should": "0.11.0",
     "Newtonsoft.Json": "9.0.1",
     "Coolector.Api": "1.0.0-*",
-    "Coolector.Common": "1.0.0-*",
-    "Coolector.Dto": "1.0.0-*",
+    "Coolector.Common": "1.0.*",
+    "Coolector.Dto": "1.0.*",
     "System.Net.Http": "4.1.0"
   },
   "testRunner": "mspec",
