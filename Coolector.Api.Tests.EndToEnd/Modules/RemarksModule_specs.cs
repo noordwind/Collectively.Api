@@ -23,9 +23,6 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         protected static IEnumerable<RemarkCategoryDto> GetCategories()
             => HttpClient.GetCollectionAsync<RemarkCategoryDto>("remarks/categories").WaitForResult();
 
-        protected static Stream GetPhoto(Guid id)
-            => HttpClient.GetStreamAsync($"remarks/{id}/photo").WaitForResult();
-
         protected static HttpResponseMessage CreateRemark()
         {
             var categories = GetCategories();
@@ -94,7 +91,6 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         static IEnumerable<RemarkDto> Remarks;
         static RemarkDto SelectedRemark;
         static RemarkDto Remark;
-        static Stream Photo;
 
         Establish context = () =>
         {
@@ -108,7 +104,6 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             Remarks = GetLatestRemarks();
             SelectedRemark = Remarks.First();
             Remark = GetRemark(SelectedRemark.Id);
-            Photo = GetPhoto(SelectedRemark.Id);
         };
 
         It should_return_remark = () =>
@@ -122,8 +117,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_have_photo = () =>
         {
-            Photo.ShouldNotBeNull();
-            Photo.CanRead.ShouldBeTrue();
+            Remark.Photos.ShouldNotBeEmpty();
         };
     }
 
