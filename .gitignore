@@ -268,3 +268,5 @@ __pycache__/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+
+appsettings.local.json
