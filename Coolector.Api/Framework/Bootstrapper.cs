@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Autofac;
 using Microsoft.Extensions.Caching.Memory;
@@ -7,6 +8,8 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Configuration;
 using NLog;
+using Polly;
+using RabbitMQ.Client.Exceptions;
 using RawRabbit;
 using RawRabbit.Configuration;
 using RawRabbit.vNext;
@@ -57,14 +60,24 @@ namespace Coolector.Api.Framework
             Logger.Info("Configuring IoC");
             base.ConfigureApplicationContainer(container);
 
+            var rmqRetryPolicy = Policy
+                .Handle<ConnectFailureException>()
+                .WaitAndRetry(5, retryAttempt =>
+                    TimeSpan.FromSeconds(Math.Pow(2, retryAttempt)),
+                    (exception, timeSpan, retryCount, context) => {
+                        Logger.Error(exception, $"Cannot connect to RabbitMQ. retryCount:{retryCount}, duration:{timeSpan}");
+                    }
+                );
+
             container.Update(builder =>
             {
                 builder.RegisterInstance(GetConfigurationValue<StorageSettings>()).SingleInstance();
-                var rawRabbitConfiguration = GetConfigurationValue<RawRabbitConfiguration>();
-                builder.RegisterInstance(rawRabbitConfiguration).SingleInstance();
-                builder.RegisterInstance(BusClientFactory.CreateDefault(rawRabbitConfiguration)).As<IBusClient>();
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterModule<ModuleContainer>();
+                var rawRabbitConfiguration = GetConfigurationValue<RawRabbitConfiguration>();
+                builder.RegisterInstance(rawRabbitConfiguration).SingleInstance();
+                rmqRetryPolicy.Execute(() =>
+                    builder.RegisterInstance(BusClientFactory.CreateDefault(rawRabbitConfiguration)).As<IBusClient>());
             });
         }
 

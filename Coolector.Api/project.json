@@ -26,7 +26,8 @@
     "Microsoft.AspNetCore.Authentication.JwtBearer": "1.0.0",
     "NLog.Extensions.Logging": "1.0.0-*",
     "Nancy": "2.0.0-barneyrubble",
-    "System.Reflection.TypeExtensions" : "4.1.0"
+    "System.Reflection.TypeExtensions": "4.1.0",
+    "Polly": "5.0.1-v5-0-alpha0001"
   },
   "frameworks": {
     "netcoreapp1.0": {
