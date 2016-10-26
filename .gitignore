@@ -270,3 +270,4 @@ __pycache__/
 !.vscode/launch.json
 
 appsettings.local.json
+appsettings.docker.json
