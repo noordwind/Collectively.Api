@@ -3,7 +3,6 @@ using Coolector.Dto.Remarks;
 using Machine.Specifications;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Net.Http;
 using FluentAssertions;
 using System.Linq;
@@ -20,10 +19,13 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         protected static IEnumerable<RemarkDto> GetLatestRemarks()
             => HttpClient.GetCollectionAsync<RemarkDto>("remarks?latest=true").WaitForResult();
 
+        protected static IEnumerable<RemarkDto> GetNearestRemarks()
+            => HttpClient.GetCollectionAsync<RemarkDto>("remarks?radius=10000&longitude=1.0&latitude=1.0&nearest=true").WaitForResult();
+
         protected static IEnumerable<RemarkCategoryDto> GetCategories()
             => HttpClient.GetCollectionAsync<RemarkCategoryDto>("remarks/categories").WaitForResult();
 
-        protected static HttpResponseMessage CreateRemark()
+        protected static HttpResponseMessage CreateRemark(double latitude = 1.0, double longitude = 1.0)
         {
             var categories = GetCategories();
             var photo = GeneratePhoto();
@@ -33,8 +35,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
                 Address = "",
                 CategoryId = categories.First().Id,
                 Description = "test",
-                Latitude = 1.0,
-                Longitude = 1.0,
+                Latitude = latitude,
+                Longitude = longitude,
                 Photo = photo
             }).WaitForResult();
         }
@@ -81,6 +83,62 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
+            }
+        };
+    }
+
+
+    [Subject("Remarks collection")]
+    public class when_fetching_nearest_remarks : RemarksModule_specs
+    {
+        protected static IEnumerable<RemarkDto> Remarks;
+
+        Establish context = () =>
+        {
+            Initialize(true);
+            CreateRemark();
+            CreateRemark(1.1, 1.1);
+            CreateRemark(1.3, 1.3);
+            Wait();
+        };
+
+        Because of = () => Remarks = GetNearestRemarks().ToList();
+
+        It should_return_non_empty_collection = () =>
+        {
+            Remarks.ShouldNotBeEmpty();
+            var i = 0;
+            foreach (var remark in Remarks)
+            {
+                remark.Id.ShouldNotEqual(Guid.Empty);
+                remark.Author.UserId.ShouldNotBeEmpty();
+                remark.Author.Name.ShouldNotBeEmpty();
+                remark.Category.Id.ShouldNotEqual(Guid.Empty);
+                remark.Category.Name.ShouldNotBeEmpty();
+                remark.Location.Coordinates.Length.ShouldEqual(2);
+                remark.Location.Coordinates[0].ShouldNotEqual(0);
+                remark.Location.Coordinates[1].ShouldNotEqual(0);
+            }
+        };
+
+        It should_return_nearest_remark_first = () =>
+        {
+            var remark = Remarks.FirstOrDefault();
+            remark.Location.Coordinates[0].ShouldEqual(1.0);
+            remark.Location.Coordinates[1].ShouldEqual(1.0);
+        };
+
+        It should_return_remarks_in_correct_order = () =>
+        {
+            RemarkDto previousRemark = null;
+            foreach (var remark in Remarks)
+            {
+                if (previousRemark != null)
+                {
+                    previousRemark.Location.Coordinates[0].ShouldBeLessThanOrEqualTo(remark.Location.Coordinates[0]);
+                    previousRemark.Location.Coordinates[1].ShouldBeLessThanOrEqualTo(remark.Location.Coordinates[1]);
+                }
+                previousRemark = remark;
             }
         };
     }
