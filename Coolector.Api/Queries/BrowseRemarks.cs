@@ -1,4 +1,5 @@
-﻿using Coolector.Common.Types;
+﻿using System.Collections.Generic;
+using Coolector.Common.Types;
 
 namespace Coolector.Api.Queries
 {
@@ -11,5 +12,6 @@ namespace Coolector.Api.Queries
         public string AuthorId { get; set; }
         public bool Latest { get; set; }
         public bool Nearest { get; set; }
+        public IEnumerable<string> Categories { get; set; }
     }
 }

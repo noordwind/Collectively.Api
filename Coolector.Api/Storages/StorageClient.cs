@@ -9,7 +9,6 @@ using Coolector.Common.Types;
 using Coolector.Common.Extensions;
 using Newtonsoft.Json;
 using System.Linq;
-using System.Reflection;
 using NLog;
 
 namespace Coolector.Api.Storages
@@ -102,7 +101,8 @@ namespace Coolector.Api.Storages
             string endpoint) where TResult : class where TQuery : class, IPagedQuery
         {
             Logger.Debug($"Get filtered data from storage, endpoint: {endpoint}, queryType: {typeof(TQuery).Name}");
-            var results = await GetAsync<IEnumerable<TResult>>(GetEndpointWithQuery(endpoint, query));
+            var queryString = endpoint.ToQueryString(query);
+            var results = await GetAsync<IEnumerable<TResult>>(queryString);
             if (results.HasNoValue || !results.Value.Any())
                 return PagedResult<TResult>.Empty;
 
@@ -120,7 +120,8 @@ namespace Coolector.Api.Storages
                 return FilterAndPaginateResults(filter, results, query);
 
             Logger.Debug($"Get filtered collection of data from storage, endpoint: {endpoint}, queryType: {typeof(TQuery).Name}");
-            results = await GetAsync<IEnumerable<TResult>>(GetEndpointWithQuery(endpoint, query));
+            var queryString = endpoint.ToQueryString(query);
+            results = await GetAsync<IEnumerable<TResult>>(queryString);
             if (results.HasNoValue || !results.Value.Any())
                 return PagedResult<TResult>.Empty;
 
@@ -154,22 +155,6 @@ namespace Coolector.Api.Storages
             IFilter<TResult, TQuery> filter,
             Maybe<IEnumerable<TResult>> results, TQuery query) where TQuery : class, IPagedQuery
         => filter.Filter(results.Value, query).Paginate(query);
-
-        private static string GetEndpointWithQuery<T>(string endpoint, T query) where T : class, IQuery
-        {
-            if (query == null)
-                return endpoint;
-
-            var values = new List<string>();
-            foreach (var property in query.GetType().GetProperties())
-            {
-                var value = property.GetValue(query, null);
-                values.Add($"{property.Name.ToLowerInvariant()}={value}");
-            }
-
-            var endpointQuery = string.Join("&", values);
-            return $"{endpoint}?{endpointQuery}";
-        }
 
         private async Task<Maybe<T>> GetFromCacheAsync<T>(string endpoint, string cacheKey = null) where T : class
         {

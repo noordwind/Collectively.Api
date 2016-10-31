@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 using System.Threading.Tasks;
 using Coolector.Api.Queries;
 using Coolector.Common.Types;
