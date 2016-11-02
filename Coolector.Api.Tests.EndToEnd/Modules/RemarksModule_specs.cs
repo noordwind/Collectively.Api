@@ -22,18 +22,25 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         protected static IEnumerable<RemarkDto> GetNearestRemarks()
             => HttpClient.GetCollectionAsync<RemarkDto>("remarks?radius=10000&longitude=1.0&latitude=1.0&nearest=true").WaitForResult();
 
+        protected static IEnumerable<RemarkDto> GetRemarksWithCategory(string categoryName)
+            => HttpClient.GetCollectionAsync<RemarkDto>($"remarks?radius=10000&longitude=1.0&latitude=1.0&categories={categoryName}").WaitForResult();
+
+        protected static IEnumerable<RemarkDto> GetRemarksWithState(string state)
+            => HttpClient.GetCollectionAsync<RemarkDto>($"remarks?radius=10000&longitude=1.0&latitude=1.0&state={state}").WaitForResult();
+
         protected static IEnumerable<RemarkCategoryDto> GetCategories()
             => HttpClient.GetCollectionAsync<RemarkCategoryDto>("remarks/categories").WaitForResult();
 
-        protected static HttpResponseMessage CreateRemark(double latitude = 1.0, double longitude = 1.0)
+        protected static HttpResponseMessage CreateRemark(double latitude = 1.0, double longitude = 1.0, string categoryName = null)
         {
-            var categories = GetCategories();
+            var categories = GetCategories().ToList();
             var photo = GeneratePhoto();
+            var category = categories.FirstOrDefault(x => x.Name == categoryName) ?? categories.First();
 
             return HttpClient.PostAsync("remarks", new
             {
                 Address = "",
-                CategoryId = categories.First().Id,
+                CategoryId = category.Id,
                 Description = "test",
                 Latitude = latitude,
                 Longitude = longitude,
@@ -87,7 +94,6 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         };
     }
 
-
     [Subject("Remarks collection")]
     public class when_fetching_nearest_remarks : RemarksModule_specs
     {
@@ -140,6 +146,113 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
                 }
                 previousRemark = remark;
             }
+        };
+    }
+
+    [Subject("Remarks collection")]
+    public class when_fetching_remarks_with_specific_category : RemarksModule_specs
+    {
+        protected static string Category = "damages";
+        protected static IEnumerable<RemarkDto> Remarks;
+
+        Establish context = () =>
+        {
+            Initialize(true);
+            CreateRemark(categoryName: Category);
+            Wait();
+        };
+
+        Because of = () => Remarks = GetRemarksWithCategory(Category);
+
+        It should_return_non_empty_collection = () =>
+        {
+            Remarks.ShouldNotBeEmpty();
+            foreach (var remark in Remarks)
+            {
+                remark.Id.ShouldNotEqual(Guid.Empty);
+                remark.Author.UserId.ShouldNotBeEmpty();
+                remark.Author.Name.ShouldNotBeEmpty();
+                remark.Category.Id.ShouldNotEqual(Guid.Empty);
+                remark.Category.Name.ShouldNotBeEmpty();
+                remark.Location.Coordinates.Length.ShouldEqual(2);
+                remark.Location.Coordinates[0].ShouldNotEqual(0);
+                remark.Location.Coordinates[1].ShouldNotEqual(0);
+            }
+        };
+
+        It should_contain_remarks_with_the_same_category = () =>
+        {
+            Remarks.All(x => x.Category.Name == Category).ShouldBeTrue();
+        };
+    }
+
+    [Subject("Remarks collection")]
+    public class when_fetching_resolved_remarks : RemarksModule_specs
+    {
+        protected static string State = "resolved";
+        protected static IEnumerable<RemarkDto> Remarks;
+
+        Establish context = () =>
+        {
+            Initialize(true);
+        };
+
+        Because of = () => Remarks = GetRemarksWithState(State);
+
+        It should_return_non_empty_collection = () =>
+        {
+            Remarks.ShouldNotBeEmpty();
+            foreach (var remark in Remarks)
+            {
+                remark.Id.ShouldNotEqual(Guid.Empty);
+                remark.Author.UserId.ShouldNotBeEmpty();
+                remark.Author.Name.ShouldNotBeEmpty();
+                remark.Category.Id.ShouldNotEqual(Guid.Empty);
+                remark.Category.Name.ShouldNotBeEmpty();
+                remark.Location.Coordinates.Length.ShouldEqual(2);
+                remark.Location.Coordinates[0].ShouldNotEqual(0);
+                remark.Location.Coordinates[1].ShouldNotEqual(0);
+            }
+        };
+
+        It should_contain_only_resolved_remarks = () =>
+        {
+            Remarks.All(x => x.Resolved).ShouldBeTrue();
+        };
+    }
+
+    [Subject("Remarks collection")]
+    public class when_fetching_remarks_with_all_states : RemarksModule_specs
+    {
+        protected static string State = "all";
+        protected static IEnumerable<RemarkDto> Remarks;
+
+        Establish context = () =>
+        {
+            Initialize(true);
+        };
+
+        Because of = () => Remarks = GetRemarksWithState(State);
+
+        It should_return_non_empty_collection = () =>
+        {
+            Remarks.ShouldNotBeEmpty();
+            foreach (var remark in Remarks)
+            {
+                remark.Id.ShouldNotEqual(Guid.Empty);
+                remark.Author.UserId.ShouldNotBeEmpty();
+                remark.Author.Name.ShouldNotBeEmpty();
+                remark.Category.Id.ShouldNotEqual(Guid.Empty);
+                remark.Category.Name.ShouldNotBeEmpty();
+                remark.Location.Coordinates.Length.ShouldEqual(2);
+                remark.Location.Coordinates[0].ShouldNotEqual(0);
+                remark.Location.Coordinates[1].ShouldNotEqual(0);
+            }
+        };
+
+        It should_return_resolved_and_active_remarks = () =>
+        {
+            Remarks.Select(x => x.Resolved).Distinct().Count().ShouldEqual(2);
         };
     }
 
