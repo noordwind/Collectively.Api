@@ -11,7 +11,6 @@ namespace Coolector.Api.Queries
         public string Description { get; set; }
         public string AuthorId { get; set; }
         public bool Latest { get; set; }
-        public bool Nearest { get; set; }
         public IEnumerable<string> Categories { get; set; }
         public string State { get; set; }
     }
