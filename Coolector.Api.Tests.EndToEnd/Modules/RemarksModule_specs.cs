@@ -40,7 +40,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             return HttpClient.PostAsync("remarks", new
             {
                 Address = "",
-                CategoryId = category.Id,
+                Category = category.Name,
                 Description = "test",
                 Latitude = latitude,
                 Longitude = longitude,
