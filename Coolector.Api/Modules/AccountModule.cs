@@ -1,4 +1,5 @@
-﻿using Coolector.Common.Commands.Users;
+﻿using Coolector.Api.Validation;
+using Coolector.Common.Commands.Users;
 using Coolector.Dto.Users;
 using GetAccount = Coolector.Api.Queries.GetAccount;
 using GetAccoutByName = Coolector.Api.Queries.GetAccoutByName;
@@ -9,8 +10,10 @@ namespace Coolector.Api.Modules
 {
     public class AccountModule : ModuleBase
     {
-        public AccountModule(ICommandDispatcher commandDispatcher, IUserStorage userStorage)
-            : base(commandDispatcher)
+        public AccountModule(ICommandDispatcher commandDispatcher,
+            IValidatorResolver validatorResolver,
+            IUserStorage userStorage)
+            : base(commandDispatcher, validatorResolver)
         {
             Get("account", async args => await Fetch<GetAccount, UserDto>
                 (async x => await userStorage.GetAsync(x.UserId)).HandleAsync());

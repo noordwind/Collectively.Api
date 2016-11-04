@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using Coolector.Api.Validation;
 using Coolector.Common.Commands;
 using Nancy;
 using Coolector.Common.Extensions;
@@ -12,19 +14,22 @@ namespace Coolector.Api.Framework
     public class CommandRequestHandler<T> where T : ICommand
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         private readonly ICommandDispatcher _dispatcher;
         private readonly T _command;
         private readonly IResponseFormatter _responseFormatter;
+        private readonly IValidatorResolver _validatorResolver;
         private Func<T, object> _responseFunc;
         private Func<T, Task<object>> _asyncResponseFunc;
         private Guid _resourceId;
 
-        public CommandRequestHandler(ICommandDispatcher dispatcher, T command, IResponseFormatter responseFormatter)
+        public CommandRequestHandler(ICommandDispatcher dispatcher, T command,
+            IResponseFormatter responseFormatter,
+            IValidatorResolver validatorResolver)
         {
             _dispatcher = dispatcher;
             _command = command;
             _responseFormatter = responseFormatter;
+            _validatorResolver = validatorResolver;
         }
 
         public CommandRequestHandler<T> Set(Action<T> action)
@@ -81,7 +86,17 @@ namespace Coolector.Api.Framework
 
         public async Task<object> DispatchAsync()
         {
-            Logger.Debug($"Dispatching command: {_command.GetType().Name}");
+            var commandName = _command.GetType().Name;
+            var validator = _validatorResolver.Resolve<T>();
+            Logger.Debug($"Validating command: {commandName}.");
+            var errors = validator.SetPropertiesAndValidate(_command).ToArray();
+            if (errors.Any())
+            {
+                Logger.Debug($"Command: {commandName} is invalid. Errors: {errors.AggregateLines()}.");
+                throw new ValidatorException(errors);
+            }
+
+            Logger.Debug($"Dispatching command: {commandName}.");
             object response = null;
             await _dispatcher.DispatchAsync(_command);
 

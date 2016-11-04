@@ -2,6 +2,7 @@
 using System.IO;
 using System.Threading.Tasks;
 using Coolector.Api.Framework;
+using Coolector.Api.Validation;
 using Coolector.Common.Commands;
 using Coolector.Common.Extensions;
 using Coolector.Common.Queries;
@@ -19,12 +20,16 @@ namespace Coolector.Api.Modules
     {
         protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         protected readonly ICommandDispatcher CommandDispatcher;
+        private readonly IValidatorResolver _validatorResolver;
         private string _currentUserId;
 
-        protected ModuleBase(ICommandDispatcher commandDispatcher, string modulePath = "")
+        protected ModuleBase(ICommandDispatcher commandDispatcher,
+            IValidatorResolver validatorResolver,
+            string modulePath = "")
             : base(modulePath)
         {
             CommandDispatcher = commandDispatcher;
+            _validatorResolver = validatorResolver;
         }
 
         protected CommandRequestHandler<T> For<T>() where T : ICommand, new()
@@ -32,12 +37,12 @@ namespace Coolector.Api.Modules
             var command = BindRequest<T>();
             var authenticatedCommand = command as IAuthenticatedCommand;
             if (authenticatedCommand == null)
-                return new CommandRequestHandler<T>(CommandDispatcher, command, Response);
+                return new CommandRequestHandler<T>(CommandDispatcher, command, Response, _validatorResolver);
 
             this.RequiresAuthentication();
             authenticatedCommand.UserId = CurrentUserId;
 
-            return new CommandRequestHandler<T>(CommandDispatcher, command, Response);
+            return new CommandRequestHandler<T>(CommandDispatcher, command, Response, _validatorResolver);
         }
 
         protected FetchRequestHandler<TQuery, TResult> Fetch<TQuery, TResult>(Func<TQuery, Task<Maybe<TResult>>> fetch)

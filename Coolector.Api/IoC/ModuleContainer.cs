@@ -10,6 +10,7 @@ namespace Coolector.Api.IoC
             builder.RegisterModule<DispatcherModule>();
             builder.RegisterModule<FilterModule>();
             builder.RegisterModule<StorageModule>();
+            builder.RegisterModule<ValidatorModule>();
         }
     }
 }

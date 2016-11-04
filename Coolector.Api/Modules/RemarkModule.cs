@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Coolector.Api.Validation;
 using Coolector.Common.Commands.Remarks;
 using Coolector.Common.Types;
 using Coolector.Dto.Remarks;
@@ -13,8 +14,10 @@ namespace Coolector.Api.Modules
 {
     public class RemarkModule : ModuleBase
     {
-        public RemarkModule(ICommandDispatcher commandDispatcher, IRemarkStorage remarkStorage)
-            : base(commandDispatcher, modulePath: "remarks")
+        public RemarkModule(ICommandDispatcher commandDispatcher,
+            IRemarkStorage remarkStorage,
+            IValidatorResolver validatorResolver)
+            : base(commandDispatcher, validatorResolver, modulePath: "remarks")
         {
             Get("", async args => await FetchCollection<BrowseRemarks, RemarkDto>
                 (async x => await remarkStorage.BrowseAsync(x)).HandleAsync());

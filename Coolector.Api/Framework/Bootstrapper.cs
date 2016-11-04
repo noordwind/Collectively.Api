@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using Autofac;
+using Coolector.Api.Validation;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Nancy;
@@ -47,12 +48,7 @@ namespace Coolector.Api.Framework
 
                 return null;
             };
-            pipelines.AfterRequest += (ctx) =>
-            {
-                ctx.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-                ctx.Response.Headers.Add("Access-Control-Allow-Methods", "POST,PUT,GET,OPTIONS,DELETE");
-                ctx.Response.Headers.Add("Access-Control-Allow-Headers", "Authorization, Origin, X-Requested-With, Content-Type, Accept");
-            };
+            pipelines.AfterRequest += (ctx) => AddCorsHeaders(ctx.Response);
             Logger.Info("API Started");
         }
 
@@ -74,6 +70,7 @@ namespace Coolector.Api.Framework
 
             container.Update(builder =>
             {
+                builder.RegisterInstance(GetConfigurationValue<FeatureSettings>()).SingleInstance();
                 builder.RegisterInstance(GetConfigurationValue<StorageSettings>()).SingleInstance();
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterModule<ModuleContainer>();
@@ -91,8 +88,13 @@ namespace Coolector.Api.Framework
 
         protected override void RequestStartup(ILifetimeScope container, IPipelines pipelines, NancyContext context)
         {
-            // No registrations should be performed in here, however you may
-            // resolve things that are needed during request startup.
+            pipelines.OnError.AddItemToEndOfPipeline((ctx, ex) =>
+            {
+                ctx.Response = ErrorResponse.FromException(ex, context.Environment);
+                AddCorsHeaders(ctx.Response);
+
+                return ctx.Response;
+            });
         }
 
         private T GetConfigurationValue<T>(string section = "") where T : new()
@@ -128,6 +130,14 @@ namespace Coolector.Api.Framework
             {
                 ctx.Request.Query[fixedNumber.Key] = fixedNumber.Value;
             }
+        }
+
+        private static void AddCorsHeaders(Response response)
+        {
+            response.WithHeader("Access-Control-Allow-Origin", "*")
+                .WithHeader("Access-Control-Allow-Methods", "POST,PUT,GET,OPTIONS,DELETE")
+                .WithHeader("Access-Control-Allow-Headers",
+                    "Authorization,Accept,Origin,Content-Type,User-Agent,X-Requested-With");
         }
     }
 }
