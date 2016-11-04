@@ -51,13 +51,17 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         protected static HttpResponseMessage DeleteRemark(Guid remarkId)
             => HttpClient.DeleteAsync($"remarks/{remarkId}").WaitForResult();
 
-        protected static HttpResponseMessage ResolveRemark(Guid remarkId, double latitude = 1.0, double longitude = 1.0)
+        protected static HttpResponseMessage ResolveRemark(Guid remarkId, 
+            double latitude = 1.0, double longitude = 1.0,
+            bool validatePhoto = false, bool validateLocation = false)
             => HttpClient.PutAsync("remarks", new
             {
                 RemarkId = remarkId,
                 Photo = GeneratePhoto(),
                 Latitude = latitude,
-                Longitude = longitude
+                Longitude = longitude,
+                ValidatePhoto = validatePhoto,
+                ValidateLocation = validateLocation
             }).WaitForResult();
 
         protected static object GeneratePhoto() => PhotoGenerator.GetDefault();
@@ -382,6 +386,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         };
     }
 
+    [Ignore("depends on api's feature switch")]
     [Subject("Remarks resolve")]
     public class when_resolving_remark_from_a_long_distance : RemarksModule_specs
     {
