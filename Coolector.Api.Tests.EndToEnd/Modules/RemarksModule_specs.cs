@@ -20,7 +20,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             => HttpClient.GetCollectionAsync<RemarkDto>("remarks?latest=true").WaitForResult();
 
         protected static IEnumerable<RemarkDto> GetNearestRemarks()
-            => HttpClient.GetCollectionAsync<RemarkDto>("remarks?radius=10000&longitude=1.0&latitude=1.0&nearest=true").WaitForResult();
+            => HttpClient.GetCollectionAsync<RemarkDto>("remarks?radius=10000&longitude=1.0&latitude=1.0").WaitForResult();
 
         protected static IEnumerable<RemarkDto> GetRemarksWithCategory(string categoryName)
             => HttpClient.GetCollectionAsync<RemarkDto>($"remarks?radius=10000&longitude=1.0&latitude=1.0&categories={categoryName}").WaitForResult();
@@ -222,9 +222,9 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     }
 
     [Subject("Remarks collection")]
-    public class when_fetching_remarks_with_all_states : RemarksModule_specs
+    public class when_fetching_active_remarks : RemarksModule_specs
     {
-        protected static string State = "all";
+        protected static string State = "active";
         protected static IEnumerable<RemarkDto> Remarks;
 
         Establish context = () =>
@@ -250,9 +250,9 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             }
         };
 
-        It should_return_resolved_and_active_remarks = () =>
+        It should_contain_only_active_remarks = () =>
         {
-            Remarks.Select(x => x.Resolved).Distinct().Count().ShouldEqual(2);
+            Remarks.All(x => x.Resolved == false).ShouldBeTrue();
         };
     }
 
