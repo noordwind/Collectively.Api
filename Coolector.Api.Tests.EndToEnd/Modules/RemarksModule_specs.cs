@@ -16,17 +16,17 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         protected static RemarkDto GetRemark(Guid id)
             => HttpClient.GetAsync<RemarkDto>($"remarks/{id}").WaitForResult();
 
-        protected static IEnumerable<RemarkDto> GetLatestRemarks()
-            => HttpClient.GetCollectionAsync<RemarkDto>("remarks?latest=true").WaitForResult();
+        protected static IEnumerable<BasicRemarkDto> GetLatestRemarks()
+            => HttpClient.GetCollectionAsync<BasicRemarkDto>("remarks?latest=true").WaitForResult();
 
-        protected static IEnumerable<RemarkDto> GetNearestRemarks()
-            => HttpClient.GetCollectionAsync<RemarkDto>("remarks?radius=10000&longitude=1.0&latitude=1.0").WaitForResult();
+        protected static IEnumerable<BasicRemarkDto> GetNearestRemarks()
+            => HttpClient.GetCollectionAsync<BasicRemarkDto>("remarks?radius=10000&longitude=1.0&latitude=1.0").WaitForResult();
 
-        protected static IEnumerable<RemarkDto> GetRemarksWithCategory(string categoryName)
-            => HttpClient.GetCollectionAsync<RemarkDto>($"remarks?radius=10000&longitude=1.0&latitude=1.0&categories={categoryName}").WaitForResult();
+        protected static IEnumerable<BasicRemarkDto> GetRemarksWithCategory(string categoryName)
+            => HttpClient.GetCollectionAsync<BasicRemarkDto>($"remarks?radius=10000&longitude=1.0&latitude=1.0&categories={categoryName}").WaitForResult();
 
-        protected static IEnumerable<RemarkDto> GetRemarksWithState(string state)
-            => HttpClient.GetCollectionAsync<RemarkDto>($"remarks?radius=10000&longitude=1.0&latitude=1.0&state={state}").WaitForResult();
+        protected static IEnumerable<BasicRemarkDto> GetRemarksWithState(string state)
+            => HttpClient.GetCollectionAsync<BasicRemarkDto>($"remarks?radius=10000&longitude=1.0&latitude=1.0&state={state}").WaitForResult();
 
         protected static IEnumerable<RemarkCategoryDto> GetCategories()
             => HttpClient.GetCollectionAsync<RemarkCategoryDto>("remarks/categories").WaitForResult();
@@ -70,7 +70,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     [Subject("Remarks collection")]
     public class when_fetching_latest_remarks : RemarksModule_specs
     {
-        static IEnumerable<RemarkDto> Remarks;
+        static IEnumerable<BasicRemarkDto> Remarks;
 
         Establish context = () =>
         {
@@ -87,10 +87,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.UserId.ShouldNotBeEmpty();
-                remark.Author.Name.ShouldNotBeEmpty();
-                remark.Category.Id.ShouldNotEqual(Guid.Empty);
-                remark.Category.Name.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeEmpty();
+                remark.Category.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -101,7 +99,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     [Subject("Remarks collection")]
     public class when_fetching_nearest_remarks : RemarksModule_specs
     {
-        protected static IEnumerable<RemarkDto> Remarks;
+        protected static IEnumerable<BasicRemarkDto> Remarks;
 
         Establish context = () =>
         {
@@ -121,10 +119,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.UserId.ShouldNotBeEmpty();
-                remark.Author.Name.ShouldNotBeEmpty();
-                remark.Category.Id.ShouldNotEqual(Guid.Empty);
-                remark.Category.Name.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeEmpty();
+                remark.Category.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -140,7 +136,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_return_remarks_in_correct_order = () =>
         {
-            RemarkDto previousRemark = null;
+            BasicRemarkDto previousRemark = null;
             foreach (var remark in Remarks)
             {
                 if (previousRemark != null)
@@ -157,7 +153,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     public class when_fetching_remarks_with_specific_category : RemarksModule_specs
     {
         protected static string Category = "damages";
-        protected static IEnumerable<RemarkDto> Remarks;
+        protected static IEnumerable<BasicRemarkDto> Remarks;
 
         Establish context = () =>
         {
@@ -174,10 +170,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.UserId.ShouldNotBeEmpty();
-                remark.Author.Name.ShouldNotBeEmpty();
-                remark.Category.Id.ShouldNotEqual(Guid.Empty);
-                remark.Category.Name.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeEmpty();
+                remark.Category.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -186,7 +180,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_contain_remarks_with_the_same_category = () =>
         {
-            Remarks.All(x => x.Category.Name == Category).ShouldBeTrue();
+            Remarks.All(x => x.Category == Category).ShouldBeTrue();
         };
     }
 
@@ -194,11 +188,16 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     public class when_fetching_resolved_remarks : RemarksModule_specs
     {
         protected static string State = "resolved";
-        protected static IEnumerable<RemarkDto> Remarks;
+        protected static IEnumerable<BasicRemarkDto> Remarks;
 
-        Establish context = () =>
+        private Establish context = () =>
         {
             Initialize(true);
+            CreateRemark();
+            Wait();
+            var remark = GetLatestRemarks().First(x => x.Resolved == false);
+            ResolveRemark(remark.Id);
+            Wait();
         };
 
         Because of = () => Remarks = GetRemarksWithState(State);
@@ -209,10 +208,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.UserId.ShouldNotBeEmpty();
-                remark.Author.Name.ShouldNotBeEmpty();
-                remark.Category.Id.ShouldNotEqual(Guid.Empty);
-                remark.Category.Name.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeEmpty();
+                remark.Category.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -229,7 +226,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     public class when_fetching_active_remarks : RemarksModule_specs
     {
         protected static string State = "active";
-        protected static IEnumerable<RemarkDto> Remarks;
+        protected static IEnumerable<BasicRemarkDto> Remarks;
 
         Establish context = () =>
         {
@@ -244,10 +241,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.UserId.ShouldNotBeEmpty();
-                remark.Author.Name.ShouldNotBeEmpty();
-                remark.Category.Id.ShouldNotEqual(Guid.Empty);
-                remark.Category.Name.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeEmpty();
+                remark.Category.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -263,8 +258,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     [Subject("Remark details")]
     public class when_fetching_remark : RemarksModule_specs
     {
-        static IEnumerable<RemarkDto> Remarks;
-        static RemarkDto SelectedRemark;
+        static IEnumerable<BasicRemarkDto> Remarks;
+        static BasicRemarkDto SelectedRemark;
         static RemarkDto Remark;
 
         Establish context = () =>
@@ -285,8 +280,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         {
             Remark.ShouldNotBeNull();
             Remark.Id.ShouldBeEquivalentTo(SelectedRemark.Id);
-            Remark.Category.Id.ShouldBeEquivalentTo(SelectedRemark.Category.Id);
-            Remark.Author.UserId.ShouldBeEquivalentTo(SelectedRemark.Author.UserId);
+            Remark.Category.Name.ShouldBeEquivalentTo(SelectedRemark.Category);
+            Remark.Author.Name.ShouldBeEquivalentTo(SelectedRemark.Author);
             Remark.Description.ShouldBeEquivalentTo(SelectedRemark.Description);
         };
 
@@ -335,8 +330,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     public class when_deleting_remark : RemarksModule_specs
     {
         protected static HttpResponseMessage Result;
-        static RemarkDto SelectedRemark;
-        static IEnumerable<RemarkDto> Remarks;
+        static BasicRemarkDto SelectedRemark;
+        static IEnumerable<BasicRemarkDto> Remarks;
 
         Establish context = () =>
         {
@@ -359,8 +354,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     public class when_resolving_remark : RemarksModule_specs
     {
         protected static HttpResponseMessage Result;
-        static RemarkDto SelectedRemark;
-        static IEnumerable<RemarkDto> Remarks;
+        static BasicRemarkDto SelectedRemark;
+        static IEnumerable<BasicRemarkDto> Remarks;
 
         Establish context = () =>
         {
@@ -391,8 +386,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     public class when_resolving_remark_from_a_long_distance : RemarksModule_specs
     {
         protected static HttpResponseMessage Result;
-        static RemarkDto SelectedRemark;
-        static IEnumerable<RemarkDto> Remarks;
+        static BasicRemarkDto SelectedRemark;
+        static IEnumerable<BasicRemarkDto> Remarks;
 
         Establish context = () =>
         {

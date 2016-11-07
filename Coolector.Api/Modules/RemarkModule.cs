@@ -1,14 +1,10 @@
 ﻿using System.Linq;
+using Coolector.Api.Commands;
+using Coolector.Api.Queries;
+using Coolector.Api.Storages;
 using Coolector.Api.Validation;
 using Coolector.Common.Commands.Remarks;
-using Coolector.Common.Types;
 using Coolector.Dto.Remarks;
-using Nancy;
-using BrowseRemarkCategories = Coolector.Api.Queries.BrowseRemarkCategories;
-using BrowseRemarks = Coolector.Api.Queries.BrowseRemarks;
-using GetRemark = Coolector.Api.Queries.GetRemark;
-using ICommandDispatcher = Coolector.Api.Commands.ICommandDispatcher;
-using IRemarkStorage = Coolector.Api.Storages.IRemarkStorage;
 
 namespace Coolector.Api.Modules
 {
@@ -20,7 +16,18 @@ namespace Coolector.Api.Modules
             : base(commandDispatcher, validatorResolver, modulePath: "remarks")
         {
             Get("", async args => await FetchCollection<BrowseRemarks, RemarkDto>
-                (async x => await remarkStorage.BrowseAsync(x)).HandleAsync());
+                (async x => await remarkStorage.BrowseAsync(x))
+                .MapTo(x => new BasicRemarkDto
+                {
+                    Id = x.Id,
+                    Author = x.Author.Name,
+                    Category = x.Category.Name,
+                    Location = x.Location,
+                    SmallPhotoUrl = x.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
+                    Description = x.Description,
+                    CreatedAt = x.CreatedAt,
+                    Resolved = x.Resolved
+                }).HandleAsync());
 
             Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategoryDto>
                 (async x => await remarkStorage.BrowseCategoriesAsync(x)).HandleAsync());
