@@ -10,6 +10,8 @@ namespace Coolector.Api.Storages
     {
         Task<Maybe<T>> GetAsync<T>(string endpoint) where T : class;
 
+        Task<Maybe<PagedResult<T>>> GetCollectionAsync<T>(string endpoint) where T : class;
+
         Task<Maybe<T>> GetUsingCacheAsync<T>(string endpoint, string cacheKey = null, TimeSpan? expiry = null)
             where T : class;
 
