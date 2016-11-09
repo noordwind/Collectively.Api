@@ -48,6 +48,19 @@ namespace Coolector.Api.Storages
             return data;
         }
 
+        public async Task<Maybe<PagedResult<T>>> GetCollectionAsync<T>(string endpoint) where T : class
+        {
+            Logger.Debug($"Get data from storage, endpoint: {endpoint}");
+            var response = await GetResponseAsync(endpoint);
+            if (response.HasNoValue)
+                return new Maybe<PagedResult<T>>();
+
+            var content = await response.Value.Content.ReadAsStringAsync();
+            var data = JsonConvert.DeserializeObject<IEnumerable<T>>(content);
+
+            return data.ToPagedResult(response.Value.Headers);
+        }
+
         public async Task<Maybe<T>> GetUsingCacheAsync<T>(string endpoint, string cacheKey = null,
             TimeSpan? expiry = null)
             where T : class
@@ -102,11 +115,11 @@ namespace Coolector.Api.Storages
         {
             Logger.Debug($"Get filtered data from storage, endpoint: {endpoint}, queryType: {typeof(TQuery).Name}");
             var queryString = endpoint.ToQueryString(query);
-            var results = await GetAsync<IEnumerable<TResult>>(queryString);
-            if (results.HasNoValue || !results.Value.Any())
+            var results = await GetCollectionAsync<TResult>(queryString);
+            if (results.HasNoValue || results.Value.IsEmpty)
                 return PagedResult<TResult>.Empty;
 
-            return results.Value.Paginate(query);
+            return results.Value;
         }
 
         public async Task<Maybe<PagedResult<TResult>>> GetFilteredCollectionUsingCacheAsync<TResult, TQuery>(
@@ -184,5 +197,6 @@ namespace Coolector.Api.Storages
 
         private static string GetCacheKey(string endpoint, string cacheKey)
             => cacheKey.Empty() ? endpoint.Replace("/", ":") : cacheKey;
+ 
     }
 }
