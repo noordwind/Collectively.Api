@@ -37,13 +37,18 @@ namespace Coolector.Api.Modules
             var command = BindRequest<T>();
             var authenticatedCommand = command as IAuthenticatedCommand;
             if (authenticatedCommand == null)
-                return new CommandRequestHandler<T>(CommandDispatcher, command, Response, _validatorResolver);
+            {
+                return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
+                    _validatorResolver, Negotiate, Request.Url);
+            }
 
             this.RequiresAuthentication();
             authenticatedCommand.UserId = CurrentUserId;
 
-            return new CommandRequestHandler<T>(CommandDispatcher, command, Response, _validatorResolver);
+            return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
+                _validatorResolver,Negotiate, Request.Url);
         }
+
 
         protected FetchRequestHandler<TQuery, TResult> Fetch<TQuery, TResult>(Func<TQuery, Task<Maybe<TResult>>> fetch)
             where TQuery : IQuery, new() where TResult : class

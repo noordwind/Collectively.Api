@@ -6,6 +6,7 @@ using Coolector.Api.Validation;
 using Coolector.Common.Commands;
 using Nancy;
 using Coolector.Common.Extensions;
+using Nancy.Responses.Negotiation;
 using NLog;
 using ICommandDispatcher = Coolector.Api.Commands.ICommandDispatcher;
 
@@ -18,18 +19,27 @@ namespace Coolector.Api.Framework
         private readonly T _command;
         private readonly IResponseFormatter _responseFormatter;
         private readonly IValidatorResolver _validatorResolver;
+        private readonly Negotiator _negotiator;
         private Func<T, object> _responseFunc;
         private Func<T, Task<object>> _asyncResponseFunc;
         private Guid _resourceId;
 
         public CommandRequestHandler(ICommandDispatcher dispatcher, T command,
             IResponseFormatter responseFormatter,
-            IValidatorResolver validatorResolver)
+            IValidatorResolver validatorResolver,
+            Negotiator negotiator,
+            Url url)
         {
             _dispatcher = dispatcher;
             _command = command;
+            _command.Request = new Common.Commands.Request
+            {
+                Origin = url.Path.Remove(0,1),
+                CreatedAt = DateTime.UtcNow
+            };
             _responseFormatter = responseFormatter;
             _validatorResolver = validatorResolver;
+            _negotiator = negotiator;
         }
 
         public CommandRequestHandler<T> Set(Action<T> action)
@@ -68,7 +78,13 @@ namespace Coolector.Api.Framework
             return this;
         }
 
-        public CommandRequestHandler<T> OnSuccessCreated(string path) => OnSuccessCreated(c => string.Format(path, _resourceId.ToString("N")));
+        public CommandRequestHandler<T> OnSuccessCreated(string path)
+        {
+            var url = string.Format(path, _resourceId.ToString("N"));
+            _command.Request.Resource = url;
+
+            return OnSuccessCreated(c => url);
+        }
 
         public CommandRequestHandler<T> OnSuccessCreated(Func<T, string> func)
         {
@@ -80,6 +96,18 @@ namespace Coolector.Api.Framework
         public CommandRequestHandler<T> OnSuccessRedirect(Func<T, string> func)
         {
             _responseFunc = x => _responseFormatter.AsRedirect(func(_command));
+
+            return this;
+        }
+
+        public CommandRequestHandler<T> OnSuccessAccepted(string path)
+        {
+            var resourceEndpoint = string.Format(path, _resourceId.ToString("N"));
+            var operationEndpoint = $"operations/{_command.Request.Id:N}";
+            _command.Request.Resource = resourceEndpoint;
+            _responseFunc = x => _negotiator.WithStatusCode(202)
+                .WithHeader("X-Resource", resourceEndpoint)
+                .WithHeader("X-Operation", operationEndpoint);
 
             return this;
         }
