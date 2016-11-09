@@ -23,9 +23,13 @@ namespace Coolector.Api.Modules
 
             Post("sign-in", async args => await For<SignInUser>().DispatchAsync());
 
-            Put("account/username", async args => await For<ChangeUserName>().DispatchAsync());
+            Put("account/username", async args => await For<ChangeUserName>()
+                .OnSuccessAccepted("account")
+                .DispatchAsync());
 
-            Put("account/avatar", async args => await For<ChangeAvatar>().DispatchAsync());
+            Put("account/avatar", async args => await For<ChangeAvatar>()
+                .OnSuccessAccepted("account")
+                .DispatchAsync());
         }
     }
 }

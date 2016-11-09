@@ -16,6 +16,9 @@ namespace Coolector.Api.IoC.Modules
             builder.RegisterType<RemarkStorage>()
                 .As<IRemarkStorage>()
                 .InstancePerLifetimeScope();
+            builder.RegisterType<OperationStorage>()
+                .As<IOperationStorage>()
+                .InstancePerLifetimeScope();
             builder.RegisterType<InMemoryCache>()
                 .As<ICache>()
                 .SingleInstance();

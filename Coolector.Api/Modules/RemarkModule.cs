@@ -35,9 +35,14 @@ namespace Coolector.Api.Modules
             Get("{id}", async args => await Fetch<GetRemark, RemarkDto>
                 (async x => await remarkStorage.GetAsync(x.Id)).HandleAsync());
 
-            Post("", async args => await For<CreateRemark>().DispatchAsync());
+            Post("", async args => await For<CreateRemark>()
+                .SetResourceId(x => x.RemarkId)
+                .OnSuccessAccepted("remarks/{0}")
+                .DispatchAsync());
 
-            Put("", async args => await For<ResolveRemark>().DispatchAsync());
+            Put("{remarkId}/resolve", async args => await For<ResolveRemark>()
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
+                .DispatchAsync());
 
             Delete("{remarkId}", async args => await For<DeleteRemark>().DispatchAsync());
         }
