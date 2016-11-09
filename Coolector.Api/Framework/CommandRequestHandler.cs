@@ -6,6 +6,7 @@ using Coolector.Api.Validation;
 using Coolector.Common.Commands;
 using Nancy;
 using Coolector.Common.Extensions;
+using Humanizer;
 using Nancy.Responses.Negotiation;
 using NLog;
 using ICommandDispatcher = Coolector.Api.Commands.ICommandDispatcher;
@@ -35,6 +36,7 @@ namespace Coolector.Api.Framework
             _command.Request = new Common.Commands.Request
             {
                 Origin = url.Path.Remove(0,1),
+                Name = typeof(T).Name.Humanize(LetterCasing.LowerCase).Underscore(),
                 CreatedAt = DateTime.UtcNow
             };
             _responseFormatter = responseFormatter;
