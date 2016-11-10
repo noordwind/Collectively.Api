@@ -1,6 +1,7 @@
 ﻿using Coolector.Api.Validation;
 using Coolector.Common.Commands.Users;
 using Coolector.Dto.Users;
+using Nancy;
 using GetAccount = Coolector.Api.Queries.GetAccount;
 using GetAccoutByName = Coolector.Api.Queries.GetAccoutByName;
 using ICommandDispatcher = Coolector.Api.Commands.ICommandDispatcher;
@@ -21,7 +22,9 @@ namespace Coolector.Api.Modules
             Get("{name}/account", async args => await Fetch<GetAccoutByName, UserDto>
                 (async x => await userStorage.GetByNameAsync(x.Name)).HandleAsync());
 
-            Post("sign-in", async args => await For<SignInUser>().DispatchAsync());
+            Post("sign-in", async args => await For<SignInUser>()
+                .OnSuccess(HttpStatusCode.NoContent)
+                .DispatchAsync());
 
             Put("account/username", async args => await For<ChangeUserName>()
                 .OnSuccessAccepted("account")
