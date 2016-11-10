@@ -44,7 +44,9 @@ namespace Coolector.Api.Modules
                 .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
 
-            Delete("{remarkId}", async args => await For<DeleteRemark>().DispatchAsync());
+            Delete("{remarkId}", async args => await For<DeleteRemark>()
+                .OnSuccessAccepted(string.Empty)
+                .DispatchAsync());
         }
     }
 }
