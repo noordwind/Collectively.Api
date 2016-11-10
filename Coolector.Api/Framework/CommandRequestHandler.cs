@@ -35,7 +35,7 @@ namespace Coolector.Api.Framework
             _command = command;
             _command.Request = new Common.Commands.Request
             {
-                Origin = url.Path.Remove(0,1),
+                Origin = url.Path.StartsWith("/") ? url.Path.Remove(0,1) : url.Path,
                 Name = typeof(T).Name.Humanize(LetterCasing.LowerCase).Underscore(),
                 CreatedAt = DateTime.UtcNow
             };
