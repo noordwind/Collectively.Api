@@ -2,7 +2,7 @@
 
 namespace Coolector.Api.Queries
 {
-    public class GetAccoutByName : IQuery
+    public class GetNameAvailability : IQuery
     {
         public string Name { get; set; }
     }
