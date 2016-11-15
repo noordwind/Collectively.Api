@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using Autofac;
+using Coolector.Api.Authentication;
 using Coolector.Api.Validation;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Nancy;
+using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
 using Nancy.Configuration;
 using NLog;
@@ -49,6 +51,7 @@ namespace Coolector.Api.Framework
                 return null;
             };
             pipelines.AfterRequest += (ctx) => AddCorsHeaders(ctx.Response);
+            SetupTokenAuthentication(container, pipelines);
             Logger.Info("API Started");
         }
 
@@ -71,6 +74,7 @@ namespace Coolector.Api.Framework
             container.Update(builder =>
             {
                 builder.RegisterInstance(GetConfigurationValue<FeatureSettings>()).SingleInstance();
+                builder.RegisterInstance(GetConfigurationValue<JwtTokenSettings>()).SingleInstance();
                 builder.RegisterInstance(GetConfigurationValue<StorageSettings>()).SingleInstance();
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterModule<ModuleContainer>();
@@ -95,6 +99,20 @@ namespace Coolector.Api.Framework
 
                 return ctx.Response;
             });
+        }
+
+        private void SetupTokenAuthentication(ILifetimeScope container, IPipelines pipelines)
+        {
+            var jwtTokenHandler = container.Resolve<IJwtTokenHandler>();
+            var statelessAuthConfiguration =
+                new StatelessAuthenticationConfiguration(ctx =>
+                {
+                    var token = jwtTokenHandler.GetFromAuthorizationHeader(ctx.Request.Headers.Authorization);
+                    var isValid = jwtTokenHandler.IsValid(token);
+
+                    return isValid ? new CoolectorIdentity(token.Sub) : null;
+                });
+            StatelessAuthentication.Enable(pipelines, statelessAuthConfiguration);
         }
 
         private T GetConfigurationValue<T>(string section = "") where T : new()

@@ -22,10 +22,6 @@ namespace Coolector.Api.Modules
             Get("{name}/account", async args => await Fetch<GetAccoutByName, UserDto>
                 (async x => await userStorage.GetByNameAsync(x.Name)).HandleAsync());
 
-            Post("sign-in", async args => await For<SignInUser>()
-                .OnSuccess(HttpStatusCode.NoContent)
-                .DispatchAsync());
-
             Put("account/username", async args => await For<ChangeUserName>()
                 .OnSuccessAccepted("account")
                 .DispatchAsync());

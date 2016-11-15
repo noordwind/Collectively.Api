@@ -58,7 +58,7 @@ namespace Coolector.Api
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
                 .AllowCredentials());
-            app.UseJwtBearerAuthentication(options);
+//            app.UseJwtBearerAuthentication(options);
             app.UseOwin().UseNancy(x => x.Bootstrapper = new Bootstrapper(Configuration));
         }
 

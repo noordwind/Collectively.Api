@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Coolector.Api.Queries;
 using Coolector.Common.Types;
 using Coolector.Dto.Users;
@@ -9,6 +10,7 @@ namespace Coolector.Api.Storages
     {
         Task<Maybe<UserDto>> GetAsync(string id);
         Task<Maybe<UserDto>> GetByNameAsync(string name);
+        Task<Maybe<UserSessionDto>> GetSessionAsync(Guid id);
         Task<Maybe<PagedResult<UserDto>>> BrowseAsync(BrowseUsers query);
     }
 }

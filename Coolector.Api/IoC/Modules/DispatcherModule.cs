@@ -15,9 +15,9 @@ namespace Coolector.Api.IoC.Modules
                 .As<ICommandDispatcher>()
                 .InstancePerLifetimeScope();
             
-            var coreAssembly = typeof(Startup).GetTypeInfo().Assembly;
-            builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(ICommandHandler<>));
-            builder.RegisterAssemblyTypes(coreAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
+            var assembly = typeof(Startup).GetTypeInfo().Assembly;
+            builder.RegisterAssemblyTypes(assembly).AsClosedTypesOf(typeof(ICommandHandler<>));
+            builder.RegisterAssemblyTypes(assembly).AsClosedTypesOf(typeof(IEventHandler<>));
         }
     }
 }
