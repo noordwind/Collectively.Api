@@ -1,4 +1,5 @@
-﻿using Coolector.Api.Authentication;
+﻿using System;
+using Coolector.Api.Authentication;
 using Coolector.Api.Commands;
 using Coolector.Api.Validation;
 using Coolector.Common.Commands.Users;
@@ -11,7 +12,8 @@ namespace Coolector.Api.Modules
         public AuthenticationModule(ICommandDispatcher commandDispatcher,
             IValidatorResolver validatorResolver,
             IUserSessionProvider userSessionProvider,
-            IJwtTokenHandler jwtTokenHandler)
+            IJwtTokenHandler jwtTokenHandler,
+            JwtTokenSettings jwtTokenSettings)
             : base(commandDispatcher, validatorResolver)
         {
             Post("sign-in", async (ctx, p) => await For<SignIn>()
@@ -27,9 +29,13 @@ namespace Coolector.Api.Modules
                     if (session.HasNoValue)
                         return HttpStatusCode.Unauthorized;
 
-                    var token = jwtTokenHandler.Create(session.Value.UserId);
-
-                    return new {sessionId = session.Value.Id, token = token, key = session.Value.Key};
+                    return new
+                    {
+                        token = jwtTokenHandler.Create(session.Value.UserId),
+                        sessionId = session.Value.Id,
+                        key = session.Value.Key,
+                        expiry = ToJavascriptTimestamp(DateTime.UtcNow.AddDays(jwtTokenSettings.ExpiryDays))
+                    };
                 })
                 .DispatchAsync());
 
@@ -40,6 +46,14 @@ namespace Coolector.Api.Modules
             Post("sign-out", async (ctx, p) => await For<SignUp>()
                 .OnSuccess(HttpStatusCode.NoContent)
                 .DispatchAsync());
+        }
+
+        private static long ToJavascriptTimestamp(DateTime input)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            var time = input.Subtract(new TimeSpan(epoch.Ticks));
+
+            return time.Ticks / 10000;
         }
     }
 }
