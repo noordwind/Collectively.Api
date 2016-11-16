@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Coolector.Api.Queries;
 using Coolector.Common.Types;
+using Coolector.Dto.Common;
 using Coolector.Dto.Users;
 
 namespace Coolector.Api.Storages
@@ -14,6 +15,9 @@ namespace Coolector.Api.Storages
         {
             _storageClient = storageClient;
         }
+
+        public async Task<Maybe<AvailableResourceDto>> IsNameAvailableAsync(string name)
+            => await _storageClient.GetAsync<AvailableResourceDto>($"users/{name}/available");
 
         public async Task<Maybe<UserDto>> GetAsync(string id)
             => await _storageClient.GetAsync<UserDto>($"users/{id}");

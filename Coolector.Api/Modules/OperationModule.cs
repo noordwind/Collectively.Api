@@ -2,8 +2,10 @@
 using Coolector.Api.Queries;
 using Coolector.Api.Storages;
 using Coolector.Api.Validation;
+using Coolector.Common.Extensions;
 using Coolector.Common.Types;
 using Coolector.Dto.Operations;
+using Nancy.Security;
 
 namespace Coolector.Api.Modules
 {
@@ -18,10 +20,14 @@ namespace Coolector.Api.Modules
             (async x =>
             {
                 var operation = await operationStorage.GetAsync(x.RequestId);
-                if (operation.HasNoValue || operation.Value.UserId != CurrentUserId)
-                    return new Maybe<OperationDto>();
+                if (operation.HasNoValue || operation.Value.UserId.Empty())
+                    return operation;
 
-                return operation;
+                this.RequiresAuthentication();
+
+                return operation.Value.UserId == CurrentUserId
+                    ? operation
+                    : new Maybe<OperationDto>();
             }).HandleAsync());
         }
     }

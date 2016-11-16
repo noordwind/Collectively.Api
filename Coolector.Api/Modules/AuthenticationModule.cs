@@ -24,9 +24,12 @@ namespace Coolector.Api.Modules
                 .OnSuccess(async c =>
                 {
                     var session = await userSessionProvider.GetAsync(c.SessionId);
+                    if (session.HasNoValue)
+                        return HttpStatusCode.Unauthorized;
+
                     var token = jwtTokenHandler.Create(session.Value.UserId);
 
-                    return new {id = session.Value.Id, token = token, key = session.Value.Key};
+                    return new {sessionId = session.Value.Id, token = token, key = session.Value.Key};
                 })
                 .DispatchAsync());
 
