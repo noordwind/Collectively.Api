@@ -7,14 +7,13 @@
   "dependencies": {
     "Microsoft.NETCore.App": {
       "type": "platform",
-      "version": "1.0.0"
+	    "version": "1.*"
     },
     "NETStandard.Library": "1.6.0",
     "Autofac": "4.1.0",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
     "Coolector.Common": "1.0.*",
     "Coolector.Dto": "1.0.*",
-
     "jose-jwt": "2.0.2",
     "RawRabbit": "1.10.0",
     "RawRabbit.vNext": "1.10.0",
