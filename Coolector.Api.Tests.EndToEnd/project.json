@@ -9,7 +9,7 @@
     "Coolector.Api": "1.0.0-*",
     "Coolector.Common": "1.0.*",
     "Coolector.Dto": "1.0.*",
-    "System.Net.Http": "4.1.0"
+    "System.Net.Http": "4.3.0"
   },
   "testRunner": "mspec",
   "frameworks": {
@@ -17,7 +17,7 @@
       "imports": "portable-net45+win8",
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.0.0-*",
+          "version": "1.1.0",
           "type": "platform"
         }
       }
