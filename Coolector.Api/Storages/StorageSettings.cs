@@ -6,5 +6,7 @@ namespace Coolector.Api.Storages
     {
         public string Url { get; set; }
         public TimeSpan? CacheExpiry { get; set; }
+        public int RetryCount { get; set; }
+        public int RetryDelayMilliseconds { get; set; }
     }
 }

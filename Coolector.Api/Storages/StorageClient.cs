@@ -9,6 +9,7 @@ using Coolector.Common.Types;
 using Coolector.Common.Extensions;
 using Newtonsoft.Json;
 using System.Linq;
+using System.Net;
 using NLog;
 
 namespace Coolector.Api.Storages
@@ -16,7 +17,6 @@ namespace Coolector.Api.Storages
     public class StorageClient : IStorageClient
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-
         private readonly ICache _cache;
         private readonly IFilterResolver _filterResolver;
         private readonly StorageSettings _settings;
@@ -149,16 +149,23 @@ namespace Coolector.Api.Storages
             if (endpoint.Empty())
                 throw new ArgumentException("Endpoint can not be empty.");
 
-            try
+            var retryNumber = 0;
+            while (retryNumber < _settings.RetryCount)
             {
-                Logger.Debug($"Fetch data from http endpoint: {endpoint}");
-                var response = await _httpClient.GetAsync(endpoint);
-                if (response.IsSuccessStatusCode)
-                    return response;
-            }
-            catch (Exception ex)
-            {
-                Logger.Error(ex, $"Exception occured while fetching data from endpoint: {endpoint}");
+                try
+                {
+                    Logger.Debug($"Fetch data from http endpoint: {endpoint}");
+                    var response = await _httpClient.GetAsync(endpoint);
+                    if (response.StatusCode != HttpStatusCode.NotFound)
+                        return response;
+
+                    await Task.Delay(_settings.RetryDelayMilliseconds);
+                    retryNumber++;
+                }
+                catch (Exception ex)
+                {
+                    Logger.Error(ex, $"Exception occured while fetching data from endpoint: {endpoint}");
+                }
             }
 
             return new Maybe<HttpResponseMessage>();
@@ -197,6 +204,5 @@ namespace Coolector.Api.Storages
 
         private static string GetCacheKey(string endpoint, string cacheKey)
             => cacheKey.Empty() ? endpoint.Replace("/", ":") : cacheKey;
- 
     }
 }

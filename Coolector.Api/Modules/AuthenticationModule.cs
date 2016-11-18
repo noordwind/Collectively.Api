@@ -1,6 +1,7 @@
 ﻿using System;
 using Coolector.Api.Authentication;
 using Coolector.Api.Commands;
+using Coolector.Api.Storages;
 using Coolector.Api.Validation;
 using Coolector.Common.Commands.Users;
 using Nancy;
@@ -11,7 +12,7 @@ namespace Coolector.Api.Modules
     {
         public AuthenticationModule(ICommandDispatcher commandDispatcher,
             IValidatorResolver validatorResolver,
-            IUserSessionProvider userSessionProvider,
+            IUserStorage userStorage,
             IJwtTokenHandler jwtTokenHandler,
             JwtTokenSettings jwtTokenSettings)
             : base(commandDispatcher, validatorResolver)
@@ -25,7 +26,7 @@ namespace Coolector.Api.Modules
                 .SetResourceId(c => c.SessionId)
                 .OnSuccess(async c =>
                 {
-                    var session = await userSessionProvider.GetAsync(c.SessionId);
+                    var session = await userStorage.GetSessionAsync(c.SessionId);
                     if (session.HasNoValue)
                         return HttpStatusCode.Unauthorized;
 

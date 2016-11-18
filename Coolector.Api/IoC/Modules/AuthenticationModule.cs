@@ -10,9 +10,6 @@ namespace Coolector.Api.IoC.Modules
             builder.RegisterType<JwtTokenHandler>()
                 .As<IJwtTokenHandler>()
                 .SingleInstance();
-            builder.RegisterType<UserSessionProvider>()
-                .As<IUserSessionProvider>()
-                .InstancePerLifetimeScope();
         }
     }
 }
