@@ -4,6 +4,7 @@ using Coolector.Api.Commands;
 using Coolector.Api.Storages;
 using Coolector.Api.Validation;
 using Coolector.Common.Commands.Users;
+using Coolector.Common.Extensions;
 using Nancy;
 
 namespace Coolector.Api.Modules
@@ -34,8 +35,8 @@ namespace Coolector.Api.Modules
                     {
                         token = jwtTokenHandler.Create(session.Value.UserId),
                         sessionId = session.Value.Id,
-                        key = session.Value.Key,
-                        expiry = ToJavascriptTimestamp(DateTime.UtcNow.AddDays(jwtTokenSettings.ExpiryDays))
+                        sessionKey = session.Value.Key,
+                        expiry = DateTime.UtcNow.AddDays(jwtTokenSettings.ExpiryDays).ToTimestamp()
                     };
                 })
                 .DispatchAsync());
@@ -47,14 +48,6 @@ namespace Coolector.Api.Modules
             Post("sign-out", async (ctx, p) => await For<SignUp>()
                 .OnSuccess(HttpStatusCode.NoContent)
                 .DispatchAsync());
-        }
-
-        private static long ToJavascriptTimestamp(DateTime input)
-        {
-            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-            var time = input.Subtract(new TimeSpan(epoch.Ticks));
-
-            return time.Ticks / 10000;
         }
     }
 }

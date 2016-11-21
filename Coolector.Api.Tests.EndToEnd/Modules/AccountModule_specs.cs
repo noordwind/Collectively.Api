@@ -2,18 +2,11 @@
 using Coolector.Dto.Users;
 using Machine.Specifications;
 using System;
-using System.Net.Http;
 
 namespace Coolector.Api.Tests.EndToEnd.Modules
 {
     public abstract class AccountModule_specs : ModuleBase_specs
     {
-        protected static HttpResponseMessage SignIn() =>
-            HttpClient.PostAsync("sign-in", new
-            {
-                AccessToken = Auth0SignInResponse.AccessToken
-            }).WaitForResult();
-
         protected static UserDto GetAccount()
             => HttpClient.GetAsync<UserDto>("account").WaitForResult();
 
@@ -21,32 +14,18 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             => HttpClient.GetAsync<UserDto>($"{name}/account").WaitForResult();
     }
 
-    [Subject("Auth0 sign in")]
-    public class when_signing_in_to_auth0 : AccountModule_specs
-    {
-        Establish context = () => Initialize();
-
-        Because of = () => SignInToAuth0();
-
-        It should_return_successful_auth0_sign_in_response = () =>
-        {
-            Auth0SignInResponse.ShouldNotBeNull();
-            Auth0SignInResponse.AccessToken.ShouldNotBeEmpty();
-            Auth0SignInResponse.IdToken.ShouldNotBeEmpty();
-            Auth0SignInResponse.TokenType.ShouldNotBeEmpty();
-        };
-    }
-
     [Subject("Account sign in")]
     public class when_signing_in_to_api : AccountModule_specs
     {
-        static HttpResponseMessage Response;
 
         Establish context = () => Initialize(authenticate: true);
 
-        Because of = () => Response = SignIn();
+        Because of = () => GetApiSignInResponse();
 
-        It should_return_successful_response = () => Response.IsSuccessStatusCode.ShouldBeTrue();
+        It should_return_token = () => ApiSignInResponse.Token.ShouldNotBeEmpty();
+        It should_return_session_id = () => ApiSignInResponse.SessionId.ShouldNotBeEmpty();
+        It should_return_session_key = () => ApiSignInResponse.SessionKey.ShouldNotBeEmpty();
+        It should_return_expiry = () => ApiSignInResponse.Expiry.ShouldBeGreaterThan(0);
     }
 
     [Subject("Account fetch")]
@@ -76,13 +55,13 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         Establish context = () => Initialize(true);
 
-        Because of = () => User = GetAccountByName(TestUserName);
+        Because of = () => User = GetAccountByName(TestEmail);
 
         It should_return_user_account = () =>
         {
             User.ShouldNotBeNull();
             User.Id.ShouldNotEqual(Guid.Empty);
-            User.Name.ShouldEqual(TestUserName);
+            User.Name.ShouldEqual(TestEmail);
             User.Role.ShouldNotBeEmpty();
             User.State.ShouldNotBeEmpty();
             User.CreatedAt.ShouldNotEqual(DateTime.UtcNow);

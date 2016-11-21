@@ -15,7 +15,7 @@ namespace Coolector.Api.Tests.EndToEnd.Framework
             _httpClient = new CustomHttpClient($"https://{domain}");
         }
 
-        public async Task<Auth0SignInResponse> SignInAsync(string username, string password)
+        public async Task<ApiSignInResponse> SignInAsync(string username, string password)
         {
             var data = new
             {
@@ -27,7 +27,7 @@ namespace Coolector.Api.Tests.EndToEnd.Framework
                 scope = "openid"
             };
 
-            return await _httpClient.PostAsync<Auth0SignInResponse>("oauth/ro", data);
+            return await _httpClient.PostAsync<ApiSignInResponse>("oauth/ro", data);
         }
     }
 }

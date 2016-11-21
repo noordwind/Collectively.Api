@@ -7,12 +7,10 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     public abstract class ModuleBase_specs
     {
         private static bool _authenticated;
-        protected static Auth0SignInResponse Auth0SignInResponse;
+        protected static ApiSignInResponse ApiSignInResponse;
         protected static IHttpClient HttpClient = new CustomHttpClient("http://localhost:5000");
-        protected static string TestUserName = "noordwind_e2e";
-
-        protected static IAuth0Client Auth0Client = new Auth0Client("noordwind-dev.eu.auth0.com",
-            "eYnnpDd1k61vxXQCbFwWtX45yX3PxFDA");
+        protected static string TestEmail = "test-e2e@noordwind.com";
+        protected static string TestPassword = "test";
 
         protected static void Initialize(bool authenticate = false)
         {
@@ -20,19 +18,23 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
                 Authenticate();
         }
 
-        protected static void SignInToAuth0()
-            => Auth0SignInResponse = GetAuth0SignInResponse();
+        protected static void SignInToApi()
+            => ApiSignInResponse = GetApiSignInResponse();
 
-        protected static Auth0SignInResponse GetAuth0SignInResponse()
-            => Auth0Client.SignInAsync("noordwind-e2e-test@malinator.com", "test").WaitForResult();
+        protected static ApiSignInResponse GetApiSignInResponse()
+            => HttpClient.PostAsync<ApiSignInResponse>("sign-in", new
+            {
+                email = TestEmail,
+                password = TestPassword
+            }).WaitForResult();
 
         protected static void Authenticate()
         {
             if (_authenticated)
                 return;
 
-            SignInToAuth0();
-            HttpClient.SetHeader("Authorization", $"Bearer {Auth0SignInResponse.IdToken}");
+            SignInToApi();
+            HttpClient.SetHeader("Authorization", $"Bearer {ApiSignInResponse.Token}");
             _authenticated = true;
         }
 
