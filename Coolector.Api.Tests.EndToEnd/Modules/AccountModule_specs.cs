@@ -11,7 +11,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             => HttpClient.GetAsync<UserDto>("account").WaitForResult();
 
         protected static UserDto GetAccountByName(string name)
-            => HttpClient.GetAsync<UserDto>($"{name}/account").WaitForResult();
+            => HttpClient.GetAsync<UserDto>($"users/{name}").WaitForResult();
     }
 
     [Subject("Account sign in")]
@@ -55,7 +55,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         Establish context = () => Initialize(true);
 
-        Because of = () => User = GetAccountByName(TestEmail);
+        Because of = () => User = GetAccountByName(TestName);
 
         It should_return_user_account = () =>
         {

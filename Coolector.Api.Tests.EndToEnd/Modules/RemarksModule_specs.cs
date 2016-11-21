@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Net.Http;
 using FluentAssertions;
 using System.Linq;
+using Coolector.Dto.Operations;
 
 namespace Coolector.Api.Tests.EndToEnd.Modules
 {
@@ -31,15 +32,15 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         protected static IEnumerable<RemarkCategoryDto> GetCategories()
             => HttpClient.GetCollectionAsync<RemarkCategoryDto>("remarks/categories").WaitForResult();
 
-        protected static HttpResponseMessage CreateRemark(double latitude = 1.0, double longitude = 1.0, string categoryName = null)
+        protected static OperationDto CreateRemark(double latitude = 1.0, double longitude = 1.0, string categoryName = null)
         {
             var categories = GetCategories().ToList();
             var photo = GeneratePhoto();
             var category = categories.FirstOrDefault(x => x.Name == categoryName) ?? categories.First();
 
-            return HttpClient.PostAsync("remarks", new
+            return OperationHandler.PostAsync("remarks", new
             {
-                Address = "",
+                Address = "test",
                 Category = category.Name,
                 Description = "test",
                 Latitude = latitude,
@@ -48,15 +49,14 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             }).WaitForResult();
         }
 
-        protected static HttpResponseMessage DeleteRemark(Guid remarkId)
-            => HttpClient.DeleteAsync($"remarks/{remarkId}").WaitForResult();
+        protected static OperationDto DeleteRemark(Guid remarkId)
+            => OperationHandler.DeleteAsync($"remarks/{remarkId}").WaitForResult();
 
-        protected static HttpResponseMessage ResolveRemark(Guid remarkId, 
+        protected static OperationDto ResolveRemark(Guid remarkId,
             double latitude = 1.0, double longitude = 1.0,
             bool validatePhoto = false, bool validateLocation = false)
-            => HttpClient.PutAsync("remarks", new
+            => OperationHandler.PutAsync($"remarks/{remarkId}/resolve", new
             {
-                RemarkId = remarkId,
                 Photo = GeneratePhoto(),
                 Latitude = latitude,
                 Longitude = longitude,
@@ -314,7 +314,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     [Subject("Remarks create")]
     public class when_creating_remark : RemarksModule_specs
     {
-        protected static HttpResponseMessage Result;
+        protected static OperationDto Result;
 
         Establish context = () => Initialize(true);
 
@@ -322,14 +322,14 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_return_success_status_code = () =>
         {
-            Result.IsSuccessStatusCode.ShouldBeTrue();
+            Result.Success.ShouldBeTrue();
         };
     }
 
     [Subject("Remarks delete")]
     public class when_deleting_remark : RemarksModule_specs
     {
-        protected static HttpResponseMessage Result;
+        protected static OperationDto Result;
         static BasicRemarkDto SelectedRemark;
         static IEnumerable<BasicRemarkDto> Remarks;
 
@@ -346,14 +346,14 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_return_success_status_code = () =>
         {
-            Result.IsSuccessStatusCode.ShouldBeTrue();
+            Result.Success.ShouldBeTrue();
         };
     }
 
     [Subject("Remarks resolve")]
     public class when_resolving_remark : RemarksModule_specs
     {
-        protected static HttpResponseMessage Result;
+        protected static OperationDto Result;
         static BasicRemarkDto SelectedRemark;
         static IEnumerable<BasicRemarkDto> Remarks;
 
@@ -370,7 +370,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_return_success_status_code = () =>
         {
-            Result.IsSuccessStatusCode.ShouldBeTrue();
+            Result.Success.ShouldBeTrue();
         };
 
         It should_be_resolved = () =>
@@ -385,7 +385,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
     [Subject("Remarks resolve")]
     public class when_resolving_remark_from_a_long_distance : RemarksModule_specs
     {
-        protected static HttpResponseMessage Result;
+        protected static OperationDto Result;
         static BasicRemarkDto SelectedRemark;
         static IEnumerable<BasicRemarkDto> Remarks;
 
@@ -402,7 +402,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_return_success_status_code = () =>
         {
-            Result.IsSuccessStatusCode.ShouldBeTrue();
+            Result.Success.ShouldBeTrue();
         };
 
         It should_not_be_resolved = () =>

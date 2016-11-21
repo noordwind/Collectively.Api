@@ -9,6 +9,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         private static bool _authenticated;
         protected static ApiSignInResponse ApiSignInResponse;
         protected static IHttpClient HttpClient = new CustomHttpClient("http://localhost:5000");
+        protected static IOperationHandler OperationHandler = new OperationHandler(HttpClient);
         protected static string TestEmail = "test-e2e@noordwind.com";
         protected static string TestName = "test-e2e";
         protected static string TestPassword = "test";
