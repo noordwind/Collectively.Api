@@ -19,9 +19,6 @@ namespace Coolector.Api.Modules
             Get("account", async args => await Fetch<GetAccount, UserDto>
                 (async x => await userStorage.GetAsync(x.UserId)).HandleAsync());
 
-            Get("{name}/account", async args => await Fetch<GetAccountByName, UserDto>
-                (async x => await userStorage.GetByNameAsync(x.Name)).HandleAsync());
-
             Get("{name}/available", async args => await Fetch<GetNameAvailability, AvailableResourceDto>
                 (async x => await userStorage.IsNameAvailableAsync(x.Name)).HandleAsync());
 

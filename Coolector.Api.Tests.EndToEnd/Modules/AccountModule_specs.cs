@@ -61,7 +61,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         {
             User.ShouldNotBeNull();
             User.Id.ShouldNotEqual(Guid.Empty);
-            User.Name.ShouldEqual(TestEmail);
+            User.Name.ShouldEqual(TestName);
             User.Role.ShouldNotBeEmpty();
             User.State.ShouldNotBeEmpty();
             User.CreatedAt.ShouldNotEqual(DateTime.UtcNow);

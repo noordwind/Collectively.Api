@@ -10,6 +10,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         protected static ApiSignInResponse ApiSignInResponse;
         protected static IHttpClient HttpClient = new CustomHttpClient("http://localhost:5000");
         protected static string TestEmail = "test-e2e@noordwind.com";
+        protected static string TestName = "test-e2e";
         protected static string TestPassword = "test";
 
         protected static void Initialize(bool authenticate = false)
@@ -25,7 +26,8 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             => HttpClient.PostAsync<ApiSignInResponse>("sign-in", new
             {
                 email = TestEmail,
-                password = TestPassword
+                password = TestPassword,
+                provider = "coolector"
             }).WaitForResult();
 
         protected static void Authenticate()
