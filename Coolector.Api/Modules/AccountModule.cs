@@ -1,11 +1,10 @@
-﻿using Coolector.Api.Queries;
+﻿using Coolector.Api.Commands;
+using Coolector.Api.Queries;
+using Coolector.Api.Storages;
 using Coolector.Api.Validation;
 using Coolector.Common.Commands.Users;
 using Coolector.Dto.Common;
 using Coolector.Dto.Users;
-using GetAccount = Coolector.Api.Queries.GetAccount;
-using ICommandDispatcher = Coolector.Api.Commands.ICommandDispatcher;
-using IUserStorage = Coolector.Api.Storages.IUserStorage;
 
 namespace Coolector.Api.Modules
 {
@@ -27,6 +26,10 @@ namespace Coolector.Api.Modules
                 .DispatchAsync());
 
             Put("account/avatar", async args => await For<ChangeAvatar>()
+                .OnSuccessAccepted("account")
+                .DispatchAsync());
+
+            Put("account/password", async args => await For<ChangePassword>()
                 .OnSuccessAccepted("account")
                 .DispatchAsync());
         }
