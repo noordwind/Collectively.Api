@@ -102,9 +102,9 @@ namespace Coolector.Api.Framework
             return this;
         }
 
-        public CommandRequestHandler<T> OnSuccessAccepted(string path)
+        public CommandRequestHandler<T> OnSuccessAccepted(string path = "")
         {
-            var resourceEndpoint = string.Format(path, _resourceId.ToString("N"));
+            var resourceEndpoint = path.Empty() ? string.Empty : string.Format(path, _resourceId.ToString("N"));
             var operationEndpoint = $"operations/{_command.Request.Id:N}";
             _command.Request.Resource = resourceEndpoint;
             _responseFunc = x => _negotiator.WithStatusCode(202)
