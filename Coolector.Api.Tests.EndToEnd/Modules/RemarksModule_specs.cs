@@ -18,7 +18,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             => HttpClient.GetAsync<RemarkDto>($"remarks/{id}").WaitForResult();
 
         protected static IEnumerable<BasicRemarkDto> GetLatestRemarks()
-            => HttpClient.GetCollectionAsync<BasicRemarkDto>("remarks?latest=true").WaitForResult();
+            => HttpClient.GetCollectionAsync<BasicRemarkDto>("remarks?latest=true&results=10000").WaitForResult();
 
         protected static IEnumerable<BasicRemarkDto> GetNearestRemarks()
             => HttpClient.GetCollectionAsync<BasicRemarkDto>("remarks?radius=10000&longitude=1.0&latitude=1.0").WaitForResult();
@@ -339,7 +339,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             CreateRemark();
             Wait();
             Remarks = GetLatestRemarks();
-            SelectedRemark = Remarks.First();
+            SelectedRemark = Remarks.First(r => r.Author == TestName);
         };
 
         Because of = () => Result = DeleteRemark(SelectedRemark.Id);
@@ -347,6 +347,30 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         It should_return_success_status_code = () =>
         {
             Result.Success.ShouldBeTrue();
+        };
+    }
+
+    [Subject("Remarks delete")]
+    public class when_deleting_remark_and_user_is_not_an_author : RemarksModule_specs
+    {
+        protected static OperationDto Result;
+        static BasicRemarkDto SelectedRemark;
+        static IEnumerable<BasicRemarkDto> Remarks;
+
+        Establish context = () =>
+        {
+            Initialize(true);
+            CreateRemark();
+            Wait();
+            Remarks = GetLatestRemarks();
+            SelectedRemark = Remarks.First(r => r.Author != TestName);
+        };
+
+        Because of = () => Result = DeleteRemark(SelectedRemark.Id);
+
+        It should_return_success_status_code = () =>
+        {
+            Result.Success.ShouldBeFalse();
         };
     }
 
