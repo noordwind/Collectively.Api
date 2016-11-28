@@ -5,6 +5,7 @@ using Coolector.Api.Framework;
 using Coolector.Api.Validation;
 using Coolector.Common.Commands;
 using Coolector.Common.Extensions;
+using Coolector.Common.Nancy;
 using Coolector.Common.Queries;
 using Coolector.Common.Types;
 using Nancy;
