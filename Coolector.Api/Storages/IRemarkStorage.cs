@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Coolector.Api.Queries;
+using Coolector.Common.Dto.Remarks;
 using Coolector.Common.Types;
-using Coolector.Dto.Remarks;
 
 namespace Coolector.Api.Storages
 {

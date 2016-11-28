@@ -1,12 +1,11 @@
 ﻿using Coolector.Api.Tests.EndToEnd.Framework;
-using Coolector.Dto.Remarks;
 using Machine.Specifications;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using FluentAssertions;
 using System.Linq;
-using Coolector.Dto.Operations;
+using Coolector.Common.Dto.Operations;
+using Coolector.Common.Dto.Remarks;
 
 namespace Coolector.Api.Tests.EndToEnd.Modules
 {
