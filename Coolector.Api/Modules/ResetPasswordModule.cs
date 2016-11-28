@@ -1,4 +1,5 @@
 ﻿using Coolector.Api.Commands;
+using Coolector.Api.Framework;
 using Coolector.Api.Validation;
 using Coolector.Common.Commands.Users;
 
@@ -7,9 +8,11 @@ namespace Coolector.Api.Modules
     public class ResetPasswordModule : ModuleBase
     {
         public ResetPasswordModule(ICommandDispatcher commandDispatcher,
-            IValidatorResolver validatorResolver) : base(commandDispatcher, validatorResolver, "reset-password")
+            IValidatorResolver validatorResolver, AppSettings appSettings)
+            : base(commandDispatcher, validatorResolver, "reset-password")
         {
             Post("", async args => await For<ResetPassword>()
+                .Set(x => x.Endpoint = appSettings.ResetPasswordUrl)
                 .OnSuccessAccepted()
                 .DispatchAsync());
 

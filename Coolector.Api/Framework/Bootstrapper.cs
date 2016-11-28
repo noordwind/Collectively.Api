@@ -73,6 +73,7 @@ namespace Coolector.Api.Framework
 
             container.Update(builder =>
             {
+                builder.RegisterInstance(GetConfigurationValue<AppSettings>()).SingleInstance();
                 builder.RegisterInstance(GetConfigurationValue<FeatureSettings>()).SingleInstance();
                 builder.RegisterInstance(GetConfigurationValue<JwtTokenSettings>()).SingleInstance();
                 builder.RegisterInstance(GetConfigurationValue<StorageSettings>()).SingleInstance();

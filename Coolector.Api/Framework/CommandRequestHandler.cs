@@ -25,6 +25,7 @@ namespace Coolector.Api.Framework
         private Func<T, Task<object>> _asyncResponseFunc;
         private Guid _resourceId;
 
+        //TODO: Fetch culture based on Accept-Language header.
         public CommandRequestHandler(ICommandDispatcher dispatcher, T command,
             IResponseFormatter responseFormatter,
             IValidatorResolver validatorResolver,
@@ -33,12 +34,7 @@ namespace Coolector.Api.Framework
         {
             _dispatcher = dispatcher;
             _command = command;
-            _command.Request = new Common.Commands.Request
-            {
-                Origin = url.Path.StartsWith("/") ? url.Path.Remove(0,1) : url.Path,
-                Name = typeof(T).Name.Humanize(LetterCasing.LowerCase).Underscore(),
-                CreatedAt = DateTime.UtcNow
-            };
+            _command.Request = Common.Commands.Request.Create<T>(url.Path, string.Empty, "en-gb");
             _responseFormatter = responseFormatter;
             _validatorResolver = validatorResolver;
             _negotiator = negotiator;
