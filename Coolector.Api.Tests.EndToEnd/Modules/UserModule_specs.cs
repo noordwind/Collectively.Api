@@ -1,9 +1,8 @@
 ﻿using Coolector.Api.Tests.EndToEnd.Framework;
-using Coolector.Dto.Users;
 using Machine.Specifications;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
+using Coolector.Common.Dto.Users;
 
 namespace Coolector.Api.Tests.EndToEnd.Modules
 {

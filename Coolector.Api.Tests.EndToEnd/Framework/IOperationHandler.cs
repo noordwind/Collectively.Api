@@ -1,6 +1,6 @@
 ﻿using System.Net.Http;
 using System.Threading.Tasks;
-using Coolector.Dto.Operations;
+using Coolector.Common.Dto.Operations;
 
 namespace Coolector.Api.Tests.EndToEnd.Framework
 {

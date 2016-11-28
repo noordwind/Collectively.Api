@@ -2,9 +2,9 @@
 using Coolector.Api.Queries;
 using Coolector.Api.Storages;
 using Coolector.Api.Validation;
-using Coolector.Common.Extensions;
+using Coolector.Common.Dto.Operations;
 using Coolector.Common.Types;
-using Coolector.Dto.Operations;
+using Coolector.Common.Extensions;
 using Nancy.Security;
 
 namespace Coolector.Api.Modules

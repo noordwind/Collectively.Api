@@ -1,6 +1,6 @@
 ﻿using Coolector.Api.Queries;
 using Coolector.Api.Validation;
-using Coolector.Dto.Users;
+using Coolector.Common.Dto.Users;
 using BrowseUsers = Coolector.Api.Queries.BrowseUsers;
 using ICommandDispatcher = Coolector.Api.Commands.ICommandDispatcher;
 using IUserStorage = Coolector.Api.Storages.IUserStorage;

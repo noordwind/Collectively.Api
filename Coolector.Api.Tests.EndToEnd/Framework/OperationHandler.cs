@@ -3,8 +3,8 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Coolector.Common.Dto.Operations;
 using Coolector.Common.Extensions;
-using Coolector.Dto.Operations;
 
 namespace Coolector.Api.Tests.EndToEnd.Framework
 {

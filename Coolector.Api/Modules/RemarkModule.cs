@@ -1,10 +1,10 @@
-﻿using System.Linq;
-using Coolector.Api.Commands;
+﻿using Coolector.Api.Commands;
 using Coolector.Api.Queries;
 using Coolector.Api.Storages;
 using Coolector.Api.Validation;
 using Coolector.Common.Commands.Remarks;
-using Coolector.Dto.Remarks;
+using Coolector.Common.Dto.Remarks;
+using System.Linq;
 
 namespace Coolector.Api.Modules
 {
