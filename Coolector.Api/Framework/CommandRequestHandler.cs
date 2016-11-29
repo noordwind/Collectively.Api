@@ -6,7 +6,6 @@ using Coolector.Api.Validation;
 using Coolector.Common.Commands;
 using Nancy;
 using Coolector.Common.Extensions;
-using Humanizer;
 using Nancy.Responses.Negotiation;
 using NLog;
 using ICommandDispatcher = Coolector.Api.Commands.ICommandDispatcher;
@@ -25,16 +24,15 @@ namespace Coolector.Api.Framework
         private Func<T, Task<object>> _asyncResponseFunc;
         private Guid _resourceId;
 
-        //TODO: Fetch culture based on Accept-Language header.
         public CommandRequestHandler(ICommandDispatcher dispatcher, T command,
             IResponseFormatter responseFormatter,
             IValidatorResolver validatorResolver,
             Negotiator negotiator,
-            Url url)
+            Url url, string culture)
         {
             _dispatcher = dispatcher;
             _command = command;
-            _command.Request = Common.Commands.Request.Create<T>(Guid.NewGuid(), url.Path, "en-gb");
+            _command.Request = Common.Commands.Request.Create<T>(Guid.NewGuid(), url.Path, culture);
             _responseFormatter = responseFormatter;
             _validatorResolver = validatorResolver;
             _negotiator = negotiator;

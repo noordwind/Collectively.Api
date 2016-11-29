@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Coolector.Api.Framework;
 using Coolector.Api.Validation;
@@ -37,17 +38,19 @@ namespace Coolector.Api.Modules
         {
             var command = BindRequest<T>();
             var authenticatedCommand = command as IAuthenticatedCommand;
+            var culture = Request.Headers.AcceptLanguage?.FirstOrDefault()?.Item1;
+            culture = culture.Empty() ? "en-gb" : culture.TrimToLower();
             if (authenticatedCommand == null)
             {
                 return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
-                    _validatorResolver, Negotiate, Request.Url);
+                    _validatorResolver, Negotiate, Request.Url, culture);
             }
 
             this.RequiresAuthentication();
             authenticatedCommand.UserId = CurrentUserId;
 
             return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
-                _validatorResolver,Negotiate, Request.Url);
+                _validatorResolver,Negotiate, Request.Url, culture);
         }
 
 
