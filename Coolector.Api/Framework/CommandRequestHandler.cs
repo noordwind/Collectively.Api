@@ -34,7 +34,7 @@ namespace Coolector.Api.Framework
         {
             _dispatcher = dispatcher;
             _command = command;
-            _command.Request = Common.Commands.Request.Create<T>(url.Path, string.Empty, "en-gb");
+            _command.Request = Common.Commands.Request.Create<T>(Guid.NewGuid(), url.Path, "en-gb");
             _responseFormatter = responseFormatter;
             _validatorResolver = validatorResolver;
             _negotiator = negotiator;
