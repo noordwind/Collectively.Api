@@ -114,7 +114,6 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         It should_return_non_empty_collection = () =>
         {
             Remarks.ShouldNotBeEmpty();
-            var i = 0;
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);

@@ -5,6 +5,10 @@ using System.IO;
 using Autofac;
 using Coolector.Api.Authentication;
 using Coolector.Api.Validation;
+using Coolector.Common.Extensions;
+using Coolector.Common.Exceptionless;
+using Coolector.Common.Nancy;
+using Coolector.Common.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Nancy;
@@ -25,6 +29,7 @@ namespace Coolector.Api.Framework
     public class Bootstrapper : AutofacNancyBootstrapper
     {
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static IExceptionHandler _exceptionHandler;
         private static readonly string DecimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
         private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
         private readonly IConfiguration _configuration;
@@ -52,7 +57,8 @@ namespace Coolector.Api.Framework
             };
             pipelines.AfterRequest += (ctx) => AddCorsHeaders(ctx.Response);
             SetupTokenAuthentication(container, pipelines);
-            Logger.Info("API Started");
+            _exceptionHandler = container.Resolve<IExceptionHandler>();
+            Logger.Info("Coolector API has started.");
         }
 
         protected override void ConfigureApplicationContainer(ILifetimeScope container)
@@ -73,13 +79,15 @@ namespace Coolector.Api.Framework
 
             container.Update(builder =>
             {
-                builder.RegisterInstance(GetConfigurationValue<AppSettings>()).SingleInstance();
-                builder.RegisterInstance(GetConfigurationValue<FeatureSettings>()).SingleInstance();
-                builder.RegisterInstance(GetConfigurationValue<JwtTokenSettings>()).SingleInstance();
-                builder.RegisterInstance(GetConfigurationValue<StorageSettings>()).SingleInstance();
+                builder.RegisterInstance(_configuration.GetSettings<AppSettings>()).SingleInstance();
+                builder.RegisterInstance(_configuration.GetSettings<FeatureSettings>()).SingleInstance();
+                builder.RegisterInstance(_configuration.GetSettings<JwtTokenSettings>()).SingleInstance();
+                builder.RegisterInstance(_configuration.GetSettings<StorageSettings>()).SingleInstance();
+                builder.RegisterInstance(_configuration.GetSettings<ExceptionlessSettings>()).SingleInstance();
+                builder.RegisterType<ExceptionlessExceptionHandler>().As<IExceptionHandler>().SingleInstance();
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterModule<ModuleContainer>();
-                var rawRabbitConfiguration = GetConfigurationValue<RawRabbitConfiguration>();
+                var rawRabbitConfiguration = _configuration.GetSettings<RawRabbitConfiguration>();
                 builder.RegisterInstance(rawRabbitConfiguration).SingleInstance();
                 rmqRetryPolicy.Execute(() =>
                     builder.RegisterInstance(BusClientFactory.CreateDefault(rawRabbitConfiguration)).As<IBusClient>());
@@ -97,6 +105,8 @@ namespace Coolector.Api.Framework
             {
                 ctx.Response = ErrorResponse.FromException(ex, context.Environment);
                 AddCorsHeaders(ctx.Response);
+                _exceptionHandler.Handle(ex, ctx.ToExceptionData(),
+                    "Request details", "Coolector", "API");
 
                 return ctx.Response;
             });
@@ -114,19 +124,6 @@ namespace Coolector.Api.Framework
                     return isValid ? new CoolectorIdentity(token.Sub) : null;
                 });
             StatelessAuthentication.Enable(pipelines, statelessAuthConfiguration);
-        }
-
-        private T GetConfigurationValue<T>(string section = "") where T : new()
-        {
-            if (string.IsNullOrWhiteSpace(section))
-            {
-                section = typeof(T).Name.Replace("Settings", string.Empty).Replace("Configuration", string.Empty);
-            }
-
-            var configurationValue = new T();
-            _configuration.GetSection(section).Bind(configurationValue);
-
-            return configurationValue;
         }
 
         private void FixNumberFormat(NancyContext ctx)

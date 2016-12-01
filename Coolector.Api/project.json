@@ -8,6 +8,8 @@
     "Autofac": "4.1.0",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
     "Coolector.Common": "1.0.*",
+    "Lockbox.Client": "1.0.0-beta-2",
+    "Exceptionless": "4.0.1922",
     "jose-jwt": "2.0.2",
     "RawRabbit": "1.10.0",
     "RawRabbit.vNext": "1.10.0",
@@ -22,7 +24,7 @@
     "NLog.Extensions.Logging": "1.0.0-*",
     "Nancy": "2.0.0-barneyrubble",
     "Nancy.Authentication.Stateless": "2.0.0-barneyrubble",
-    "System.Reflection.TypeExtensions": "4.1.0",
+    "System.Reflection.TypeExtensions": "4.3.0",
     "Polly": "5.0.1-v5-0-alpha0001"
   },
   "frameworks": {

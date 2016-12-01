@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Nancy.Owin;
 using NLog.Extensions.Logging;
+using Lockbox.Client.Extensions;
 
 namespace Coolector.Api
 {
@@ -28,6 +29,11 @@ namespace Coolector.Api
                 .AddJsonFile($"appsettings.{EnvironmentName}.json", optional: true)
                 .AddEnvironmentVariables()
                 .SetBasePath(env.ContentRootPath);
+
+            if (env.IsProduction())
+            {
+                builder.AddLockbox();
+            }
 
             Configuration = builder.Build();
         }
