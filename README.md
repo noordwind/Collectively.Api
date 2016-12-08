@@ -33,7 +33,7 @@ Clone the [Coolector.Docker](https://github.com/noordwind/Coolector.Docker) repo
 
 ```
 git clone https://github.com/noordwind/Coolector.Docker
-./starth.sh
+./start.sh
 ```
 
 Once executed, you shall be able to access the following services:
