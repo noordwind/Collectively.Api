@@ -2,9 +2,9 @@
 using Coolector.Api.Queries;
 using Coolector.Api.Storages;
 using Coolector.Api.Validation;
-using Coolector.Common.Commands.Users;
 using Coolector.Common.Dto.General;
-using Coolector.Common.Dto.Users;
+using Coolector.Services.Users.Shared.Commands;
+using Coolector.Services.Users.Shared.Dto;
 
 namespace Coolector.Api.Modules
 {

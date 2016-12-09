@@ -1,7 +1,7 @@
 ﻿using Coolector.Api.Tests.EndToEnd.Framework;
 using Machine.Specifications;
 using System;
-using Coolector.Common.Dto.Users;
+using Coolector.Services.Users.Shared.Dto;
 
 namespace Coolector.Api.Tests.EndToEnd.Modules
 {

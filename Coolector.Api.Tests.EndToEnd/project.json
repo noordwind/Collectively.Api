@@ -8,6 +8,9 @@
     "Newtonsoft.Json": "9.0.1",
     "Coolector.Api": "1.0.0-*",
     "Coolector.Common": "1.0.*",
+    "Coolector.Services.Operations.Shared": "1.0.*",
+    "Coolector.Services.Remarks.Shared": "1.0.*",
+    "Coolector.Services.Users.Shared": "1.0.*",
     "System.Net.Http": "4.3.0"
   },
   "testRunner": "mspec",

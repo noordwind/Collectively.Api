@@ -3,8 +3,8 @@ using Coolector.Api.Authentication;
 using Coolector.Api.Commands;
 using Coolector.Api.Storages;
 using Coolector.Api.Validation;
-using Coolector.Common.Commands.Users;
 using Coolector.Common.Extensions;
+using Coolector.Services.Users.Shared.Commands;
 using Nancy;
 
 namespace Coolector.Api.Modules

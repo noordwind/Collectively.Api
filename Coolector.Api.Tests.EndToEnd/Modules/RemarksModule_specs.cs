@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using System.Linq;
-using Coolector.Common.Dto.Operations;
-using Coolector.Common.Dto.Remarks;
+using Coolector.Services.Operations.Shared.Dto;
+using Coolector.Services.Remarks.Shared.Dto;
 
 namespace Coolector.Api.Tests.EndToEnd.Modules
 {

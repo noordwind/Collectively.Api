@@ -2,9 +2,9 @@
 using Coolector.Api.Queries;
 using Coolector.Api.Storages;
 using Coolector.Api.Validation;
-using Coolector.Common.Commands.Remarks;
-using Coolector.Common.Dto.Remarks;
 using System.Linq;
+using Coolector.Services.Remarks.Shared.Commands;
+using Coolector.Services.Remarks.Shared.Dto;
 
 namespace Coolector.Api.Modules
 {

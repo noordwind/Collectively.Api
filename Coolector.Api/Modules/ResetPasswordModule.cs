@@ -1,7 +1,7 @@
 ﻿using Coolector.Api.Commands;
 using Coolector.Api.Framework;
 using Coolector.Api.Validation;
-using Coolector.Common.Commands.Users;
+using Coolector.Services.Users.Shared.Commands;
 
 namespace Coolector.Api.Modules
 {

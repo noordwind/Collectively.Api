@@ -1,5 +1,5 @@
 ﻿using Coolector.Api.Tests.EndToEnd.Framework;
-using Coolector.Common.Dto.Operations;
+using Coolector.Services.Operations.Shared.Dto;
 using Machine.Specifications;
 
 namespace Coolector.Api.Tests.EndToEnd.Modules

@@ -2,7 +2,7 @@
 using Machine.Specifications;
 using System;
 using System.Collections.Generic;
-using Coolector.Common.Dto.Users;
+using Coolector.Services.Users.Shared.Dto;
 
 namespace Coolector.Api.Tests.EndToEnd.Modules
 {

@@ -5,9 +5,12 @@
     "emitEntryPoint": true
   },
   "dependencies": {
+    "Coolector.Common": "1.0.*",
+    "Coolector.Services.Operations.Shared": "1.0.*",
+    "Coolector.Services.Remarks.Shared": "1.0.*",
+    "Coolector.Services.Users.Shared": "1.0.*",
     "Autofac": "4.1.0",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
-    "Coolector.Common": "1.0.*",
     "Lockbox.Client": "1.0.0-beta-2",
     "Exceptionless": "4.0.1922",
     "jose-jwt": "2.0.2",

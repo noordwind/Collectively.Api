@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Coolector.Common.Commands.Remarks;
 using Coolector.Common.Extensions;
+using Coolector.Services.Remarks.Shared.Commands;
 
 namespace Coolector.Api.Validation
 {

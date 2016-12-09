@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using Coolector.Api.Queries;
-using Coolector.Common.Dto.Users;
 using Coolector.Common.Types;
+using Coolector.Services.Users.Shared.Dto;
 
 namespace Coolector.Api.Filters
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Coolector.Common.Dto.Operations;
 using Coolector.Common.Types;
+using Coolector.Services.Operations.Shared.Dto;
 
 namespace Coolector.Api.Storages
 {
