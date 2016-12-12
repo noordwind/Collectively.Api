@@ -11,7 +11,7 @@
     "Coolector.Services.Users.Shared": "1.0.*",
     "Autofac": "4.1.0",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
-    "Lockbox.Client": "1.0.0-beta-2",
+    "Lockbox.Client": "1.0.0",
     "Exceptionless": "4.0.1922",
     "jose-jwt": "2.0.2",
     "RawRabbit": "1.10.0",
