@@ -1,80 +1,541 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: https://coolector.tk/api
 
-# coolector
+# Coolector
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+## Registration [/sign-up]
 
-## Questions Collection [/questions]
+### Register via email [POST]
 
-### List All Questions [GET]
++ Request (application/json)
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
+    + Body
+    
+            {
+              "email": "user1@email.com", 
+              "name": "user1", 
+              "password": "secret"
+            }
+    
++ Response 202
+
+    + Headers
+
+            X-Resource: account
+            X-Operations: operations/{id}
+
+## Authentication [/sign-in]
+
+### Authenticate via email [POST]
+
++ Request (application/json)
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
+    + Body
+    
+            {
+              "email": "user1@email.com", 
+              "name": "user1", 
+              "password": "secret"
+            }
+    
++ Response 200 (application/json)
+
+        {
+          "expiry": 1234567890,
+          "sessionId": "SESSION_ID",
+          "sessionKey": "SESSION_KEY",
+          "token": "API_KEY"
+        }
+        
+        
+### Authenticate via Facebook [POST]
+
++ Request (application/json)
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
+    + Body
+    
+            {
+              "accessToken": "FACEBOOK_ACCESS_TOKEN", 
+              "provider": "facebook"
+            }
+    
++ Response 200 (application/json)
+
+        {
+          "expiry": 1234567890,
+          "sessionId": "SESSION_ID",
+          "sessionKey": "SESSION_KEY",
+          "token": "API_KEY"
+        }
+        
+        
+## Account [/account]
+
+### Get user account [GET]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
++ Response 200 (application/json)
+
+        {
+          "userId": "19f2b8fc-20a5-4f5b-97d8-d653882492ad",
+          "email": "user1@email.com", 
+          "name": "user1",
+          "provider": "coolector"          
+          "pictureUrl": "",
+          "role": "user",          
+          "state": "active",          
+          "externalUserId": "",          
+          "createdAt": "2016-12-09 12:21:45"   
+        }
+        
+
+## Available account name [/account/is-name-available/{name}]
+
+### Check if account name is available [GET]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+          "isAvailable": true
+        }
+        
+        
+## Account name [/account/name]
+
+### Set name [PUT]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Content-Type: application/json
+            Authorization: Bearer API_KEY
+
+    + Body
+    
+            {
+              "name": "user1"
+            }
+
++ Response 202
+
+    + Headers
+
+            X-Resource: account
+            X-Operations: operations/{id}     
+            
+            
+
+## Avatar [/account/avatar]
+
+### Set avatar [PUT]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Content-Type: application/json
+            Authorization: Bearer API_KEY
+
+    + Body
+    
+            {
+              "pictureUrl": "full_image_url"
+            }
+
++ Response 202
+
+    + Headers
+
+            X-Resource: account
+            X-Operations: operations/{id}   
+
+
+## Change password [/account/password]
+
+### Set new password to the account [PUT]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Content-Type: application/json
+            Authorization: Bearer API_KEY
+
+    + Body
+    
+            {
+              "currentPassword": "secret",
+              "newPassword": "secret1"
+            }
+
++ Response 202
+
+    + Headers
+
+            X-Resource: account
+            X-Operations: operations/{id} 
+            
+
+## Reset password [/reset-password]
+
+### Reset password to the account [POST]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Content-Type: application/json
+
+    + Body
+    
+            {
+              "email": "user1@email.com"
+            }
+
++ Response 202
+
+    + Headers
+
+            X-Operations: operations/{id}        
+            
+## Set new password [/reset-password/set-new]
+
+### Set new password to the account [POST]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Content-Type: application/json
+
+    + Body
+    
+            {
+              "email": "user1@email.com",
+              "password": "secret1"
+              "token": "reset_password_token"
+            }
+
++ Response 202
+
+    + Headers
+
+            X-Operations: operations/{id}   
+
+## Remarks categories [/remarks/categories]
+
+### Browse remarks categories [GET]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
 
 + Response 200 (application/json)
 
         [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
+         {
+           "id": "12f2b8f1-10ab-4f59-6ad3-b6528c239201",
+           "name": "accidents"
+         },
+         {
+           "id": "34f2b8f1-10ab-4f59-6ad3-b6528c239201",
+           "name": "damages"
+         },
+         {
+           "id": "56f2b8f1-10ab-4f59-6ad3-b6528c239201",
+           "name": "litter"
+         }         
         ]
 
-### Create a New Question [POST]
 
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+## Remarks [/remarks{?page}{?results}{?latitude}{?longitude}{?radius}{?author}{?latest}{?categories}{?state}]
 
-+ Request (application/json)
++ Parameters
+    + page = `1` (optional, number) ... Number of page. 
+    + results = `10` (optional, number) ... Number of results per page.
+    + latitude = `` (optional, number) ... Latitude of the center position.
+    + longitude = `` (optional, number) ... Longitude of the center position.
+    + radius = 1000 (optional, number) ... Radius in meters.
+    + author = `` (optional, string) ... Name of the remarks author.
+    + latest = `false` (optional, bool) ... Flag true|false.
+    + categories = `` (optional, list<string>) ... List of categories names.
+    + state = `active` (optional, string) ... State of the remarks active|resolved.
 
-        {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
-        }
+### Browse remarks [GET]
 
-+ Response 201 (application/json)
++ Request
+
+    + Headers
+    
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        [
+         {
+           "id": "49f2b8f1-10ab-4f59-6ad3-b6528c239201",
+           "author": "user1", 
+           "category": "litter",
+           "location": {
+             "address": "st. Test 123, 00-123 City, Country",
+             "coordinates": [0.0, 0.0]
+           },
+           "smallPhotoUrl": "full_image_url",
+           "description": "This is my remark.",          
+           "state": "active",          
+           "createdAt": "2016-12-09 12:21:45",
+           "resolved": false
+         }
+        ]
+
+### Create a remark [POST]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Content-Type: application/json
+            Authorization: Bearer API_KEY
+
+    + Body
+    
+            {
+              "category": "litter",
+              "photo": {
+                "base64": "encoded_base64_photo",
+                "name": "remark.jpg",
+                "contentType": "image/jpeg"
+              },
+              "latitude": 0.0, 
+              "longitude": 0.0,  
+              "address":  "st. Test 123, 00-123 City, Country",
+              "description": "This is my remark."
+            }
+
++ Response 202
+
+    + Headers
+    
+            X-Resource: remarks/{remark_id}  
+            X-Operations: operations/{operation_id}  
+
+
+## Remark [/remarks/{id}]
+
++ Parameters
+    + id (required, guid) ... Id of the remark. 
+
+### Get remark [GET]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        [
+         {
+           "id": "49f2b8f1-10ab-4f59-6ad3-b6528c239201",
+           "author": {
+            "userId": "19f2b8fc-20a5-4f5b-97d8-d653882492ad",
+            "name": "user1"
+           }, 
+           "category": {
+            "id": "29f2b8fe-30ab-1f5a-6cd1-a653782495ce",
+            "name": "litter"
+           },
+           "location": {
+             "address": "st. Test 123, 00-123 City, Country",
+             "coordinates": [0.0, 0.0]
+           },
+           "photos": [ {
+               "name": "small.jpg", 
+               "size": "small",
+               "url": "full_image_url",
+               "metadata": ""
+             },
+             {
+               "name": "medium.jpg", 
+               "size": "medium",
+               "url": "full_image_url",
+               "metadata": ""
+             },
+             {
+               "name": "big.jpg", 
+               "size": "big",
+               "url": "full_image_url",
+               "metadata": ""
+             }             
+           ],
+           "description": "This is my remark.",          
+           "state": "active",          
+           "createdAt": "2016-12-09 12:21:45",
+           "resolved": true,
+           "resolvedAt": "2016-12-09 13:35:11"
+         }
+        ]
+
+
+### Delete remark [DELETE]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
++ Response 202
 
     + Headers
 
-            Location: /questions/2
+            X-Operations: operations/{id} 
 
-    + Body
+## Resolve remark [/remarks/{id}/resolve]
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
++ Parameters
+    + id (required, guid) ... Id of the remark. 
+
+### Resolve remark [PUT]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
++ Response 202
+
+    + Headers
+    
+            X-Resource: remarks/{remark_id}  
+            X-Operations: operations/{operation_id}  
+
+## Users [/users{?page}{?results}]
+
++ Parameters
+    + page = `1` (optional, number) ... Number of page. 
+    + results = `10` (optional, number) ... Number of results per page.
+
+### Browse users [GET]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        [
+         {
+           "userId": "19f2b8fc-20a5-4f5b-97d8-d653882492ad",
+           "email": "user1@email.com", 
+           "name": "user1",
+           "provider": "coolector"          
+           "pictureUrl": "",
+           "role": "user",          
+           "state": "active",          
+           "externalUserId": "",          
+           "createdAt": "2016-12-09 12:21:45"   
+         }
+        ]
+
+
+## User [/users/{name}]
+
++ Parameters
+    + name (required, string) ... Name of the user. 
+
+### Get user [GET]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        {
+          "userId": "19f2b8fc-20a5-4f5b-97d8-d653882492ad",
+          "email": "user1@email.com", 
+          "name": "user1",
+          "provider": "coolector"          
+          "pictureUrl": "",
+          "role": "user",          
+          "state": "active",          
+          "externalUserId": "",          
+          "createdAt": "2016-12-09 12:21:45"   
+        }
+
+
+## Operations [/operations/{id}]
+
++ Parameters
+    + id (required, guid) ... Id of the operation. 
+
+### Get operation details [GET]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
++ Response 200 (application/json)
+
+        {
+          "id": "a2f2b8fc-30b5-4f5e-67d2-e943382492e0",
+          "requestId": "b3f2b8f1-20b4-8f50-27ae-e941b820927f",
+          "userId": "19f2b8fc-20a5-4f5b-97d8-d653882492ad",    
+          "code": "success", 
+          "message": "error message",
+          "name": "operation_name"          
+          "origin": "origin",
+          "resource": "resource",          
+          "state": "completed", 
+          "success": true,
+          "createdAt": "2016-12-09 12:21:45",
+          "updatedAt": "2016-12-09 12:21:46" 
+        }
