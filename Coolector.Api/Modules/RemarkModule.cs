@@ -40,8 +40,8 @@ namespace Coolector.Api.Modules
                 .OnSuccessAccepted("remarks/{0}")
                 .DispatchAsync());
 
-            Put("{id}/photos", async args => await For<AddPhotosToRemark>()
-                .OnSuccessAccepted($"remarks/{args.id}")
+            Put("{remarkId}/photos", async args => await For<AddPhotosToRemark>()
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
 
             Put("{remarkId}/resolve", async args => await For<ResolveRemark>()
