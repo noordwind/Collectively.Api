@@ -9,6 +9,7 @@
     "Coolector.Services.Operations.Shared": "1.0.*",
     "Coolector.Services.Remarks.Shared": "1.0.*",
     "Coolector.Services.Users.Shared": "1.0.*",
+    "Coolector.Services.Statistics.Shared": "1.0.*",
     "Autofac": "4.1.0",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
     "Lockbox.Client": "1.0.0",
