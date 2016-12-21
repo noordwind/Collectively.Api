@@ -11,7 +11,7 @@
         }
     },
   "dependencies": {
-    "FluentAssertions": "4.12.0",
+    "FluentAssertions": "4.18.0",
     "Machine.Specifications": "0.11.0",
     "Machine.Specifications.Should": "0.11.0",
     "dotnet-test-mspec": "*",
