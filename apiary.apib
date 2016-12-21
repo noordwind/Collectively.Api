@@ -338,14 +338,19 @@ HOST: https://coolector.tk/api
             {
               "category": "litter",
               "photo": {
-                "base64": "encoded_base64_photo",
+                "base64": "ENCODED_BASE64_IMAGE",
                 "name": "remark.jpg",
                 "contentType": "image/jpeg"
               },
               "latitude": 0.0, 
               "longitude": 0.0,  
               "address":  "st. Test 123, 00-123 City, Country",
-              "description": "This is my remark."
+              "description": "This is my remark.",
+              "socialMedia": [{
+                "name": "facebook",
+                "publish": true,
+                "accessToken": "FACEBOOK_ACCESS_TOKEN"
+              ]
             }
 
 + Response 202
@@ -428,6 +433,48 @@ HOST: https://coolector.tk/api
     + Headers
 
             X-Operations: operations/{id} 
+
+
+## Remark photos [/remarks/{remarkId}/photos]
+
+### Add remark photos [PUT]
+
++ Parameters
+    + remarkId (required, guid) ... Id of the remark. 
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Content-Type: application/json
+            Authorization: Bearer API_KEY
+
+    + Body
+    
+            {
+              "photos": [{
+                "base64": "ENCODED_BASE64_IMAGE",
+                "name": "remark1.jpg",
+                "contentType": "image/jpeg"
+              }, {
+                "base64": "ENCODED_BASE64_IMAGE",
+                "name": "remark2.jpg",
+                "contentType": "image/jpeg"
+              }, {
+                "base64": "ENCODED_BASE64_IMAGE",
+                "name": "remark3.jpg",
+                "contentType": "image/jpeg"
+              }]
+            }
+    
++ Response 202
+
+    + Headers
+    
+            X-Resource: remarks/{remark_id}  
+            X-Operations: operations/{operation_id}              
+            
 
 ## Resolve remark [/remarks/{id}/resolve]
 
