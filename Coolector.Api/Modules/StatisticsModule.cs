@@ -13,12 +13,12 @@ namespace Coolector.Api.Modules
             IStatisticsStorage statisticsStorage) 
             : base(commandDispatcher, validatorResolver, modulePath: "statistics")
         {
-            Get("reporters", async args => await FetchCollection<BrowseReporters, ReporterDto>
-                (async x => await statisticsStorage.BrowseReportersAsync(x))
+            Get("users", async args => await FetchCollection<BrowseUserStatistics, UserStatisticsDto>
+                (async x => await statisticsStorage.BrowseUserStatisticsAsync(x))
                 .HandleAsync());
 
-            Get("resolvers", async args => await FetchCollection<BrowseResolvers, ResolverDto>
-                (async x => await statisticsStorage.BrowseResolversAsync(x))
+            Get("users/{id}", async args => await Fetch<GetUserStatistics, UserStatisticsDto>
+                (async x => await statisticsStorage.GetUserStatisticsAsync(x))
                 .HandleAsync());
         }
     }

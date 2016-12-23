@@ -9,17 +9,19 @@ namespace Coolector.Api.Storages
     {
         private readonly IStorageClient _storageClient;
 
+        private const string UserStatisticsEndpoint = "statistics/users";
+
         public StatisticsStorage(IStorageClient storageClient)
         {
             _storageClient = storageClient;
         }
 
-        public async Task<Maybe<PagedResult<ReporterDto>>> BrowseReportersAsync(BrowseReporters query)
+        public async Task<Maybe<PagedResult<UserStatisticsDto>>> BrowseUserStatisticsAsync(BrowseUserStatistics query)
             => await _storageClient
-                .GetFilteredCollectionAsync<ReporterDto, BrowseReporters>(query, "statistics/reporters");
+                .GetFilteredCollectionAsync<UserStatisticsDto, BrowseUserStatistics>(query, UserStatisticsEndpoint);
 
-        public async Task<Maybe<PagedResult<ResolverDto>>> BrowseResolversAsync(BrowseResolvers query)
+        public async Task<Maybe<UserStatisticsDto>> GetUserStatisticsAsync(GetUserStatistics query)
             => await _storageClient
-                .GetFilteredCollectionAsync<ResolverDto, BrowseResolvers>(query, "statistics/resolvers");
+                .GetAsync<UserStatisticsDto>($"{UserStatisticsEndpoint}/{query.Id}");
     }
 }
