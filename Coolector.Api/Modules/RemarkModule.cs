@@ -48,10 +48,13 @@ namespace Coolector.Api.Modules
 
             Delete("{remarkId}/photos", async args => await For<RemovePhotosFromRemark>()
                 .Set(x => x.Photos = new List<GroupedFile>
-                 {
-                    Name = args.name,
-                    GroupId = args.groupId
-                 })
+                {   
+                    new GroupedFile
+                    {
+                        Name = args.name,
+                        GroupId = args.groupId
+                    }
+                })
                 .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
 
