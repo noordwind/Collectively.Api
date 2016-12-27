@@ -5,6 +5,8 @@ using Coolector.Api.Validation;
 using System.Linq;
 using Coolector.Services.Remarks.Shared.Commands;
 using Coolector.Services.Remarks.Shared.Dto;
+using System.Collections.Generic;
+using Coolector.Services.Remarks.Shared.Commands.Models;
 
 namespace Coolector.Api.Modules
 {
@@ -41,6 +43,15 @@ namespace Coolector.Api.Modules
                 .DispatchAsync());
 
             Put("{remarkId}/photos", async args => await For<AddPhotosToRemark>()
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
+                .DispatchAsync());
+
+            Delete("{remarkId}/photos", async args => await For<RemovePhotosFromRemark>()
+                .Set(x => x.Photos = new List<GroupedFile>
+                 {
+                    Name = args.name,
+                    GroupId = args.groupId
+                 })
                 .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
 
