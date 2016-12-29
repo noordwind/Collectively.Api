@@ -24,5 +24,9 @@ namespace Coolector.Api.Storages
         public async Task<Maybe<PagedResult<RemarkCategoryDto>>> BrowseCategoriesAsync(BrowseRemarkCategories query)
             => await _storageClient.GetFilteredCollectionAsync<RemarkCategoryDto, BrowseRemarkCategories>
                 (query, "remarks/categories");
+
+        public async Task<Maybe<PagedResult<TagDto>>> BrowseTagsAsync(BrowseRemarkTags query)
+            => await _storageClient.GetFilteredCollectionAsync<TagDto, BrowseRemarkTags>
+                (query, "remarks/tags");
     }
 }
