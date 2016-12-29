@@ -1,8 +1,8 @@
 ﻿using Coolector.Api.Commands;
+using Coolector.Api.Queries;
 using Coolector.Api.Storages;
 using Coolector.Api.Validation;
 using Coolector.Services.Statistics.Shared.Dto;
-using Coolector.Services.Statistics.Shared.Queries;
 
 namespace Coolector.Api.Modules
 {
