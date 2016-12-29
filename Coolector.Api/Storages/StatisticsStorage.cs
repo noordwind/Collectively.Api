@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Coolector.Api.Queries;
 using Coolector.Common.Types;
 using Coolector.Services.Statistics.Shared.Dto;
@@ -8,8 +9,8 @@ namespace Coolector.Api.Storages
     public class StatisticsStorage : IStatisticsStorage
     {
         private readonly IStorageClient _storageClient;
-
-        private const string UserStatisticsEndpoint = "statistics/users";
+        private readonly string RemarkStatisticsEndpoint = "statistics/remarks";
+        private readonly string UserStatisticsEndpoint = "statistics/users";
 
         public StatisticsStorage(IStorageClient storageClient)
         {
@@ -23,5 +24,13 @@ namespace Coolector.Api.Storages
         public async Task<Maybe<UserStatisticsDto>> GetUserStatisticsAsync(GetUserStatistics query)
             => await _storageClient
                 .GetAsync<UserStatisticsDto>($"{UserStatisticsEndpoint}/{query.Id}");
+
+        public async Task<Maybe<PagedResult<RemarkStatisticsDto>>> BrowseRemarkStatisticsAsync(BrowseRemarkStatistics query)
+            => await _storageClient
+                .GetFilteredCollectionAsync<RemarkStatisticsDto, BrowseRemarkStatistics>(query, RemarkStatisticsEndpoint);
+
+        public async Task<Maybe<RemarkStatisticsDto>> GetRemarkStatisticsAsync(GetRemarkStatistics query)
+            => await _storageClient
+                .GetAsync<RemarkStatisticsDto>($"{RemarkStatisticsEndpoint}/{query.Id}");
     }
 }

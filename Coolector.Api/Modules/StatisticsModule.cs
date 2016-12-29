@@ -13,6 +13,14 @@ namespace Coolector.Api.Modules
             IStatisticsStorage statisticsStorage) 
             : base(commandDispatcher, validatorResolver, modulePath: "statistics")
         {
+            Get("remarks", async args => await FetchCollection<BrowseRemarkStatistics, RemarkStatisticsDto>
+                (async x => await statisticsStorage.BrowseRemarkStatisticsAsync(x))
+                .HandleAsync());
+
+            Get("remarks/{id}", async args => await Fetch<GetRemarkStatistics, RemarkStatisticsDto>
+                (async x => await statisticsStorage.GetRemarkStatisticsAsync(x))
+                .HandleAsync());
+
             Get("users", async args => await FetchCollection<BrowseUserStatistics, UserStatisticsDto>
                 (async x => await statisticsStorage.BrowseUserStatisticsAsync(x))
                 .HandleAsync());
