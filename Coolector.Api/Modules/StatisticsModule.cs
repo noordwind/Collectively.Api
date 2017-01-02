@@ -21,6 +21,10 @@ namespace Coolector.Api.Modules
                 (async x => await statisticsStorage.GetRemarkStatisticsAsync(x))
                 .HandleAsync());
 
+            Get("remarks/general", async args => await Fetch<GetRemarkGeneralStatistics, RemarkGeneralStatisticsDto>
+                (async x => await statisticsStorage.GetRemarkGeneralStatisticsAsync(x))
+                .HandleAsync());
+
             Get("users", async args => await FetchCollection<BrowseUserStatistics, UserStatisticsDto>
                 (async x => await statisticsStorage.BrowseUserStatisticsAsync(x))
                 .HandleAsync());
