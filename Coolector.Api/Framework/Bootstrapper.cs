@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using Autofac;
-using Coolector.Api.Authentication;
 using Coolector.Api.Validation;
 using Coolector.Common.Extensions;
 using Coolector.Common.Exceptionless;
@@ -24,6 +21,7 @@ using ModuleContainer = Coolector.Api.IoC.ModuleContainer;
 using StorageSettings = Coolector.Api.Storages.StorageSettings;
 using Newtonsoft.Json;
 using Coolector.Common.RabbitMq;
+using Coolector.Common.Security.Authentication;
 
 namespace Coolector.Api.Framework
 {

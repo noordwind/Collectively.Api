@@ -1,5 +1,5 @@
 ﻿using Autofac;
-using Coolector.Api.Authentication;
+using Coolector.Common.Security.Authentication;
 
 namespace Coolector.Api.IoC.Modules
 {
