@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading.Tasks;
 using Coolector.Api.Queries;
+using Coolector.Common.Extensions;
 using Coolector.Common.Types;
 using Coolector.Services.Statistics.Shared.Dto;
 
@@ -32,5 +33,9 @@ namespace Coolector.Api.Storages
         public async Task<Maybe<RemarkStatisticsDto>> GetRemarkStatisticsAsync(GetRemarkStatistics query)
             => await _storageClient
                 .GetAsync<RemarkStatisticsDto>($"{RemarkStatisticsEndpoint}/{query.Id}");
+
+        public async Task<Maybe<RemarkGeneralStatisticsDto>> GetRemarkGeneralStatisticsAsync(GetRemarkGeneralStatistics query)
+            => await _storageClient
+                .GetAsync<RemarkGeneralStatisticsDto>($"{RemarkStatisticsEndpoint}/general".ToQueryString(query));
     }
 }
