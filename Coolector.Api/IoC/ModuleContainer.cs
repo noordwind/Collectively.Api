@@ -1,5 +1,6 @@
 ﻿using Autofac;
 using Coolector.Api.IoC.Modules;
+using Coolector.Common.Security;
 
 namespace Coolector.Api.IoC
 {
@@ -7,7 +8,6 @@ namespace Coolector.Api.IoC
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterModule<AuthenticationModule>();
             builder.RegisterModule<DispatcherModule>();
             builder.RegisterModule<FilterModule>();
             builder.RegisterModule<StorageModule>();

@@ -3,7 +3,7 @@ using Coolector.Api.Commands;
 using Coolector.Api.Storages;
 using Coolector.Api.Validation;
 using Coolector.Common.Extensions;
-using Coolector.Common.Security.Authentication;
+using Coolector.Common.Security;
 using Coolector.Services.Users.Shared.Commands;
 using Nancy;
 

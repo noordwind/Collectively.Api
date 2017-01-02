@@ -14,14 +14,12 @@ using Nancy.Authentication.Stateless;
 using Nancy.Bootstrapper;
 using Nancy.Configuration;
 using NLog;
-using Polly;
-using RabbitMQ.Client.Exceptions;
 using RawRabbit.Configuration;
 using ModuleContainer = Coolector.Api.IoC.ModuleContainer;
 using StorageSettings = Coolector.Api.Storages.StorageSettings;
 using Newtonsoft.Json;
 using Coolector.Common.RabbitMq;
-using Coolector.Common.Security.Authentication;
+using Coolector.Common.Security;
 
 namespace Coolector.Api.Framework
 {
@@ -55,7 +53,7 @@ namespace Coolector.Api.Framework
                 return null;
             };
             pipelines.AfterRequest += (ctx) => AddCorsHeaders(ctx.Response);
-            SetupTokenAuthentication(container, pipelines);
+            pipelines.SetupTokenAuthentication(container);
             _exceptionHandler = container.Resolve<IExceptionHandler>();
             Logger.Info("Coolector API has started.");
         }
@@ -70,12 +68,12 @@ namespace Coolector.Api.Framework
                 builder.RegisterType<CustomJsonSerializer>().As<JsonSerializer>().SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<AppSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<FeatureSettings>()).SingleInstance();
-                builder.RegisterInstance(_configuration.GetSettings<JwtTokenSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<StorageSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<ExceptionlessSettings>()).SingleInstance();
                 builder.RegisterType<ExceptionlessExceptionHandler>().As<IExceptionHandler>().SingleInstance();
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterModule<ModuleContainer>();
+                SecurityContainer.Register(builder, _configuration);
                 RabbitMqContainer.Register(builder, _configuration.GetSettings<RawRabbitConfiguration>());
             });
         }
@@ -96,20 +94,6 @@ namespace Coolector.Api.Framework
 
                 return ctx.Response;
             });
-        }
-
-        private void SetupTokenAuthentication(ILifetimeScope container, IPipelines pipelines)
-        {
-            var jwtTokenHandler = container.Resolve<IJwtTokenHandler>();
-            var statelessAuthConfiguration =
-                new StatelessAuthenticationConfiguration(ctx =>
-                {
-                    var token = jwtTokenHandler.GetFromAuthorizationHeader(ctx.Request.Headers.Authorization);
-                    var isValid = jwtTokenHandler.IsValid(token);
-
-                    return isValid ? new CoolectorIdentity(token.Sub) : null;
-                });
-            StatelessAuthentication.Enable(pipelines, statelessAuthConfiguration);
         }
 
         private void FixNumberFormat(NancyContext ctx)
