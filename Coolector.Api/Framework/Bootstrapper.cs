@@ -8,6 +8,7 @@ using Coolector.Api.Validation;
 using Coolector.Common.Extensions;
 using Coolector.Common.Exceptionless;
 using Coolector.Common.Nancy;
+using Coolector.Common.Nancy.Serialization;
 using Coolector.Common.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
@@ -23,6 +24,7 @@ using RawRabbit.Configuration;
 using RawRabbit.vNext;
 using ModuleContainer = Coolector.Api.IoC.ModuleContainer;
 using StorageSettings = Coolector.Api.Storages.StorageSettings;
+using Newtonsoft.Json;
 
 namespace Coolector.Api.Framework
 {
@@ -79,6 +81,7 @@ namespace Coolector.Api.Framework
 
             container.Update(builder =>
             {
+                builder.RegisterType<CustomJsonSerializer>().As<JsonSerializer>().SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<AppSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<FeatureSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<JwtTokenSettings>()).SingleInstance();
