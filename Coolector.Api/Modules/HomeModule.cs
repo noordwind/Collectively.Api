@@ -9,7 +9,7 @@ namespace Coolector.Api.Modules
             IValidatorResolver validatorResolver)
             : base(commandDispatcher, validatorResolver)
         {
-            Get("", args => "Welcome to Coolector API!");
+            Get("", args => "Welcome to the Coolector API!");
         }
     }
 }

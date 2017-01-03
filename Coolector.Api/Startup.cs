@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using Nancy.Owin;
 using NLog.Extensions.Logging;
 using Lockbox.Client.Extensions;
@@ -30,10 +29,10 @@ namespace Coolector.Api
                 .AddEnvironmentVariables()
                 .SetBasePath(env.ContentRootPath);
 
-            if (env.IsProduction())
-            {
-                builder.AddLockbox();
-            }
+            // if (env.IsProduction())
+            // {
+            //     builder.AddLockbox();
+            // }
 
             Configuration = builder.Build();
         }
@@ -51,20 +50,10 @@ namespace Coolector.Api
         {
             loggerFactory.AddNLog();
             env.ConfigureNLog("nlog.config");
-            var options = new JwtBearerOptions
-            {
-                Audience = Configuration["auth0:clientId"],
-                Authority = $"https://{Configuration["auth0:domain"]}/",
-                TokenValidationParameters = new TokenValidationParameters
-                {
-                    NameClaimType = "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"
-                }
-            };
             app.UseCors(builder => builder.AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
                 .AllowCredentials());
-//            app.UseJwtBearerAuthentication(options);
             app.UseOwin().UseNancy(x => x.Bootstrapper = new Bootstrapper(Configuration));
         }
 
