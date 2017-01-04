@@ -29,10 +29,10 @@ namespace Coolector.Api
                 .AddEnvironmentVariables()
                 .SetBasePath(env.ContentRootPath);
 
-            // if (env.IsProduction())
-            // {
-            //     builder.AddLockbox();
-            // }
+            if (env.IsProduction())
+            {
+                builder.AddLockbox();
+            }
 
             Configuration = builder.Build();
         }
