@@ -29,7 +29,8 @@ namespace Coolector.Api.Modules
                     SmallPhotoUrl = x.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
                     Description = x.Description,
                     CreatedAt = x.CreatedAt,
-                    Resolved = x.Resolved
+                    Resolved = x.Resolved,
+                    Rating = x.Rating
                 }).HandleAsync());
 
             Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategoryDto>
