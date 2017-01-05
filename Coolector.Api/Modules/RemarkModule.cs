@@ -7,6 +7,7 @@ using Coolector.Services.Remarks.Shared.Commands;
 using Coolector.Services.Remarks.Shared.Dto;
 using System.Collections.Generic;
 using Coolector.Services.Remarks.Shared.Commands.Models;
+using System;
 
 namespace Coolector.Api.Modules
 {
@@ -34,7 +35,6 @@ namespace Coolector.Api.Modules
             Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategoryDto>
                 (async x => await remarkStorage.BrowseCategoriesAsync(x)).HandleAsync());
 
-            
             Get("tags", async args => await FetchCollection<BrowseRemarkTags, TagDto>
                 (async x => await remarkStorage.BrowseTagsAsync(x)).HandleAsync());
 
@@ -67,6 +67,15 @@ namespace Coolector.Api.Modules
 
             Delete("{remarkId}", async args => await For<DeleteRemark>()
                 .OnSuccessAccepted(string.Empty)
+                .DispatchAsync());
+
+            Put("{remarkId}/votes", async args => await For<SubmitRemarkVote>()
+                .Set(x => x.CreatedAt = DateTime.UtcNow)
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
+                .DispatchAsync());
+
+            Delete("{remarkId}/votes", async args => await For<DeleteRemarkVote>()
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
         }
     }
