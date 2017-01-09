@@ -12,5 +12,7 @@ namespace Coolector.Api.Storages
         Task<Maybe<PagedResult<RemarkStatisticsDto>>> BrowseRemarkStatisticsAsync(BrowseRemarkStatistics query);
         Task<Maybe<RemarkStatisticsDto>> GetRemarkStatisticsAsync(GetRemarkStatistics query);
         Task<Maybe<RemarkGeneralStatisticsDto>> GetRemarkGeneralStatisticsAsync(GetRemarkGeneralStatistics query);
+        Task<Maybe<PagedResult<CategoryStatisticsDto>>> BrowseCategoryStatisticsAsync(BrowseCategoryStatistics query);
+        Task<Maybe<PagedResult<TagStatisticsDto>>> BrowseTagStatisticsAsync(BrowseTagStatistics query);
     }
 }

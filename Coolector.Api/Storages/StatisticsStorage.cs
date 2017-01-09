@@ -12,6 +12,8 @@ namespace Coolector.Api.Storages
         private readonly IStorageClient _storageClient;
         private readonly string RemarkStatisticsEndpoint = "statistics/remarks";
         private readonly string UserStatisticsEndpoint = "statistics/users";
+        private readonly string CategoryStatisticsEndpoint = "statistics/categories";
+        private readonly string TagStatisticsEndpoint = "statistics/tags";
 
         public StatisticsStorage(IStorageClient storageClient)
         {
@@ -37,5 +39,14 @@ namespace Coolector.Api.Storages
         public async Task<Maybe<RemarkGeneralStatisticsDto>> GetRemarkGeneralStatisticsAsync(GetRemarkGeneralStatistics query)
             => await _storageClient
                 .GetAsync<RemarkGeneralStatisticsDto>($"{RemarkStatisticsEndpoint}/general".ToQueryString(query));
+
+        public async Task<Maybe<PagedResult<CategoryStatisticsDto>>> BrowseCategoryStatisticsAsync(
+                BrowseCategoryStatistics query)
+            => await _storageClient
+                .GetFilteredCollectionAsync<CategoryStatisticsDto, BrowseCategoryStatistics>(query, CategoryStatisticsEndpoint);
+
+        public async Task<Maybe<PagedResult<TagStatisticsDto>>> BrowseTagStatisticsAsync(BrowseTagStatistics query)
+            => await _storageClient
+                .GetFilteredCollectionAsync<TagStatisticsDto, BrowseTagStatistics>(query, TagStatisticsEndpoint);
     }
 }

@@ -25,6 +25,14 @@ namespace Coolector.Api.Modules
                 (async x => await statisticsStorage.GetRemarkGeneralStatisticsAsync(x))
                 .HandleAsync());
 
+            Get("categories", async args => await FetchCollection<BrowseCategoryStatistics, CategoryStatisticsDto>
+                (async x => await statisticsStorage.BrowseCategoryStatisticsAsync(x))
+                .HandleAsync());
+
+            Get("tags", async args => await FetchCollection<BrowseTagStatistics, TagStatisticsDto>
+                (async x => await statisticsStorage.BrowseTagStatisticsAsync(x))
+                .HandleAsync());
+
             Get("users", async args => await FetchCollection<BrowseUserStatistics, UserStatisticsDto>
                 (async x => await statisticsStorage.BrowseUserStatisticsAsync(x))
                 .HandleAsync());
