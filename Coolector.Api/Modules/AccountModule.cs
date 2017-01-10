@@ -20,7 +20,7 @@ namespace Coolector.Api.Modules
             Get("account/names/{name}/available", async args => await Fetch<GetNameAvailability, AvailableResourceDto>
                 (async x => await userStorage.IsNameAvailableAsync(x.Name)).HandleAsync());
 
-            Put("account/name", async args => await For<ChangeUserName>()
+            Put("account/name", async args => await For<ChangeUsername>()
                 .OnSuccessAccepted("account")
                 .DispatchAsync());
 
