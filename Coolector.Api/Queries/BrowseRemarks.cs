@@ -13,5 +13,6 @@ namespace Coolector.Api.Queries
         public bool Latest { get; set; }
         public IEnumerable<string> Categories { get; set; }
         public string State { get; set; }
+        public bool Disliked { get; set; }
     }
 }
