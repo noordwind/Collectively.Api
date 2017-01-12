@@ -12,6 +12,7 @@ using System.Linq;
 using System.Net;
 using NLog;
 using Coolector.Common.Security;
+using System.Net.Http.Headers;
 
 namespace Coolector.Api.Storages
 {
@@ -169,8 +170,7 @@ namespace Coolector.Api.Storages
                     return null;
                 }
 
-                _httpClient.DefaultRequestHeaders.Remove("Authorization");
-                _httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {token}");
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Value);
                 _isAuthenticated = true;
             }
 
