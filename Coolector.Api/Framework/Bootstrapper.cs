@@ -121,7 +121,7 @@ namespace Coolector.Api.Framework
                 .WithHeader("Access-Control-Allow-Methods", "POST,PUT,GET,OPTIONS,DELETE")
                 .WithHeader("Access-Control-Allow-Headers",
                     "Authorization,Accept,Origin,Content-Type,User-Agent,X-Requested-With")
-                .WithHeader("Access-Control-Expose-Headers", "X-Operation,X-Resource,Location");
+                .WithHeader("Access-Control-Expose-Headers", "X-Operation,X-Resource,Location,X-Total-Count");
         }
     }
 }
