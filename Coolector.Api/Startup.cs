@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using Nancy.Owin;
 using NLog.Extensions.Logging;
 using Lockbox.Client.Extensions;
+using NLog.Web;
 
 namespace Coolector.Api
 {
@@ -49,6 +50,7 @@ namespace Coolector.Api
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             loggerFactory.AddNLog();
+            app.AddNLogWeb();
             env.ConfigureNLog("nlog.config");
             app.UseCors(builder => builder.AllowAnyHeader()
                 .AllowAnyMethod()

@@ -25,6 +25,7 @@
     "Microsoft.Extensions.Caching.Memory": "1.1.0",
     "Microsoft.Extensions.Configuration.Binder": "1.1.0",
     "Microsoft.Extensions.Configuration.Json": "1.1.0",
+    "NLog.Web.AspNetCore": "4.3.0",
     "NLog.Extensions.Logging": "1.0.0-*",
     "Nancy": "2.0.0-barneyrubble",
     "Nancy.Authentication.Stateless": "2.0.0-barneyrubble",
