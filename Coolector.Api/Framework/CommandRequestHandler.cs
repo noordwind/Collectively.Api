@@ -76,7 +76,7 @@ namespace Coolector.Api.Framework
 
         public CommandRequestHandler<T> OnSuccessCreated(string path)
         {
-            var url = string.Format(path, _resourceId.ToString("N"));
+            var url = string.Format(path, _resourceId);
             _command.Request.Resource = url;
 
             return OnSuccessCreated(c => url);
@@ -98,8 +98,8 @@ namespace Coolector.Api.Framework
 
         public CommandRequestHandler<T> OnSuccessAccepted(string path = "")
         {
-            var resourceEndpoint = path.Empty() ? string.Empty : string.Format(path, _resourceId.ToString("N"));
-            var operationEndpoint = $"operations/{_command.Request.Id:N}";
+            var resourceEndpoint = path.Empty() ? string.Empty : string.Format(path, _resourceId);
+            var operationEndpoint = $"operations/{_command.Request.Id}";
             _command.Request.Resource = resourceEndpoint;
             _responseFunc = x => _negotiator.WithStatusCode(202)
                 .WithHeader("X-Resource", resourceEndpoint)
