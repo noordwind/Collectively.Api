@@ -30,7 +30,7 @@ namespace Coolector.Api
                 .AddEnvironmentVariables()
                 .SetBasePath(env.ContentRootPath);
 
-            if (env.IsProduction())
+            if (env.IsProduction() || env.IsDevelopment())
             {
                 builder.AddLockbox();
             }
