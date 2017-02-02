@@ -1,4 +1,4 @@
 language: csharp
 solution: Coolector.Api.sln
-script:    
+install:    
   - sudo ./Coolector.Api/build.sh
