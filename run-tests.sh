@@ -1,0 +1,1 @@
+dotnet test ./Coolector.Api.Tests
