@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+curl -H "Content-Type: application/json" --data '{"source_type": "Branch", "source_name": "$TRAVIS_BRANCH"}' -X POST https://registry.hub.docker.com/u/noordwind/coolector.api/trigger/$DOCKER_HUB_WEBHOOK_TOKEN/
