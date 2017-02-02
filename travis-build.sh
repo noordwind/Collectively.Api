@@ -1,3 +1,11 @@
 #!/usr/bin/env bash
-dotnet restore --source "https://api.nuget.org/v3/index.json" --source "https://www.myget.org/F/coolector/api/v3/index.json" --no-cache
+MYGET_ENV=""
+case "$TRAVIS_BRANCH" in
+  "develop")
+    MYGET_ENV="-dev"
+    ;;
+esac
+
+echo $MYGET_ENV
+dotnet restore --source "https://api.nuget.org/v3/index.json" --source "https://www.myget.org/F/coolector$MYGET_ENV/api/v3/index.json" --no-cache
 dotnet build **/project.json
