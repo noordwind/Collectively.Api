@@ -1,4 +1,7 @@
 language: csharp
-solution: Coolector.Api.sln
-install:    
-  - sudo ./Coolector.Api/build.sh
+dist: trusty
+sudo: required
+mono: none
+dotnet: 1.0.0-preview2-1-003177
+script:
+  - ./travis-build.sh --quiet verify
