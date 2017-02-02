@@ -1,0 +1,4 @@
+language: csharp
+solution: Coolector.Api.sln
+script:    
+  - /Coolector.Api/build.sh
