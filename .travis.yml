@@ -8,7 +8,7 @@ before_script:
   - chmod a+x ./run-tests.sh
   - chmod a+x ./after-success.sh
 script:
-  - ./travis-build.sh
+  - ./build.sh
   - ./run-tests.sh
 after_success:
   - ./after-success.sh
