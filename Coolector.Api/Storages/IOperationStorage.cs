@@ -8,5 +8,6 @@ namespace Coolector.Api.Storages
     public interface IOperationStorage
     {
         Task<Maybe<OperationDto>> GetAsync(Guid requestId);
+        Task<Maybe<OperationDto>> GetUpdatedAsync(Guid requestId);
     }
 }
