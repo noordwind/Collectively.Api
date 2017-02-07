@@ -12,3 +12,8 @@ script:
   - ./run-tests.sh
 after_success:
   - ./after-success.sh
+notifications:
+  slack:
+    secure: c8/Gk+m1hpbkUEmhp4haicNiH6yDCxUQpUJuTmcbecuyFdIWi5Hbrw2A5VC+e+ISc3F3o9S+iOs971yMtHJMH99Gfs3EbAM0+JMcqYouL9bQF+bgIoGRGdXjscWVWArqv6tjzajLEqwYuxAWimxf3f8n1QrlF2yoLhAXmzNsx17XOKwjutefoktalbJ5Zg4al9VIeflXdIhw1E/KutZ/lfYhbOgYyTZ76LKi+2jtrWf7dLxwS0hAYx3EWWCuzKtgd7oGYkJ/lSYskGgeM5jEn0ec1/9mxG/lx3uY4dMmJS79xVsNeYGd4uvghD7WVC6g0GD1gCUfFIVRpDyFcDxX3blDE3aeFPtOXZZ6fkUEseKWZQKnLzSw8NM43SekUefMy10nhfBu15r652KWiXH6EXZgt4jalZjrvBwZcPw+L5qg/rjkB6NUi/va2DpwrEfO+TGpJLHD58b1QejfqL/ujj16m+FLAbgRCL9cr9PA1Km1SlEZwniejIFqHoujC95vUQPk/kRJPTog+X2nUxjY14y/GTtpHsbRQ0h1eLGJ1tyfemZxUjmrrr56E5wMZNCF1ezyq5ukBwzaTYg9hiESVIWr9VSHQLj/1BgRVw+slxExC8PClS0c4Yitzu9ITm++wSsxvbZ/LuprchmFdzkfR4r4AieK7mO66uaAelF96vs=
+    on_success: change
+    on_failure: always
