@@ -106,7 +106,7 @@ HOST: https://coolector.tk/api
           "role": "user",          
           "state": "active",          
           "externalUserId": "",          
-          "createdAt": "2016-12-09 12:21:45"   
+          "createdAt": "2017-01-01T10:16:11.696Z" 
         }
         
 
@@ -283,6 +283,41 @@ HOST: https://coolector.tk/api
         ]
 
 
+## Remarks tags [/remarks/tags]
+
+### Browse remarks tags [GET]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+
++ Response 200 (application/json)
+
+        [
+         {
+           "id": "18844b00-4c54-4d92-a592-ada630dfa8b9",
+           "name": "junk"
+         },
+         {
+            "id": "56d66ade-dc68-4f12-a36e-eb8eca4a7a7f",
+            "name": "small"
+         },
+         {
+           "id": "b72c5a1d-d9ad-4507-a867-0b7952b5bc33",
+           "name": "crash"
+         },
+         {
+           "id":  "91c77527-b449-4823-85f8-8bdceee5d27e",
+           "name": "stink"
+         },
+         {
+           "id": "ae72e9db-bafc-4ef2-adb9-c721529fa412",
+           "name": "plastic"
+         }
+        ]
+
 ## Remarks [/remarks{?page}{?results}{?latitude}{?longitude}{?radius}{?author}{?latest}{?categories}{?state}]
 
 + Parameters
@@ -316,9 +351,11 @@ HOST: https://coolector.tk/api
              "coordinates": [0.0, 0.0]
            },
            "smallPhotoUrl": "full_image_url",
-           "description": "This is my remark.",          
+           "description": "This is my remark.",   
+           "tags": ["litter", "big", "junk"],
+           "rating": 2,
            "state": "active",          
-           "createdAt": "2016-12-09 12:21:45",
+           "createdAt": "2017-01-05T07:11:52.696Z",
            "resolved": false
          }
         ]
@@ -346,6 +383,7 @@ HOST: https://coolector.tk/api
               "longitude": 0.0,  
               "address":  "st. Test 123, 00-123 City, Country",
               "description": "This is my remark.",
+              "tags": ["litter", "big", "junk"],
               "socialMedia": [{
                 "name": "facebook",
                 "publish": true,
@@ -393,28 +431,47 @@ HOST: https://coolector.tk/api
            },
            "photos": [ {
                "name": "small.jpg", 
+               "groupId": "1d219183-387c-48e5-af21-6a27a1e0f80a",
                "size": "small",
                "url": "full_image_url",
                "metadata": ""
              },
              {
                "name": "medium.jpg", 
+               "groupId": "1d219183-387c-48e5-af21-6a27a1e0f80a",
                "size": "medium",
                "url": "full_image_url",
                "metadata": ""
              },
              {
                "name": "big.jpg", 
+               "groupId": "1d219183-387c-48e5-af21-6a27a1e0f80a",
                "size": "big",
                "url": "full_image_url",
                "metadata": ""
              }             
            ],
-           "description": "This is my remark.",          
+           "votes": [{
+                "userId": "19f2b8fc-20a5-4f5b-97d8-d653882492ad",
+                "positive": true,
+                "createdAt": "2017-02-05T09:22:43.696Z"
+           },
+           {
+                "userId": "2df2b8f1-20a5-4f5b-97d8-d653882492ad",
+                "positive": true,
+                "createdAt": "2017-02-05T10:25:43.696Z"
+           }],
+           "rating": 2,
+           "description": "This is my remark.",
+           "tags": ["litter", "big", "junk"],
            "state": "active",          
-           "createdAt": "2016-12-09 12:21:45",
+           "createdAt": "2017-01-05T09:22:43.696Z",
            "resolved": true,
-           "resolvedAt": "2016-12-09 13:35:11"
+           "resolvedAt": "2017-03-05T09:20:45.696Z"
+           "resolvedAtLocation": {
+             "address": "st. Test 123, 00-123 City, Country",
+             "coordinates": [0.0, 0.0]
+           }
          }
         ]
 
@@ -476,6 +533,69 @@ HOST: https://coolector.tk/api
             X-Operations: operations/{operation_id}              
             
 
+## Delete remark photos [/remarks/{remarkId}/photos/{groupId}]
+
+### Delete remark photos [DELETE]
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
++ Response 202
+
+    + Headers
+
+            X-Operations: operations/{id} 
+
+## Remark votes [/remarks/{id}/votes]
+
+### Submit remark vote [PUT]
+
++ Parameters
+    + id (required, guid) ... Id of the remark. 
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
+    + Body
+    
+            {
+              "positive": true
+            }
+
++ Response 202
+
+    + Headers
+    
+            X-Resource: remarks/{remark_id}  
+            X-Operations: operations/{operation_id}  
+
+### Delete remark vote [DELETE]
+
++ Parameters
+    + id (required, guid) ... Id of the remark. 
+
++ Request
+
+    + Headers
+    
+            Accept: application/json
+            Authorization: Bearer API_KEY
+
++ Response 202
+
+    + Headers
+    
+            X-Resource: remarks/{remark_id}  
+            X-Operations: operations/{operation_id}  
+
 ## Resolve remark [/remarks/{id}/resolve]
 
 + Parameters
@@ -523,7 +643,7 @@ HOST: https://coolector.tk/api
            "role": "user",          
            "state": "active",          
            "externalUserId": "",          
-           "createdAt": "2016-12-09 12:21:45"   
+           "createdAt": "2017-01-01T10:15:11.696Z"   
          }
         ]
 
@@ -552,7 +672,7 @@ HOST: https://coolector.tk/api
           "role": "user",          
           "state": "active",          
           "externalUserId": "",          
-          "createdAt": "2016-12-09 12:21:45"   
+          "createdAt": "2017-01-01T10:15:11.696Z"  
         }
 
 
@@ -583,6 +703,6 @@ HOST: https://coolector.tk/api
           "resource": "resource",          
           "state": "completed", 
           "success": true,
-          "createdAt": "2016-12-09 12:21:45",
-          "updatedAt": "2016-12-09 12:21:46" 
+          "createdAt": "2017-02-01T10:16:11.696Z"
+          "updatedAt": "2017-02-01T10:16:13.696Z"
         }
