@@ -86,8 +86,12 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.ShouldNotBeEmpty();
-                remark.Category.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeNull();
+                remark.Category.ShouldNotBeNull();
+                remark.Author.UserId.ShouldNotBeEmpty();
+                remark.Category.Id.ShouldNotEqual(Guid.Empty);
+                remark.Author.Name.ShouldNotBeEmpty();
+                remark.Category.Name.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -117,8 +121,12 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.ShouldNotBeEmpty();
-                remark.Category.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeNull();
+                remark.Category.ShouldNotBeNull();
+                remark.Author.UserId.ShouldNotBeEmpty();
+                remark.Category.Id.ShouldNotEqual(Guid.Empty);
+                remark.Author.Name.ShouldNotBeEmpty();
+                remark.Category.Name.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -168,8 +176,12 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.ShouldNotBeEmpty();
-                remark.Category.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeNull();
+                remark.Category.ShouldNotBeNull();
+                remark.Author.UserId.ShouldNotBeEmpty();
+                remark.Category.Id.ShouldNotEqual(Guid.Empty);
+                remark.Author.Name.ShouldNotBeEmpty();
+                remark.Category.Name.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -178,7 +190,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_contain_remarks_with_the_same_category = () =>
         {
-            Remarks.All(x => x.Category == Category).ShouldBeTrue();
+            Remarks.All(x => x.Category.Name == Category).ShouldBeTrue();
         };
     }
 
@@ -206,8 +218,12 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.ShouldNotBeEmpty();
-                remark.Category.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeNull();
+                remark.Category.ShouldNotBeNull();
+                remark.Author.UserId.ShouldNotBeEmpty();
+                remark.Category.Id.ShouldNotEqual(Guid.Empty);
+                remark.Author.Name.ShouldNotBeEmpty();
+                remark.Category.Name.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -239,8 +255,12 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             foreach (var remark in Remarks)
             {
                 remark.Id.ShouldNotEqual(Guid.Empty);
-                remark.Author.ShouldNotBeEmpty();
-                remark.Category.ShouldNotBeEmpty();
+                remark.Author.ShouldNotBeNull();
+                remark.Category.ShouldNotBeNull();
+                remark.Author.UserId.ShouldNotBeEmpty();
+                remark.Category.Id.ShouldNotEqual(Guid.Empty);
+                remark.Author.Name.ShouldNotBeEmpty();
+                remark.Category.Name.ShouldNotBeEmpty();
                 remark.Location.Coordinates.Length.ShouldEqual(2);
                 remark.Location.Coordinates[0].ShouldNotEqual(0);
                 remark.Location.Coordinates[1].ShouldNotEqual(0);
@@ -337,7 +357,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             CreateRemark();
             Wait();
             Remarks = GetLatestRemarks();
-            SelectedRemark = Remarks.First(r => r.Author == TestName);
+            SelectedRemark = Remarks.First(r => r.Author.Name == TestName);
         };
 
         Because of = () => Result = DeleteRemark(SelectedRemark.Id);
@@ -361,7 +381,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             CreateRemark();
             Wait();
             Remarks = GetLatestRemarks();
-            SelectedRemark = Remarks.First(r => r.Author != TestName);
+            SelectedRemark = Remarks.First(r => r.Author.Name != TestName);
         };
 
         Because of = () => Result = DeleteRemark(SelectedRemark.Id);
