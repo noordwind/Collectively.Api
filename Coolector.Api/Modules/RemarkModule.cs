@@ -23,8 +23,8 @@ namespace Coolector.Api.Modules
                 .MapTo(x => new BasicRemarkDto
                 {
                     Id = x.Id,
-                    Author = x.Author.Name,
-                    Category = x.Category.Name,
+                    Author = x.Author,
+                    Category = x.Category,
                     Location = x.Location,
                     SmallPhotoUrl = x.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
                     Description = x.Description,
