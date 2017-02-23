@@ -205,7 +205,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             Initialize(true);
             CreateRemark();
             Wait();
-            var remark = GetLatestRemarks().First(x => x.Resolved == false);
+            var remark = GetLatestRemarks().First(x => x.State.State != State);
             ResolveRemark(remark.Id);
             Wait();
         };
@@ -232,7 +232,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_contain_only_resolved_remarks = () =>
         {
-            Remarks.All(x => x.Resolved).ShouldBeTrue();
+            Remarks.All(x => x.State.State == State).ShouldBeTrue();
         };
     }
 
@@ -269,7 +269,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
 
         It should_contain_only_active_remarks = () =>
         {
-            Remarks.All(x => x.Resolved == false).ShouldBeTrue();
+            Remarks.All(x => x.State.State != "resolved").ShouldBeTrue();
         };
     }
 
@@ -405,7 +405,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             CreateRemark();
             Wait();
             Remarks = GetLatestRemarks();
-            SelectedRemark = Remarks.First(x => x.Resolved == false);
+            SelectedRemark = Remarks.First(x => x.State.State != "resolved");
         };
 
         Because of = () => Result = ResolveRemark(SelectedRemark.Id);
@@ -419,7 +419,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         {
             Wait();
             var remark = GetRemark(SelectedRemark.Id);
-            remark.Resolved.ShouldBeTrue();
+            remark.State.State.ShouldEqual("resolved");
         };
     }
 
@@ -437,7 +437,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
             CreateRemark();
             Wait();
             Remarks = GetLatestRemarks();
-            SelectedRemark = Remarks.First(x => x.Resolved == false);
+            SelectedRemark = Remarks.First(x => x.State.State != "resolved");
         };
 
         Because of = () => Result = ResolveRemark(SelectedRemark.Id, 80.0, 80.0);
@@ -451,7 +451,7 @@ namespace Coolector.Api.Tests.EndToEnd.Modules
         {
             Wait();
             var remark = GetRemark(SelectedRemark.Id);
-            remark.Resolved.ShouldBeFalse();
+            remark.State.State.ShouldNotEqual("resolved");
         };
     }
 }

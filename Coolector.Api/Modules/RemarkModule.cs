@@ -29,7 +29,7 @@ namespace Coolector.Api.Modules
                     SmallPhotoUrl = x.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
                     Description = x.Description,
                     CreatedAt = x.CreatedAt,
-                    Resolved = x.Resolved,
+                    State = x.State,
                     Rating = x.Rating
                 }).HandleAsync());
 
