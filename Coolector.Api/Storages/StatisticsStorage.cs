@@ -36,9 +36,9 @@ namespace Coolector.Api.Storages
             => await _storageClient
                 .GetAsync<RemarkStatisticsDto>($"{RemarkStatisticsEndpoint}/{query.Id}");
 
-        public async Task<Maybe<RemarkGeneralStatisticsDto>> GetRemarkGeneralStatisticsAsync(GetRemarkGeneralStatistics query)
+        public async Task<Maybe<RemarksCountStatisticsDto>> GetRemarksCountStatisticsAsync(GetRemarksCountStatistics query)
             => await _storageClient
-                .GetAsync<RemarkGeneralStatisticsDto>($"{RemarkStatisticsEndpoint}/general".ToQueryString(query));
+                .GetAsync<RemarksCountStatisticsDto>($"{RemarkStatisticsEndpoint}/general".ToQueryString(query));
 
         public async Task<Maybe<PagedResult<CategoryStatisticsDto>>> BrowseCategoryStatisticsAsync(
                 BrowseCategoryStatistics query)
