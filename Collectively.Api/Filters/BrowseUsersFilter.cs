@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using Collectively.Api.Queries;
 using Collectively.Common.Types;
-
+using Collectively.Services.Storage.Models.Users;
 
 namespace Collectively.Api.Filters
 {
-    public class BrowseUsersFilter : IFilter<UserDto, BrowseUsers>
+    public class BrowseUsersFilter : IFilter<User, BrowseUsers>
     {
-        public IEnumerable<UserDto> Filter(IEnumerable<UserDto> values, BrowseUsers query)
+        public IEnumerable<User> Filter(IEnumerable<User> values, BrowseUsers query)
         {
             return values;
         }

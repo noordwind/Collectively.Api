@@ -3,7 +3,7 @@ using Collectively.Api.Queries;
 using Collectively.Api.Storages;
 using Collectively.Api.Validation;
 using Collectively.Messages.Commands.Users;
-
+using Collectively.Services.Storage.Models.Users;
 
 namespace Collectively.Api.Modules
 {
@@ -14,10 +14,10 @@ namespace Collectively.Api.Modules
             IUserStorage userStorage)
             : base(commandDispatcher, validatorResolver)
         {
-            Get("account", async args => await Fetch<GetAccount, UserDto>
+            Get("account", async args => await Fetch<GetAccount, User>
                 (async x => await userStorage.GetAsync(x.UserId)).HandleAsync());
 
-            Get("account/names/{name}/available", async args => await Fetch<GetNameAvailability, AvailableResourceDto>
+            Get("account/names/{name}/available", async args => await Fetch<GetNameAvailability, AvailableResource>
                 (async x => await userStorage.IsNameAvailableAsync(x.Name)).HandleAsync());
 
             Put("account/name", async args => await For<ChangeUsername>()

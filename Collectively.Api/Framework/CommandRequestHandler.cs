@@ -32,7 +32,7 @@ namespace Collectively.Api.Framework
         {
             _dispatcher = dispatcher;
             _command = command;
-            _command.Request = Common.Commands.Request.Create<T>(Guid.NewGuid(), url.Path, culture);
+            _command.Request = Messages.Commands.Request.Create<T>(Guid.NewGuid(), url.Path, culture);
             _responseFormatter = responseFormatter;
             _validatorResolver = validatorResolver;
             _negotiator = negotiator;

@@ -4,10 +4,10 @@ using Collectively.Api.Storages;
 using Collectively.Api.Validation;
 using System.Linq;
 using Collectively.Messages.Commands.Remarks;
-
 using System.Collections.Generic;
 using Collectively.Messages.Commands.Remarks.Models;
 using System;
+using Collectively.Services.Storage.Models.Remarks;
 
 namespace Collectively.Api.Modules
 {
@@ -18,9 +18,9 @@ namespace Collectively.Api.Modules
             IValidatorResolver validatorResolver)
             : base(commandDispatcher, validatorResolver, modulePath: "remarks")
         {
-            Get("", async args => await FetchCollection<BrowseRemarks, RemarkDto>
+            Get("", async args => await FetchCollection<BrowseRemarks, Remark>
                 (async x => await remarkStorage.BrowseAsync(x))
-                .MapTo(x => new BasicRemarkDto
+                .MapTo(x => new BasicRemark
                 {
                     Id = x.Id,
                     Author = x.Author,
@@ -33,13 +33,13 @@ namespace Collectively.Api.Modules
                     Rating = x.Rating
                 }).HandleAsync());
 
-            Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategoryDto>
+            Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategory>
                 (async x => await remarkStorage.BrowseCategoriesAsync(x)).HandleAsync());
 
-            Get("tags", async args => await FetchCollection<BrowseRemarkTags, TagDto>
+            Get("tags", async args => await FetchCollection<BrowseRemarkTags, Tag>
                 (async x => await remarkStorage.BrowseTagsAsync(x)).HandleAsync());
 
-            Get("{id}", async args => await Fetch<GetRemark, RemarkDto>
+            Get("{id}", async args => await Fetch<GetRemark, Remark>
                 (async x => await remarkStorage.GetAsync(x.Id)).HandleAsync());
 
             Post("", async args => await For<CreateRemark>()

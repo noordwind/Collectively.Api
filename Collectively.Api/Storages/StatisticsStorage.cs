@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Collectively.Api.Queries;
 using Collectively.Common.Extensions;
 using Collectively.Common.Types;
+using Collectively.Services.Storage.Models.Statistics;
 
 
 namespace Collectively.Api.Storages
@@ -20,33 +21,33 @@ namespace Collectively.Api.Storages
             _storageClient = storageClient;
         }
 
-        public async Task<Maybe<PagedResult<UserStatisticsDto>>> BrowseUserStatisticsAsync(BrowseUserStatistics query)
+        public async Task<Maybe<PagedResult<UserStatistics>>> BrowseUserStatisticsAsync(BrowseUserStatistics query)
             => await _storageClient
-                .GetFilteredCollectionAsync<UserStatisticsDto, BrowseUserStatistics>(query, UserStatisticsEndpoint);
+                .GetFilteredCollectionAsync<UserStatistics, BrowseUserStatistics>(query, UserStatisticsEndpoint);
 
-        public async Task<Maybe<UserStatisticsDto>> GetUserStatisticsAsync(GetUserStatistics query)
+        public async Task<Maybe<UserStatistics>> GetUserStatisticsAsync(GetUserStatistics query)
             => await _storageClient
-                .GetAsync<UserStatisticsDto>($"{UserStatisticsEndpoint}/{query.Id}");
+                .GetAsync<UserStatistics>($"{UserStatisticsEndpoint}/{query.Id}");
 
-        public async Task<Maybe<PagedResult<RemarkStatisticsDto>>> BrowseRemarkStatisticsAsync(BrowseRemarkStatistics query)
+        public async Task<Maybe<PagedResult<RemarkStatistics>>> BrowseRemarkStatisticsAsync(BrowseRemarkStatistics query)
             => await _storageClient
-                .GetFilteredCollectionAsync<RemarkStatisticsDto, BrowseRemarkStatistics>(query, RemarkStatisticsEndpoint);
+                .GetFilteredCollectionAsync<RemarkStatistics, BrowseRemarkStatistics>(query, RemarkStatisticsEndpoint);
 
-        public async Task<Maybe<RemarkStatisticsDto>> GetRemarkStatisticsAsync(GetRemarkStatistics query)
+        public async Task<Maybe<RemarkStatistics>> GetRemarkStatisticsAsync(GetRemarkStatistics query)
             => await _storageClient
-                .GetAsync<RemarkStatisticsDto>($"{RemarkStatisticsEndpoint}/{query.Id}");
+                .GetAsync<RemarkStatistics>($"{RemarkStatisticsEndpoint}/{query.Id}");
 
-        public async Task<Maybe<RemarksCountStatisticsDto>> GetRemarksCountStatisticsAsync(GetRemarksCountStatistics query)
+        public async Task<Maybe<RemarksCountStatistics>> GetRemarksCountStatisticsAsync(GetRemarksCountStatistics query)
             => await _storageClient
-                .GetAsync<RemarksCountStatisticsDto>($"{RemarkStatisticsEndpoint}/general".ToQueryString(query));
+                .GetAsync<RemarksCountStatistics>($"{RemarkStatisticsEndpoint}/general".ToQueryString(query));
 
-        public async Task<Maybe<PagedResult<CategoryStatisticsDto>>> BrowseCategoryStatisticsAsync(
+        public async Task<Maybe<PagedResult<CategoryStatistics>>> BrowseCategoryStatisticsAsync(
                 BrowseCategoryStatistics query)
             => await _storageClient
-                .GetFilteredCollectionAsync<CategoryStatisticsDto, BrowseCategoryStatistics>(query, CategoryStatisticsEndpoint);
+                .GetFilteredCollectionAsync<CategoryStatistics, BrowseCategoryStatistics>(query, CategoryStatisticsEndpoint);
 
-        public async Task<Maybe<PagedResult<TagStatisticsDto>>> BrowseTagStatisticsAsync(BrowseTagStatistics query)
+        public async Task<Maybe<PagedResult<TagStatistics>>> BrowseTagStatisticsAsync(BrowseTagStatistics query)
             => await _storageClient
-                .GetFilteredCollectionAsync<TagStatisticsDto, BrowseTagStatistics>(query, TagStatisticsEndpoint);
+                .GetFilteredCollectionAsync<TagStatistics, BrowseTagStatistics>(query, TagStatisticsEndpoint);
     }
 }

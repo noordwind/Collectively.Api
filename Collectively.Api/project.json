@@ -7,6 +7,7 @@
   "dependencies": {
     "Collectively.Common": "1.0.*",
     "Collectively.Messages": "1.0.*",
+    "Collectively.Services.Storage.Models": "1.0.*",
     "Autofac": "4.2.1",
     "Autofac.Extensions.DependencyInjection": "4.0.0",
     "Lockbox.Client": "1.0.0",

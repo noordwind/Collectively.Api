@@ -4,7 +4,7 @@ using Collectively.Api.Storages;
 using Collectively.Api.Validation;
 using Collectively.Common.Types;
 using Collectively.Common.Extensions;
-
+using Collectively.Services.Storage.Models.Operations;
 using Nancy.Security;
 
 namespace Collectively.Api.Modules
@@ -16,7 +16,7 @@ namespace Collectively.Api.Modules
             IOperationStorage operationStorage)
             : base(commandDispatcher, validatorResolver, modulePath: "operations")
         {
-            Get("{requestId}", args => Fetch<GetOperation, OperationDto>
+            Get("{requestId}", args => Fetch<GetOperation, Operation>
             (async x =>
             {
                 var operation = await operationStorage.GetAsync(x.RequestId);
@@ -27,7 +27,7 @@ namespace Collectively.Api.Modules
 
                 return operation.Value.UserId == CurrentUserId
                     ? operation
-                    : new Maybe<OperationDto>();
+                    : new Maybe<Operation>();
             }).HandleAsync());
         }
     }

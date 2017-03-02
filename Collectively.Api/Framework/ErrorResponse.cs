@@ -52,37 +52,37 @@ namespace Collectively.Api.Framework
 
         private class ErrorMessage
         {
-            public readonly IEnumerable<ErrorDto> Errors;
+            public readonly IEnumerable<Error> Errors;
 
-            private ErrorMessage(IEnumerable<ErrorDto> errors)
+            private ErrorMessage(IEnumerable<Error> errors)
             {
                 Errors = errors;
             }
 
             public static ErrorMessage FromErrors(params string[] errors)
-                => new ErrorMessage(errors.Select(CreateErrorDto));
+                => new ErrorMessage(errors.Select(CreateError));
 
             public static ErrorMessage FromExceptions(params Exception[] exceptions)
-                => new ErrorMessage(exceptions.Select(CreateErrorDto));
+                => new ErrorMessage(exceptions.Select(CreateError));
 
-            private static ErrorDto CreateErrorDto(string error)
+            private static Error CreateError(string error)
             {
-                return new ErrorDto
+                return new Error
                 {
                     Message = error
                 };
             }
 
-            private static ErrorDto CreateErrorDto(Exception exception)
+            private static Error CreateError(Exception exception)
             {
-                return new ErrorDto
+                return new Error
                 {
                     Message = exception.Message
                 };
             }
         }
 
-        private class ErrorDto
+        private class Error
         {
             public string Message { get; set; }
         }

@@ -64,7 +64,7 @@ namespace Collectively.Api.Framework
 
             container.Update(builder =>
             {
-                builder.RegisterType<CustomJsonSerializer>().As<JsonSerializer>().SingleInstance();
+                builder.RegisterType<JsonNetSerializer>().As<JsonSerializer>().SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<AppSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<FeatureSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<ExceptionlessSettings>()).SingleInstance();

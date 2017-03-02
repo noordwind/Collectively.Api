@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using Collectively.Api.Queries;
 using Collectively.Common.Types;
-
+using Collectively.Services.Storage.Models.Users;
 
 namespace Collectively.Api.Storages
 {
@@ -15,19 +15,19 @@ namespace Collectively.Api.Storages
             _storageClient = storageClient;
         }
 
-        public async Task<Maybe<AvailableResourceDto>> IsNameAvailableAsync(string name)
-            => await _storageClient.GetAsync<AvailableResourceDto>($"users/{name}/available");
+        public async Task<Maybe<AvailableResource>> IsNameAvailableAsync(string name)
+            => await _storageClient.GetAsync<AvailableResource>($"users/{name}/available");
 
-        public async Task<Maybe<UserDto>> GetAsync(string id)
-            => await _storageClient.GetAsync<UserDto>($"users/{id}");
+        public async Task<Maybe<User>> GetAsync(string id)
+            => await _storageClient.GetAsync<User>($"users/{id}");
 
-        public async Task<Maybe<UserDto>> GetByNameAsync(string name)
-            => await _storageClient.GetAsync<UserDto>($"users/{name}/account");
+        public async Task<Maybe<User>> GetByNameAsync(string name)
+            => await _storageClient.GetAsync<User>($"users/{name}/account");
 
-        public async Task<Maybe<UserSessionDto>> GetSessionAsync(Guid id)
-            => await _storageClient.GetAsync<UserSessionDto>($"user-sessions/{id}");
+        public async Task<Maybe<UserSession>> GetSessionAsync(Guid id)
+            => await _storageClient.GetAsync<UserSession>($"user-sessions/{id}");
 
-        public async Task<Maybe<PagedResult<UserDto>>> BrowseAsync(BrowseUsers query)
-            => await _storageClient.GetFilteredCollectionUsingCacheAsync<UserDto, BrowseUsers>(query, "users");
+        public async Task<Maybe<PagedResult<User>>> BrowseAsync(BrowseUsers query)
+            => await _storageClient.GetFilteredCollectionUsingCacheAsync<User, BrowseUsers>(query, "users");
     }
 }
