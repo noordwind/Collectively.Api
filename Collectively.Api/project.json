@@ -24,8 +24,10 @@
     "Microsoft.Extensions.Configuration.Json": "1.1.0",
     "NLog.Web.AspNetCore": "4.3.0",
     "NLog.Extensions.Logging": "1.0.0-*",
-    "Nancy": "2.0.0-barneyrubble",
-    "Nancy.Authentication.Stateless": "2.0.0-barneyrubble",
+    "Nancy": "2.0.0-clinteastwood",
+    "Nancy.Authentication.Stateless": "2.0.0-clinteastwood",
+    "Nancy.Bootstrappers.Autofac": "2.0.0-clinteastwood",
+    "Nancy.Serialization.JsonNet": "2.0.0-clinteastwood",
     "System.Reflection.TypeExtensions": "4.3.0",
     "Polly": "5.0.1-v5-0-alpha0001"
   },
