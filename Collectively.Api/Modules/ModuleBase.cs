@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Collectively.Api.Framework;
 using Collectively.Api.Validation;
-using Collectively.Common.Commands;
+using Collectively.Messages.Commands;
 using Collectively.Common.Extensions;
 using Collectively.Common.Nancy;
 using Collectively.Common.Queries;

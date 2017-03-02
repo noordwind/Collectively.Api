@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using Autofac;
 using Collectively.Api.Commands;
-using Collectively.Common.Commands;
-using Collectively.Common.Events;
+using Collectively.Messages.Commands;
+using Collectively.Messages.Events;
 using Module = Autofac.Module;
 
 namespace Collectively.Api.IoC.Modules

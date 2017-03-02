@@ -3,7 +3,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Collectively.Api.Validation;
-using Collectively.Common.Commands;
+using Collectively.Messages.Commands;
 using Nancy;
 using Collectively.Common.Extensions;
 using Nancy.Responses.Negotiation;

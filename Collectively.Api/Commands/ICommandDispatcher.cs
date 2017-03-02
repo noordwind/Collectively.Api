@@ -1,5 +1,5 @@
 ﻿using System.Threading.Tasks;
-using Collectively.Common.Commands;
+using Collectively.Messages.Commands;
 
 namespace Collectively.Api.Commands
 {
