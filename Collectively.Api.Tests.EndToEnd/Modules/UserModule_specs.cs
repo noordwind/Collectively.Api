@@ -2,20 +2,20 @@
 using Machine.Specifications;
 using System;
 using System.Collections.Generic;
-
+using Collectively.Services.Storage.Models.Users;
 
 namespace Collectively.Api.Tests.EndToEnd.Modules
 {
     public abstract class UserModule_specs : ModuleBase_specs
     {
-        protected static IEnumerable<UserDto> GetUsers()
-            => HttpClient.GetCollectionAsync<UserDto>("users").WaitForResult();
+        protected static IEnumerable<User> GetUsers()
+            => HttpClient.GetCollectionAsync<User>("users").WaitForResult();
     }
 
     [Subject("Users collection")]
     public class when_fetching_the_users : UserModule_specs
     {
-        static IEnumerable<UserDto> Users;
+        static IEnumerable<User> Users;
 
         Establish context = () => Initialize();
 

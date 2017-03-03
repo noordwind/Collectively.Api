@@ -1,17 +1,17 @@
 ﻿using Collectively.Api.Tests.EndToEnd.Framework;
 using Machine.Specifications;
 using System;
-
+using Collectively.Services.Storage.Models.Users;
 
 namespace Collectively.Api.Tests.EndToEnd.Modules
 {
     public abstract class AccountModule_specs : ModuleBase_specs
     {
-        protected static UserDto GetAccount()
-            => HttpClient.GetAsync<UserDto>("account").WaitForResult();
+        protected static User GetAccount()
+            => HttpClient.GetAsync<User>("account").WaitForResult();
 
-        protected static UserDto GetAccountByName(string name)
-            => HttpClient.GetAsync<UserDto>($"users/{name}").WaitForResult();
+        protected static User GetAccountByName(string name)
+            => HttpClient.GetAsync<User>($"users/{name}").WaitForResult();
     }
 
     [Subject("Account sign in")]
@@ -31,7 +31,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Account fetch")]
     public class when_fetching_account : AccountModule_specs
     {
-        static UserDto User;
+        static User User;
 
         Establish context = () => Initialize(authenticate: true);
 
@@ -51,7 +51,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Account fetch by name")]
     public class when_fetching_account_by_name : AccountModule_specs
     {
-        static UserDto User;
+        static User User;
 
         Establish context = () => Initialize(true);
 

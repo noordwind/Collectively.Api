@@ -1,12 +1,12 @@
 ﻿using Collectively.Api.Tests.EndToEnd.Framework;
-
+using Collectively.Services.Storage.Models.Operations;
 using Machine.Specifications;
 
 namespace Collectively.Api.Tests.EndToEnd.Modules
 {
     public abstract class ResetPasswordModule_specs : ModuleBase_specs
     {
-        protected static OperationDto InitiateResetPassword()
+        protected static Operation InitiateResetPassword()
         {
             return OperationHandler.PostAsync("reset-password", new
             {
@@ -18,7 +18,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Initiate reset password")]
     public class when_initiating_password_reset : ResetPasswordModule_specs
     {
-        protected static OperationDto Result;
+        protected static Operation Result;
 
         Establish context = () =>
         {

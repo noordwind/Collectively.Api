@@ -4,7 +4,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Collectively.Common.Extensions;
-
+using Collectively.Services.Storage.Models.Operations;
 
 namespace Collectively.Api.Tests.EndToEnd.Framework
 {
@@ -17,16 +17,16 @@ namespace Collectively.Api.Tests.EndToEnd.Framework
             _httpClient = httpClient;
         }
 
-        public async Task<OperationDto> PostAsync(string endpoint, object data = null)
+        public async Task<Operation> PostAsync(string endpoint, object data = null)
             => await HandleOperationAsync(await _httpClient.PostAsync(endpoint, data));
 
-        public async Task<OperationDto> PutAsync(string endpoint, object data = null)
+        public async Task<Operation> PutAsync(string endpoint, object data = null)
             => await HandleOperationAsync(await _httpClient.PutAsync(endpoint, data));
 
-        public async Task<OperationDto> DeleteAsync(string endpoint)
+        public async Task<Operation> DeleteAsync(string endpoint)
             => await HandleOperationAsync(await _httpClient.DeleteAsync(endpoint));
 
-        public async Task<OperationDto> HandleOperationAsync(HttpResponseMessage response)
+        public async Task<Operation> HandleOperationAsync(HttpResponseMessage response)
         {
             if (response.StatusCode != HttpStatusCode.Accepted)
             {
@@ -41,12 +41,12 @@ namespace Collectively.Api.Tests.EndToEnd.Framework
             return await HandleOperationAsync(endpoint);
         }
 
-        public async Task<OperationDto> HandleOperationAsync(string endpoint)
+        public async Task<Operation> HandleOperationAsync(string endpoint)
         {
             var retryNumber = 0;
             while (retryNumber < 10)
             {
-                var operation = await _httpClient.GetAsync<OperationDto>(endpoint);
+                var operation = await _httpClient.GetAsync<Operation>(endpoint);
                 if (operation != null && operation.State != "created")
                     return operation;
 

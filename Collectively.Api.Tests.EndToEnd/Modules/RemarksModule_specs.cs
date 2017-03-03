@@ -4,8 +4,8 @@ using System;
 using System.Collections.Generic;
 using FluentAssertions;
 using System.Linq;
-
-
+using Collectively.Services.Storage.Models.Remarks;
+using Collectively.Services.Storage.Models.Operations;
 
 namespace Collectively.Api.Tests.EndToEnd.Modules
 {
@@ -13,25 +13,25 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     {
         protected static IPhotoGenerator PhotoGenerator = new PhotoGenerator(); 
 
-        protected static RemarkDto GetRemark(Guid id)
-            => HttpClient.GetAsync<RemarkDto>($"remarks/{id}").WaitForResult();
+        protected static Remark GetRemark(Guid id)
+            => HttpClient.GetAsync<Remark>($"remarks/{id}").WaitForResult();
 
-        protected static IEnumerable<BasicRemarkDto> GetLatestRemarks()
-            => HttpClient.GetCollectionAsync<BasicRemarkDto>("remarks?latest=true&results=10000").WaitForResult();
+        protected static IEnumerable<BasicRemark> GetLatestRemarks()
+            => HttpClient.GetCollectionAsync<BasicRemark>("remarks?latest=true&results=10000").WaitForResult();
 
-        protected static IEnumerable<BasicRemarkDto> GetNearestRemarks()
-            => HttpClient.GetCollectionAsync<BasicRemarkDto>("remarks?radius=10000&longitude=1.0&latitude=1.0").WaitForResult();
+        protected static IEnumerable<BasicRemark> GetNearestRemarks()
+            => HttpClient.GetCollectionAsync<BasicRemark>("remarks?radius=10000&longitude=1.0&latitude=1.0").WaitForResult();
 
-        protected static IEnumerable<BasicRemarkDto> GetRemarksWithCategory(string categoryName)
-            => HttpClient.GetCollectionAsync<BasicRemarkDto>($"remarks?radius=10000&longitude=1.0&latitude=1.0&categories={categoryName}").WaitForResult();
+        protected static IEnumerable<BasicRemark> GetRemarksWithCategory(string categoryName)
+            => HttpClient.GetCollectionAsync<BasicRemark>($"remarks?radius=10000&longitude=1.0&latitude=1.0&categories={categoryName}").WaitForResult();
 
-        protected static IEnumerable<BasicRemarkDto> GetRemarksWithState(string state)
-            => HttpClient.GetCollectionAsync<BasicRemarkDto>($"remarks?radius=10000&longitude=1.0&latitude=1.0&state={state}").WaitForResult();
+        protected static IEnumerable<BasicRemark> GetRemarksWithState(string state)
+            => HttpClient.GetCollectionAsync<BasicRemark>($"remarks?radius=10000&longitude=1.0&latitude=1.0&state={state}").WaitForResult();
 
-        protected static IEnumerable<RemarkCategoryDto> GetCategories()
-            => HttpClient.GetCollectionAsync<RemarkCategoryDto>("remarks/categories").WaitForResult();
+        protected static IEnumerable<RemarkCategory> GetCategories()
+            => HttpClient.GetCollectionAsync<RemarkCategory>("remarks/categories").WaitForResult();
 
-        protected static OperationDto CreateRemark(double latitude = 1.0, double longitude = 1.0, string categoryName = null)
+        protected static Operation CreateRemark(double latitude = 1.0, double longitude = 1.0, string categoryName = null)
         {
             var categories = GetCategories().ToList();
             var photo = GeneratePhoto();
@@ -48,10 +48,10 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
             }).WaitForResult();
         }
 
-        protected static OperationDto DeleteRemark(Guid remarkId)
+        protected static Operation DeleteRemark(Guid remarkId)
             => OperationHandler.DeleteAsync($"remarks/{remarkId}").WaitForResult();
 
-        protected static OperationDto ResolveRemark(Guid remarkId,
+        protected static Operation ResolveRemark(Guid remarkId,
             double latitude = 1.0, double longitude = 1.0,
             bool validatePhoto = false, bool validateLocation = false)
             => OperationHandler.PutAsync($"remarks/{remarkId}/resolve", new
@@ -69,7 +69,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Remarks collection")]
     public class when_fetching_latest_remarks : RemarksModule_specs
     {
-        static IEnumerable<BasicRemarkDto> Remarks;
+        static IEnumerable<BasicRemark> Remarks;
 
         Establish context = () =>
         {
@@ -102,7 +102,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Remarks collection")]
     public class when_fetching_nearest_remarks : RemarksModule_specs
     {
-        protected static IEnumerable<BasicRemarkDto> Remarks;
+        protected static IEnumerable<BasicRemark> Remarks;
 
         Establish context = () =>
         {
@@ -142,7 +142,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
 
         It should_return_remarks_in_correct_order = () =>
         {
-            BasicRemarkDto previousRemark = null;
+            BasicRemark previousRemark = null;
             foreach (var remark in Remarks)
             {
                 if (previousRemark != null)
@@ -159,7 +159,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     public class when_fetching_remarks_with_specific_category : RemarksModule_specs
     {
         protected static string Category = "damages";
-        protected static IEnumerable<BasicRemarkDto> Remarks;
+        protected static IEnumerable<BasicRemark> Remarks;
 
         Establish context = () =>
         {
@@ -198,7 +198,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     public class when_fetching_resolved_remarks : RemarksModule_specs
     {
         protected static string State = "resolved";
-        protected static IEnumerable<BasicRemarkDto> Remarks;
+        protected static IEnumerable<BasicRemark> Remarks;
 
         private Establish context = () =>
         {
@@ -240,7 +240,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     public class when_fetching_active_remarks : RemarksModule_specs
     {
         protected static string State = "active";
-        protected static IEnumerable<BasicRemarkDto> Remarks;
+        protected static IEnumerable<BasicRemark> Remarks;
 
         Establish context = () =>
         {
@@ -276,9 +276,9 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Remark details")]
     public class when_fetching_remark : RemarksModule_specs
     {
-        static IEnumerable<BasicRemarkDto> Remarks;
-        static BasicRemarkDto SelectedRemark;
-        static RemarkDto Remark;
+        static IEnumerable<BasicRemark> Remarks;
+        static BasicRemark SelectedRemark;
+        static Remark Remark;
 
         Establish context = () =>
         {
@@ -312,7 +312,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Remarks categories")]
     public class when_fetching_remarks_categories : RemarksModule_specs
     {
-        static IEnumerable<RemarkCategoryDto> Categories;
+        static IEnumerable<RemarkCategory> Categories;
 
         Establish context = () => Initialize(authenticate: false);
 
@@ -332,7 +332,7 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Remarks create")]
     public class when_creating_remark : RemarksModule_specs
     {
-        protected static OperationDto Result;
+        protected static Operation Result;
 
         Establish context = () => Initialize(true);
 
@@ -347,9 +347,9 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Remarks delete")]
     public class when_deleting_remark : RemarksModule_specs
     {
-        protected static OperationDto Result;
-        static BasicRemarkDto SelectedRemark;
-        static IEnumerable<BasicRemarkDto> Remarks;
+        protected static Operation Result;
+        static BasicRemark SelectedRemark;
+        static IEnumerable<BasicRemark> Remarks;
 
         Establish context = () =>
         {
@@ -371,9 +371,9 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Remarks delete")]
     public class when_deleting_remark_and_user_is_not_an_author : RemarksModule_specs
     {
-        protected static OperationDto Result;
-        static BasicRemarkDto SelectedRemark;
-        static IEnumerable<BasicRemarkDto> Remarks;
+        protected static Operation Result;
+        static BasicRemark SelectedRemark;
+        static IEnumerable<BasicRemark> Remarks;
 
         Establish context = () =>
         {
@@ -395,9 +395,9 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Remarks resolve")]
     public class when_resolving_remark : RemarksModule_specs
     {
-        protected static OperationDto Result;
-        static BasicRemarkDto SelectedRemark;
-        static IEnumerable<BasicRemarkDto> Remarks;
+        protected static Operation Result;
+        static BasicRemark SelectedRemark;
+        static IEnumerable<BasicRemark> Remarks;
 
         Establish context = () =>
         {
@@ -427,9 +427,9 @@ namespace Collectively.Api.Tests.EndToEnd.Modules
     [Subject("Remarks resolve")]
     public class when_resolving_remark_from_a_long_distance : RemarksModule_specs
     {
-        protected static OperationDto Result;
-        static BasicRemarkDto SelectedRemark;
-        static IEnumerable<BasicRemarkDto> Remarks;
+        protected static Operation Result;
+        static BasicRemark SelectedRemark;
+        static IEnumerable<BasicRemark> Remarks;
 
         Establish context = () =>
         {

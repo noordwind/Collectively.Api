@@ -9,6 +9,7 @@
     "Collectively.Api": "1.0.0-*",
     "Collectively.Common": "1.0.*",
     "Collectively.Messages": "1.0.*",
+    "Collectively.Services.Storage.Models": "1.0.*",
     "System.Net.Http": "4.3.0"
   },
   "testRunner": "mspec",
