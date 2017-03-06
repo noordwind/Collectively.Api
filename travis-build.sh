@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 MYGET_ENV=""
 case "$TRAVIS_BRANCH" in
   "develop")
