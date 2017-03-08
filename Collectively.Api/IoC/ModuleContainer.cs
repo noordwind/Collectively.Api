@@ -1,6 +1,6 @@
 ﻿using Autofac;
 using Collectively.Api.IoC.Modules;
-using Collectively.Common.Security;
+using Collectively.Common.ServiceClients;
 
 namespace Collectively.Api.IoC
 {
@@ -12,6 +12,7 @@ namespace Collectively.Api.IoC
             builder.RegisterModule<FilterModule>();
             builder.RegisterModule<StorageModule>();
             builder.RegisterModule<ValidatorModule>();
+            builder.RegisterModule<ServiceClientModule>();
         }
     }
 }
