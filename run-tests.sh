@@ -1,2 +1,2 @@
 #!/bin/bash
-dotnet test ./Collectively.Api.Tests
+dotnet test Collectively.Api.Tests/Collectively.Api.Tests.csproj
