@@ -5,9 +5,9 @@ using Collectively.Api.Validation;
 using System.Linq;
 using Collectively.Messages.Commands.Remarks;
 using System.Collections.Generic;
-using Collectively.Messages.Commands.Remarks.Models;
 using System;
 using Collectively.Services.Storage.Models.Remarks;
+using Collectively.Messages.Commands.Models;
 
 namespace Collectively.Api.Modules
 {
@@ -67,7 +67,7 @@ namespace Collectively.Api.Modules
                 .DispatchAsync());
 
             Delete("{remarkId}", async args => await For<DeleteRemark>()
-                .OnSuccessAccepted(string.Empty)
+                .OnSuccessAccepted()
                 .DispatchAsync());
 
             Put("{remarkId}/votes", async args => await For<SubmitRemarkVote>()

@@ -24,8 +24,12 @@ namespace Collectively.Api.Modules
                 .OnSuccessAccepted("account")
                 .DispatchAsync());
 
-            Put("account/avatar", async args => await For<ChangeAvatar>()
+            Post("account/avatar", async args => await For<UploadAvatar>()
                 .OnSuccessAccepted("account")
+                .DispatchAsync());
+
+            Delete("account/avatar", async args => await For<RemoveAvatar>()
+                .OnSuccessAccepted()
                 .DispatchAsync());
 
             Put("account/password", async args => await For<ChangePassword>()
