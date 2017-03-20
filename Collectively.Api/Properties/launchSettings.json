@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Collectively.Api": {
+      "commandName": "Project",
+      "applicationUrl": "http://localhost:5000"
+    }
+  }
+}
