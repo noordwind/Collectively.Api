@@ -11,11 +11,11 @@ namespace Collectively.Api.Queries
         public string Description { get; set; }
         public string AuthorId { get; set; }
         public string ResolverId { get; set; }
-        public string State { get; set; }
         public bool Latest { get; set; }
         public bool Disliked { get; set; }
         public bool OnlyLiked { get; set; }
         public bool OnlyDisliked { get; set; }
+        public IEnumerable<string> States { get; set; }
         public IEnumerable<string> Categories { get; set; }
         public IEnumerable<string> Tags { get; set; }
     }
