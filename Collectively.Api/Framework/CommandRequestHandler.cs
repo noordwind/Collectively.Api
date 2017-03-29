@@ -96,6 +96,9 @@ namespace Collectively.Api.Framework
             return this;
         }
 
+        public CommandRequestHandler<T> OnSuccessAccepted(Func<T, string> func)
+            => OnSuccessAccepted(func(_command));
+
         public CommandRequestHandler<T> OnSuccessAccepted(string path = "")
         {
             var resourceEndpoint = path.Empty() ? string.Empty : string.Format(path, _resourceId);

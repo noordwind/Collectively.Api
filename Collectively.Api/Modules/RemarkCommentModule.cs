@@ -15,7 +15,7 @@ namespace Collectively.Api.Modules
         {
             Post("", async args => await For<AddCommentToRemark>()
                 .SetResourceId(x => x.CommentId)
-                .OnSuccessAccepted()
+                .OnSuccessAccepted(x => $"remarks/{x.RemarkId}/comments/" + "{0}")
                 .DispatchAsync());
 
             Put("{commentId}", async args => await For<EditRemarkComment>()
