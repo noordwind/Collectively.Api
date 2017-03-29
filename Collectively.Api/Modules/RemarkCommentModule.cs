@@ -6,7 +6,7 @@ using Collectively.Messages.Commands.Remarks;
 
 namespace Collectively.Api.Modules
 {
-  public class RemarkCommentModule : ModuleBase
+    public class RemarkCommentModule : ModuleBase
     {
         public RemarkCommentModule(ICommandDispatcher commandDispatcher,
             IRemarkStorage remarkStorage,
@@ -14,6 +14,7 @@ namespace Collectively.Api.Modules
             : base(commandDispatcher, validatorResolver, modulePath: "remarks/{remarkId}/comments")
         {
             Post("", async args => await For<AddCommentToRemark>()
+                .SetResourceId(x => x.CommentId)
                 .OnSuccessAccepted()
                 .DispatchAsync());
 
