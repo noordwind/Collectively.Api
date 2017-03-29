@@ -1,4 +1,5 @@
-﻿using Collectively.Api.Commands;
+﻿using System;
+using Collectively.Api.Commands;
 using Collectively.Api.Storages;
 using Collectively.Api.Validation;
 using Collectively.Messages.Commands.Remarks;
@@ -23,6 +24,15 @@ namespace Collectively.Api.Modules
             Delete("{commentId}", async args => await For<DeleteRemarkComment>()
                 .OnSuccessAccepted()
                 .DispatchAsync());
+
+            Put("{commentId}/votes", async args => await For<SubmitRemarkCommentVote>()
+                .Set(x => x.CreatedAt = DateTime.UtcNow)
+                .OnSuccessAccepted()
+                .DispatchAsync());
+
+            Delete("{commentId}/votes", async args => await For<DeleteRemarkCommentVote>()
+                .OnSuccessAccepted()
+                .DispatchAsync());                
         }
     }
 }
