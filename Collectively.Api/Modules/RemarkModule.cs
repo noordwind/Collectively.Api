@@ -31,7 +31,8 @@ namespace Collectively.Api.Modules
                     CreatedAt = x.CreatedAt,
                     State = x.State,
                     Rating = x.Rating,
-                    CommentsCount = x.CommentsCount
+                    CommentsCount = x.CommentsCount,
+                    ParticipantsCount = x.ParticipantsCount
                 }).HandleAsync());
 
             Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategory>
