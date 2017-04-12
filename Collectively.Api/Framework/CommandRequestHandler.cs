@@ -28,11 +28,11 @@ namespace Collectively.Api.Framework
             IResponseFormatter responseFormatter,
             IValidatorResolver validatorResolver,
             Negotiator negotiator,
-            Url url, string culture)
+            Messages.Commands.Request request)
         {
             _dispatcher = dispatcher;
             _command = command;
-            _command.Request = Messages.Commands.Request.Create<T>(Guid.NewGuid(), url.Path, culture);
+            _command.Request = request;
             _responseFormatter = responseFormatter;
             _validatorResolver = validatorResolver;
             _negotiator = negotiator;

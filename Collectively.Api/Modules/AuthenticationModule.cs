@@ -1,9 +1,7 @@
 ﻿using System;
 using Collectively.Api.Commands;
-using Collectively.Api.Storages;
+using Collectively.Api.Services;
 using Collectively.Api.Validation;
-using Collectively.Common.Extensions;
-using Collectively.Common.Security;
 using Collectively.Messages.Commands.Users;
 using Nancy;
 
@@ -13,48 +11,30 @@ namespace Collectively.Api.Modules
     {
         public AuthenticationModule(ICommandDispatcher commandDispatcher,
             IValidatorResolver validatorResolver,
-            IUserStorage userStorage,
-            IOperationStorage operationStorage,
-            IJwtTokenHandler jwtTokenHandler,
-            JwtTokenSettings jwtTokenSettings)
+            IAuthenticationService authenticationService)
             : base(commandDispatcher, validatorResolver)
         {
-            Post("sign-in", async (ctx, p) => await For<SignIn>()
-                .Set(c =>
+            Post("sign-in", async args => 
+            {
+                var credentials = BindRequest<SignIn>();
+                credentials.Request = CreateRequest<SignIn>();
+                credentials.SessionId = Guid.NewGuid();
+                credentials.IpAddress = Request.UserHostAddress;
+                credentials.UserAgent = Request.Headers.UserAgent;
+                var session = await authenticationService.AuthenticateAsync(credentials);
+                if (session.HasNoValue)
                 {
-                    c.IpAddress = Request.UserHostAddress;
-                    c.UserAgent = Request.Headers.UserAgent;
-                })
-                .SetResourceId(c => c.SessionId)
-                .OnSuccess(async c =>
-                {
-                    var operation = await operationStorage.GetUpdatedAsync(c.Request.Id);
-                    if(operation.HasNoValue || !operation.Value.Success)
-                    {
-                        return HttpStatusCode.Unauthorized;
-                    }
+                    return HttpStatusCode.Unauthorized;
+                }
 
-                    var session = await userStorage.GetSessionAsync(c.SessionId);
-                    if (session.HasNoValue)
-                    {
-                        return HttpStatusCode.Unauthorized;
-                    }
-
-                    return new
-                    {
-                        token = jwtTokenHandler.Create(session.Value.UserId),
-                        sessionId = session.Value.Id,
-                        sessionKey = session.Value.Key,
-                        expiry = DateTime.UtcNow.AddDays(jwtTokenSettings.ExpiryDays).ToTimestamp()
-                    };
-                })
-                .DispatchAsync());
+                return session.Value;
+            });
 
             Post("sign-up", async (ctx, p) => await For<SignUp>()
                 .OnSuccessAccepted("account")
                 .DispatchAsync());
 
-            Post("sign-out", async (ctx, p) => await For<SignUp>()
+            Post("sign-out", async (ctx, p) => await For<SignOut>()
                 .OnSuccess(HttpStatusCode.NoContent)
                 .DispatchAsync());
         }

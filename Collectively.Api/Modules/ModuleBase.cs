@@ -2,6 +2,7 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Collectively.Api.Commands;
 using Collectively.Api.Framework;
 using Collectively.Api.Validation;
 using Collectively.Messages.Commands;
@@ -14,7 +15,6 @@ using Nancy.ModelBinding;
 using Nancy.Responses;
 using Nancy.Security;
 using NLog;
-using ICommandDispatcher = Collectively.Api.Commands.ICommandDispatcher;
 
 namespace Collectively.Api.Modules
 {
@@ -38,19 +38,17 @@ namespace Collectively.Api.Modules
         {
             var command = BindRequest<T>();
             var authenticatedCommand = command as IAuthenticatedCommand;
-            var culture = Request.Headers.AcceptLanguage?.FirstOrDefault()?.Item1;
-            culture = culture.Empty() ? "en-gb" : culture.TrimToLower();
             if (authenticatedCommand == null)
             {
                 return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
-                    _validatorResolver, Negotiate, Request.Url, culture);
+                    _validatorResolver, Negotiate, CreateRequest<T>());
             }
 
             this.RequiresAuthentication();
             authenticatedCommand.UserId = CurrentUserId;
 
             return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
-                _validatorResolver,Negotiate, Request.Url, culture);
+                _validatorResolver,Negotiate, CreateRequest<T>());
         }
 
 
@@ -93,15 +91,12 @@ namespace Collectively.Api.Modules
             get
             {
                 if (_currentUserId.Empty())
-                    SetCurrentUserId(Context.CurrentUser?.Identity?.Name);
+                {
+                    _currentUserId = Context.CurrentUser?.Identity?.Name;
+                }
 
                 return _currentUserId;
             }
-        }
-
-        protected void SetCurrentUserId(string id)
-        {
-            _currentUserId = id;
         }
 
         protected Response FromStream(Maybe<Stream> stream, string fileName, string contentType)
@@ -116,5 +111,18 @@ namespace Collectively.Api.Modules
 
             return response.AsAttachment(fileName);
         }
+
+        protected string Culture 
+        {
+            get 
+            {
+                var culture = Request.Headers.AcceptLanguage?.FirstOrDefault()?.Item1;
+
+                return culture.Empty() ? "en-gb" : culture.TrimToLower();
+            }
+        }
+
+        protected Messages.Commands.Request CreateRequest<T>()
+            => Messages.Commands.Request.Create<T>(Guid.NewGuid(), Request.Url.Path, Culture);
     }
 }

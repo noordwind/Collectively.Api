@@ -18,6 +18,9 @@ using ModuleContainer = Collectively.Api.IoC.ModuleContainer;
 using Newtonsoft.Json;
 using Collectively.Common.RabbitMq;
 using Collectively.Common.Security;
+using Collectively.Api.Services;
+using Collectively.Common.ServiceClients;
+using Collectively.Api.IoC.Modules;
 
 namespace Collectively.Api.Framework
 {
@@ -69,6 +72,7 @@ namespace Collectively.Api.Framework
                 builder.RegisterInstance(_configuration.GetSettings<ExceptionlessSettings>()).SingleInstance();
                 builder.RegisterType<ExceptionlessExceptionHandler>().As<IExceptionHandler>().SingleInstance();
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
+                builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerRequest();
                 builder.RegisterModule<ModuleContainer>();
                 SecurityContainer.Register(builder, _configuration);
                 RabbitMqContainer.Register(builder, _configuration.GetSettings<RawRabbitConfiguration>());

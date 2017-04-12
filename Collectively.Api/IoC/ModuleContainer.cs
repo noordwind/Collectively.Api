@@ -13,6 +13,7 @@ namespace Collectively.Api.IoC
             builder.RegisterModule<StorageModule>();
             builder.RegisterModule<ValidatorModule>();
             builder.RegisterModule<ServiceClientModule>();
+            builder.RegisterModule<ServiceClientsModule>();
         }
     }
 }
