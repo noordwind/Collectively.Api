@@ -3,6 +3,7 @@ using Collectively.Api.Queries;
 using Collectively.Api.Storages;
 using Collectively.Api.Validation;
 using Collectively.Messages.Commands.Users;
+using Collectively.Services.Storage.Models.Notifications;
 using Collectively.Services.Storage.Models.Users;
 
 namespace Collectively.Api.Modules
@@ -11,11 +12,16 @@ namespace Collectively.Api.Modules
     {
         public AccountModule(ICommandDispatcher commandDispatcher,
             IValidatorResolver validatorResolver,
-            IUserStorage userStorage)
+            IUserStorage userStorage,
+            INotificationSettingsStorage notificationSettingsStorage)
             : base(commandDispatcher, validatorResolver)
         {
             Get("account", async args => await Fetch<GetAccount, User>
                 (async x => await userStorage.GetAsync(x.UserId)).HandleAsync());
+
+            Get("account/settings/notifications", async args => await Fetch<GetNotificationSettings, UserNotificationSettings>
+                (async x => await notificationSettingsStorage.GetAsync(x.UserId))
+                .HandleAsync());
 
             Get("account/names/{name}/available", async args => await Fetch<GetNameAvailability, AvailableResource>
                 (async x => await userStorage.IsNameAvailableAsync(x.Name)).HandleAsync());

@@ -43,6 +43,10 @@ namespace Collectively.Api.IoC.Modules
                 .As<IStatisticsStorage>()
                 .SingleInstance();
 
+            builder.RegisterType<NotificationSettingsStorage>()
+                .As<INotificationSettingsStorage>()
+                .SingleInstance();
+
             builder.RegisterType<InMemoryCache>()
                 .As<ICache>()
                 .SingleInstance();

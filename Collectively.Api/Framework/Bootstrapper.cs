@@ -19,8 +19,6 @@ using Newtonsoft.Json;
 using Collectively.Common.RabbitMq;
 using Collectively.Common.Security;
 using Collectively.Api.Services;
-using Collectively.Common.ServiceClients;
-using Collectively.Api.IoC.Modules;
 
 namespace Collectively.Api.Framework
 {
