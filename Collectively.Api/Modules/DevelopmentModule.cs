@@ -8,19 +8,29 @@ namespace Collectively.Api.Modules
 {
     public class DevelopmentModule : ModuleBase
     {
+        private static int RequestCounter = 0;
+
         public DevelopmentModule(ICommandDispatcher commandDispatcher,
             IValidatorResolver validatorResolver,
             IOperationStorage operationStorage)
             : base(commandDispatcher, validatorResolver, modulePath: "development")
         {
-            Get("operation/{state}", args => 
+            Get("operation", args => 
             {
+                var state = "created";
+                RequestCounter++;
+                if(RequestCounter == 10)
+                {
+                    state = "completed";
+                    RequestCounter = 0;
+                }
+
                 return new Operation
                 {
                     Id = Guid.NewGuid(),
                     RequestId = Guid.NewGuid(),
                     CreatedAt = DateTime.UtcNow,
-                    State = args.state
+                    State = state
                 };
             });
         }
