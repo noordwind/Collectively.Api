@@ -2,6 +2,7 @@
 using Collectively.Api.Queries;
 using Collectively.Api.Storages;
 using Collectively.Api.Validation;
+using Collectively.Messages.Commands.Notifications;
 using Collectively.Messages.Commands.Users;
 using Collectively.Services.Storage.Models.Notifications;
 using Collectively.Services.Storage.Models.Users;
@@ -27,6 +28,10 @@ namespace Collectively.Api.Modules
                 (async x => await userStorage.IsNameAvailableAsync(x.Name)).HandleAsync());
 
             Put("account/name", async args => await For<ChangeUsername>()
+                .OnSuccessAccepted("account")
+                .DispatchAsync());
+
+            Put("account/settings/notifications", async args => await For<UpdateUserNotificationSettings>()
                 .OnSuccessAccepted("account")
                 .DispatchAsync());
 
