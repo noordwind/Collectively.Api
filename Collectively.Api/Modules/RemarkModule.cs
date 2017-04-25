@@ -72,6 +72,10 @@ namespace Collectively.Api.Modules
                 .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
 
+            Put("{remarkId}/renew", async args => await For<RenewRemark>()
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
+                .DispatchAsync());
+
             Delete("{remarkId}", async args => await For<DeleteRemark>()
                 .OnSuccessAccepted()
                 .DispatchAsync());
