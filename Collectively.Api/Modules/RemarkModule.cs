@@ -88,6 +88,10 @@ namespace Collectively.Api.Modules
             Delete("{remarkId}/votes", async args => await For<DeleteRemarkVote>()
                 .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
+
+            Delete("{remarkId}/states/{stateId}", async args => await For<DeleteRemarkState>()
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
+                .DispatchAsync());
         }
     }
 }
