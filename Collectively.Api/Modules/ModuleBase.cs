@@ -15,6 +15,7 @@ using Nancy.ModelBinding;
 using Nancy.Responses;
 using Nancy.Security;
 using NLog;
+using Structure.Sketching.ExtensionMethods;
 
 namespace Collectively.Api.Modules
 {
@@ -49,6 +50,31 @@ namespace Collectively.Api.Modules
 
             return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
                 _validatorResolver,Negotiate, CreateRequest<T>());
+        }
+
+        protected CommandRequestHandler<T> ForFileUpload<T>() where T : IFileUploadCommand, new()
+        {
+            var command = BindRequest<T>();
+
+            this.RequiresAuthentication();
+            command.UserId = CurrentUserId;
+
+            var files = Context.Request.Files;
+            var file = files?.FirstOrDefault();
+
+            if (file != null)
+            {
+                var stream = new MemoryStream();
+                file.Value.CopyTo(stream);
+                var bytes = stream.ToArray();
+                var base64 = Convert.ToBase64String(bytes);
+                command.FileBase64 = base64;
+                command.Name = file.Name;
+                command.ContentType = file.ContentType;
+            }
+
+            return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
+                _validatorResolver, Negotiate, CreateRequest<T>());
         }
 
 

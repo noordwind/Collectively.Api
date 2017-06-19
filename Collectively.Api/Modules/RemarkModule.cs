@@ -49,6 +49,10 @@ namespace Collectively.Api.Modules
                 .OnSuccessAccepted("remarks/{0}")
                 .DispatchAsync());
 
+            Put("{remarkId}/photo", async args => await ForFileUpload<AddPhotoToRemark>()
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
+                .DispatchAsync());
+
             Put("{remarkId}/photos", async args => await For<AddPhotosToRemark>()
                 .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
