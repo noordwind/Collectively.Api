@@ -4,7 +4,7 @@ DOCKER_TAG=''
 case "$TRAVIS_BRANCH" in
   "master")
     DOCKER_ENV=production
-    DOCKET_TAG=latest
+    DOCKER_TAG=latest
     ;;
   "develop")
     DOCKER_ENV=development
