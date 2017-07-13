@@ -16,7 +16,6 @@ before_script:
 script:
   - ./scripts/travis-build.sh
   - ./scripts/run-tests.sh
-  - ./scripts/dotnet-publish.sh
 after_success:
   - ./scripts/after-success.sh
 notifications:
