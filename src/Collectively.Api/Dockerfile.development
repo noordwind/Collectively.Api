@@ -1,12 +1,5 @@
-FROM microsoft/dotnet:latest
-COPY . /app
-WORKDIR /app
- 
-RUN ["dotnet", "restore", "--source", "https://api.nuget.org/v3/index.json", "--source", "https://www.myget.org/F/collectively-dev/api/v3/index.json", "--no-cache"]
-RUN ["dotnet", "build"]
- 
-EXPOSE 5000/tcp
-ENV ASPNETCORE_URLS http://*:5000
+FROM microsoft/dotnet:runtime
+WORKDIR /dotnetapp
+COPY ./bin/Docker .
 ENV ASPNETCORE_ENVIRONMENT development
- 
-ENTRYPOINT ["dotnet", "run"]
+ENTRYPOINT dotnet Collectively.Api.dll

@@ -11,6 +11,7 @@ namespace Collectively.Api
                 .UseKestrel()
                 .UseContentRoot(Directory.GetCurrentDirectory())
                 .UseStartup<Startup>()
+                .UseUrls("http://*:5000")
                 .Build();
 
             host.Run();
