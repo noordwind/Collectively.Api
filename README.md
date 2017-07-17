@@ -36,7 +36,7 @@ git clone https://github.com/noordwind/Collectively.Docker
 ./start.sh
 ```
 
-Once executed, you shall be able to access the API at [http://localhost:5000](http://localhost:5000)
+For the list of available services and their endpoints [click here](https://github.com/noordwind/Collectively).
 
 ## Classic way
 
@@ -50,10 +50,10 @@ Clone the repository and start the application via *dotnet run* command:
 git clone https://github.com/noordwind/Collectively.Api
 cd Collectively.Api/Collectively.Api
 dotnet restore --source https://api.nuget.org/v3/index.json --source https://www.myget.org/F/collectively/api/v3/index.json --no-cache
-dotnet run
+dotnet run --urls "http://*:5000"
 ```
 
-Now you should be able to access the service under the [http://localhost:5000](http://localhost:5000). 
+Once executed, you shall be able to access the API at [http://localhost:5000](http://localhost:5000)
 
 Please note that the following solution will only run the HTTP API which is merely one of the many parts required to run properly the whole Collectively system.
 
