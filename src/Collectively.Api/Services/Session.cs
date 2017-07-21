@@ -7,6 +7,6 @@ namespace Collectively.Api.Services
         public string Token { get; set; }
         public Guid SessionId { get; set; }
         public string SessionKey { get; set; }
-        public long Expiry { get; set; }
+        public long Expires { get; set; }
     }
 }

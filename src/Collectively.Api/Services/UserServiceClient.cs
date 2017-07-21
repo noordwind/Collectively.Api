@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using Collectively.Common.Security;
 using Collectively.Common.ServiceClients;
 using Collectively.Common.Types;
 using Collectively.Messages.Commands.Users;
@@ -17,7 +18,7 @@ namespace Collectively.Api.Services
             _name = name;
         }
 
-        public async Task<Maybe<UserSession>> AuthenticateAsync(SignIn credentials)
-            => await _serviceClient.PostAsync<UserSession>(_name, "sign-in", credentials);
+        public async Task<Maybe<JwtBasic>> AuthenticateAsync(SignIn credentials)
+            => await _serviceClient.PostAsync<JwtBasic>(_name, "sign-in", credentials);
     }
 }

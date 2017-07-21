@@ -21,26 +21,14 @@ namespace Collectively.Api.Services
             _jwtTokenSettings = jwtTokenSettings;
         }
         
-        public async Task<Maybe<Session>> AuthenticateAsync(SignIn credentials)
+        public async Task<Maybe<JwtBasic>> AuthenticateAsync(SignIn credentials)
         {
             if(HasInvalidCredentials(credentials))
             {
                 return null;
             }
-
-            var session = await _serviceClient.AuthenticateAsync(credentials);
-            if(session.HasNoValue)
-            {
-                return null;
-            }
-
-            return new Session
-            {
-                Token = _jwtTokenHandler.Create(session.Value.UserId, TimeSpan.FromDays(_jwtTokenSettings.ExpiryDays)),
-                SessionId = session.Value.Id,
-                SessionKey = session.Value.Key,
-                Expiry = DateTime.UtcNow.AddDays(_jwtTokenSettings.ExpiryDays).ToTimestamp()  
-            };
+            
+            return await _serviceClient.AuthenticateAsync(credentials);
         }
 
         private bool HasInvalidCredentials(SignIn credentials)

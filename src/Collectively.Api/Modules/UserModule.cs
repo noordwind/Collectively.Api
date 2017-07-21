@@ -14,11 +14,11 @@ namespace Collectively.Api.Modules
             IValidatorResolver validatorResolver)
             : base(commandDispatcher, validatorResolver, modulePath: "users")
         {
-            Get("", async args => await FetchCollection<BrowseUsers, User>
+            Get("", async args => await FetchCollection<BrowseUsers, UserInfo>
                 (async x => await userStorage.BrowseAsync(x)).HandleAsync());
 
-            Get("{name}", async args => await Fetch<GetUserByName, User>
-                (async x => await userStorage.GetByNameAsync(x.Name)).HandleAsync());
+            Get("{name}", async args => await Fetch<GetUserByName, UserInfo>
+                (async x => await userStorage.GetInfoByNameAsync(x.Name)).HandleAsync());
         }
     }
 }

@@ -10,8 +10,10 @@ namespace Collectively.Api.Storages
     {
         Task<Maybe<AvailableResource>> IsNameAvailableAsync(string name);
         Task<Maybe<User>> GetAsync(string id);
+        Task<Maybe<UserInfo>> GetInfoAsync(string id);
         Task<Maybe<User>> GetByNameAsync(string name);
+        Task<Maybe<UserInfo>> GetInfoByNameAsync(string name);
         Task<Maybe<UserSession>> GetSessionAsync(Guid id);
-        Task<Maybe<PagedResult<User>>> BrowseAsync(BrowseUsers query);
+        Task<Maybe<PagedResult<UserInfo>>> BrowseAsync(BrowseUsers query);
     }
 }

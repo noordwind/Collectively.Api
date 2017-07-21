@@ -21,13 +21,19 @@ namespace Collectively.Api.Storages
         public async Task<Maybe<User>> GetAsync(string id)
             => await _storageClient.GetAsync<User>($"users/{id}");
 
+        public async Task<Maybe<UserInfo>> GetInfoAsync(string id)
+            => await _storageClient.GetAsync<UserInfo>($"users/{id}");
+
         public async Task<Maybe<User>> GetByNameAsync(string name)
             => await _storageClient.GetAsync<User>($"users/{name}/account");
+
+        public async Task<Maybe<UserInfo>> GetInfoByNameAsync(string name)
+            => await _storageClient.GetAsync<UserInfo>($"users/{name}/account");
 
         public async Task<Maybe<UserSession>> GetSessionAsync(Guid id)
             => await _storageClient.GetAsync<UserSession>($"user-sessions/{id}");
 
-        public async Task<Maybe<PagedResult<User>>> BrowseAsync(BrowseUsers query)
-            => await _storageClient.GetFilteredCollectionUsingCacheAsync<User, BrowseUsers>(query, "users");
+        public async Task<Maybe<PagedResult<UserInfo>>> BrowseAsync(BrowseUsers query)
+            => await _storageClient.GetFilteredCollectionUsingCacheAsync<UserInfo, BrowseUsers>(query, "users");
     }
 }
