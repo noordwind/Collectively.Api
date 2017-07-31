@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Collectively.Common.Types;
 
 namespace Collectively.Api.Queries
@@ -11,6 +12,7 @@ namespace Collectively.Api.Queries
         public string Description { get; set; }
         public string AuthorId { get; set; }
         public string ResolverId { get; set; }
+        public Guid? GroupId { get; set; }
         public bool Latest { get; set; }
         public bool Disliked { get; set; }
         public bool OnlyLiked { get; set; }

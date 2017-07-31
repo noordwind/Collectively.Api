@@ -47,6 +47,14 @@ namespace Collectively.Api.IoC.Modules
                 .As<INotificationSettingsStorage>()
                 .SingleInstance();
 
+            builder.RegisterType<GroupStorage>()
+                .As<IGroupStorage>()
+                .SingleInstance();
+
+            builder.RegisterType<OrganizationStorage>()
+                .As<IOrganizationStorage>()
+                .SingleInstance();
+
             builder.RegisterType<InMemoryCache>()
                 .As<ICache>()
                 .SingleInstance();
