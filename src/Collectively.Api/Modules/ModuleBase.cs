@@ -55,28 +55,48 @@ namespace Collectively.Api.Modules
         protected CommandRequestHandler<T> ForFileUpload<T>() where T : IFileUploadCommand, new()
         {
             var command = BindRequest<T>();
-
             this.RequiresAuthentication();
             command.UserId = CurrentUserId;
-
             var files = Context.Request.Files;
             var file = files?.FirstOrDefault();
-
             if (file != null)
             {
-                var stream = new MemoryStream();
-                file.Value.CopyTo(stream);
-                var bytes = stream.ToArray();
-                var base64 = Convert.ToBase64String(bytes);
-                command.FileBase64 = base64;
-                command.Name = file.Name;
-                command.ContentType = file.ContentType;
+                using(var stream = new MemoryStream())
+                {
+                    file.Value.CopyTo(stream);
+                    var bytes = stream.ToArray();
+                    var base64 = Convert.ToBase64String(bytes);
+                    command.FileBase64 = base64;
+                    command.Name = file.Name;
+                    command.ContentType = file.ContentType;
+                }
             }
 
             return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
                 _validatorResolver, Negotiate, CreateRequest<T>());
         }
 
+        protected Collectively.Messages.Commands.Models.File ToFile()
+        {
+            var files = Context.Request.Files;
+            var file = files?.FirstOrDefault();
+            if (file != null)
+            {
+                using(var stream = new MemoryStream())
+                {
+                    file.Value.CopyTo(stream);
+                    var bytes = stream.ToArray();
+
+                    return new Collectively.Messages.Commands.Models.File
+                    {
+                        Name = file.Name,
+                        ContentType = file.ContentType,
+                        Base64 = Convert.ToBase64String(bytes)
+                    };
+                }
+            } 
+            return null;           
+        }
 
         protected FetchRequestHandler<TQuery, TResult> Fetch<TQuery, TResult>(Func<TQuery, Task<Maybe<TResult>>> fetch)
             where TQuery : IQuery, new() where TResult : class
