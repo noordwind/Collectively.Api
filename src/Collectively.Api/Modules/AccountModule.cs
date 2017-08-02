@@ -46,6 +46,10 @@ namespace Collectively.Api.Modules
             Put("account/password", async args => await For<ChangePassword>()
                 .OnSuccessAccepted("account")
                 .DispatchAsync());
+
+            Delete("account", async args => await For<DeleteAccount>()
+                .OnSuccessAccepted()
+                .DispatchAsync());
         }
     }
 }
