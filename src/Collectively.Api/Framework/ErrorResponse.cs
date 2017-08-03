@@ -36,6 +36,8 @@ namespace Collectively.Api.Framework
             var statusCode = HttpStatusCode.InternalServerError;
             if (exception is AuthenticationException)
                 statusCode = HttpStatusCode.Unauthorized;
+            else if (exception is UnauthorizedAccessException)
+                statusCode = HttpStatusCode.Forbidden;
             else if (exception is RouteExecutionEarlyExitException)
                 statusCode = HttpStatusCode.Unauthorized;
             else if (exception is ValidationException)

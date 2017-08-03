@@ -16,11 +16,15 @@ using Nancy.Responses;
 using Nancy.Security;
 using NLog;
 using Structure.Sketching.ExtensionMethods;
+using Collectively.Common.Security;
+using System.Security.Claims;
+using System.Security.Authentication;
 
 namespace Collectively.Api.Modules
 {
     public abstract class ModuleBase : NancyModule
     {
+        private static readonly string[] ForbiddenAccountStates = new []{"inactive", "locked", "deleted"};
         protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         protected readonly ICommandDispatcher CommandDispatcher;
         private readonly IValidatorResolver _validatorResolver;
@@ -37,6 +41,7 @@ namespace Collectively.Api.Modules
 
         protected CommandRequestHandler<T> For<T>() where T : ICommand, new()
         {
+            ValidateAccess();
             var command = BindRequest<T>();
             var authenticatedCommand = command as IAuthenticatedCommand;
             if (authenticatedCommand == null)
@@ -50,30 +55,6 @@ namespace Collectively.Api.Modules
 
             return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
                 _validatorResolver,Negotiate, CreateRequest<T>());
-        }
-
-        protected CommandRequestHandler<T> ForFileUpload<T>() where T : IFileUploadCommand, new()
-        {
-            var command = BindRequest<T>();
-            this.RequiresAuthentication();
-            command.UserId = CurrentUserId;
-            var files = Context.Request.Files;
-            var file = files?.FirstOrDefault();
-            if (file != null)
-            {
-                using(var stream = new MemoryStream())
-                {
-                    file.Value.CopyTo(stream);
-                    var bytes = stream.ToArray();
-                    var base64 = Convert.ToBase64String(bytes);
-                    command.FileBase64 = base64;
-                    command.Name = file.Name;
-                    command.ContentType = file.ContentType;
-                }
-            }
-
-            return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
-                _validatorResolver, Negotiate, CreateRequest<T>());
         }
 
         protected Collectively.Messages.Commands.Models.File ToFile()
@@ -101,6 +82,7 @@ namespace Collectively.Api.Modules
         protected FetchRequestHandler<TQuery, TResult> Fetch<TQuery, TResult>(Func<TQuery, Task<Maybe<TResult>>> fetch)
             where TQuery : IQuery, new() where TResult : class
         {
+            ValidateAccess();
             var query = BindRequest<TQuery>();
             var authenticatedQuery = query as IAuthenticatedQuery;
             if (authenticatedQuery == null)
@@ -111,6 +93,18 @@ namespace Collectively.Api.Modules
 
             return new FetchRequestHandler<TQuery, TResult>(query, fetch, Negotiate, Request.Url);
         }
+
+        private void ValidateAccess()
+        {
+            if(ForbiddenAccountStates.Contains(Identity.State))
+            {
+                throw new UnauthorizedAccessException($"Forbidden access. Account state: '{Identity.State}'.");
+            }            
+        }
+
+        private CollectivelyIdentity Identity => Context.CurrentUser != null ? 
+            Context.CurrentUser as CollectivelyIdentity :
+            new CollectivelyIdentity(string.Empty, string.Empty, "active", Enumerable.Empty<Claim>());
 
         protected FetchRequestHandler<TQuery, TResult> FetchCollection<TQuery, TResult>(
             Func<TQuery, Task<Maybe<PagedResult<TResult>>>> fetch)
