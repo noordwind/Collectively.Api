@@ -18,7 +18,18 @@ namespace Collectively.Api.Modules
                 (async x => await organizationStorage.GetAsync(x.Id)).HandleAsync());
 
             Get("", async args => await FetchCollection<BrowseOrganizations, Organization>
-                (async x => await organizationStorage.BrowseAsync(x)).HandleAsync());
+                (async x => await organizationStorage.BrowseAsync(x))
+                .MapTo(x => new BasicOrganization
+                {
+                    Id = x.Id,
+                    Name = x.Name,
+                    Codename = x.Codename,
+                    IsPublic = x.IsPublic,
+                    State = x.State,
+                    CreatedAt = x.CreatedAt,
+                    MembersCount = x.Members?.Count ?? 0,
+                    GroupsCount = x.Groups?.Count ?? 0
+                }).HandleAsync());
                 
             Post("", async args => await For<CreateOrganization>()
                 .SetResourceId(x => x.OrganizationId)
