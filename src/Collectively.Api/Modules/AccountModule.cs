@@ -39,6 +39,10 @@ namespace Collectively.Api.Modules
                 .OnSuccessAccepted("account")
                 .DispatchAsync());
 
+            Post("account/activate", async args => await For<ActivateAccount>()
+                .OnSuccessAccepted("account")
+                .DispatchAsync());
+
             Delete("account/avatar", async args => await For<RemoveAvatar>()
                 .OnSuccessAccepted()
                 .DispatchAsync());
