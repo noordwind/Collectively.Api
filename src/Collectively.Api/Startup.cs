@@ -42,9 +42,11 @@ namespace Collectively.Api
         {
             services.AddWebEncoders();
             services.AddCors();
+            var redisSettings = new RedisSettings();
+            Configuration.GetSection("redis").Bind(redisSettings);
             services.AddDistributedRedisCache(x =>
             {
-                x.Configuration = "127.0.0.1";
+                x.Configuration = redisSettings.ConnectionString;
             });
             Services = services;
         }
