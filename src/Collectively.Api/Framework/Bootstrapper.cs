@@ -1,5 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Threading.Tasks;
 using Autofac;
 using Collectively.Api.Validation;
 using Collectively.Common.Extensions;
@@ -19,20 +21,25 @@ using Newtonsoft.Json;
 using Collectively.Common.RabbitMq;
 using Collectively.Common.Security;
 using Collectively.Api.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Autofac.Extensions.DependencyInjection;
 
 namespace Collectively.Api.Framework
 {
     public class Bootstrapper : AutofacNancyBootstrapper
     {
+        private static readonly string[] ForbiddenAccountStates = new []{"inactive", "locked", "deleted"};
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private static IExceptionHandler _exceptionHandler;
         private static readonly string DecimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
         private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
         private readonly IConfiguration _configuration;
+        private readonly IServiceCollection _services;
 
-        public Bootstrapper(IConfiguration configuration)
+        public Bootstrapper(IConfiguration configuration, IServiceCollection services)
         {
             _configuration = configuration;
+            _services = services;
         }
 
 #if DEBUG
@@ -64,6 +71,7 @@ namespace Collectively.Api.Framework
 
             container.Update(builder =>
             {
+                builder.Populate(_services);
                 builder.RegisterType<CustomJsonSerializer>().As<JsonSerializer>().SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<AppSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<FeatureSettings>()).SingleInstance();
@@ -72,6 +80,7 @@ namespace Collectively.Api.Framework
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerRequest();
                 builder.RegisterModule<ModuleContainer>();
+                builder.RegisterType<AccountStateProvider>().As<IAccountStateProvider>();
                 SecurityContainer.Register(builder, _configuration);
                 RabbitMqContainer.Register(builder, _configuration.GetSettings<RawRabbitConfiguration>());
             });
@@ -93,6 +102,21 @@ namespace Collectively.Api.Framework
 
                 return ctx.Response;
             });
+
+            pipelines.BeforeRequest += async (ctx, token) => {
+                var nancyContext = ctx as NancyContext;
+                if(nancyContext.CurrentUser == null)
+                {
+                    return null;
+                }
+                var userId = nancyContext.CurrentUser.Identity.Name;
+                var state = await container.Resolve<IAccountStateProvider>().GetAsync(userId);
+                if(state.Empty() || ForbiddenAccountStates.Contains(state))
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+                return null;
+            };
         }
 
         private void FixNumberFormat(NancyContext ctx)

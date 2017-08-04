@@ -12,14 +12,15 @@ using Nancy.Owin;
 using NLog.Extensions.Logging;
 using Lockbox.Client.Extensions;
 using NLog.Web;
+using Microsoft.Extensions.Caching.Distributed;
 
 namespace Collectively.Api
 {
     public class Startup
     {
-        public string EnvironmentName {get;set;}
+        public string EnvironmentName { get; set; }
         public IConfiguration Configuration { get; set; }
-        public IContainer ApplicationContainer { get; set; }
+        public IServiceCollection Services { get; set; }
 
         public Startup(IHostingEnvironment env)
         {
@@ -34,17 +35,18 @@ namespace Collectively.Api
             {
                 builder.AddLockbox();
             }
-
             Configuration = builder.Build();
         }
 
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddWebEncoders();
             services.AddCors();
-            ApplicationContainer = GetServiceContainer(services);
-
-            return new AutofacServiceProvider(ApplicationContainer);
+            services.AddDistributedRedisCache(x =>
+            {
+                x.Configuration = "127.0.0.1";
+            });
+            Services = services;
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
@@ -56,15 +58,7 @@ namespace Collectively.Api
                 .AllowAnyMethod()
                 .AllowAnyOrigin()
                 .AllowCredentials());
-            app.UseOwin().UseNancy(x => x.Bootstrapper = new Bootstrapper(Configuration));
-        }
-
-        protected static IContainer GetServiceContainer(IEnumerable<ServiceDescriptor> services)
-        {
-            var builder = new ContainerBuilder();
-            builder.Populate(services);
-
-            return builder.Build();
+            app.UseOwin().UseNancy(x => x.Bootstrapper = new Bootstrapper(Configuration, Services));
         }
     }
 }

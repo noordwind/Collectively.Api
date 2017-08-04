@@ -24,7 +24,6 @@ namespace Collectively.Api.Modules
 {
     public abstract class ModuleBase : NancyModule
     {
-        private static readonly string[] ForbiddenAccountStates = new []{"inactive", "locked", "deleted"};
         protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         protected readonly ICommandDispatcher CommandDispatcher;
         private readonly IValidatorResolver _validatorResolver;
@@ -41,7 +40,6 @@ namespace Collectively.Api.Modules
 
         protected CommandRequestHandler<T> For<T>() where T : ICommand, new()
         {
-            ValidateAccess();
             var command = BindRequest<T>();
             var authenticatedCommand = command as IAuthenticatedCommand;
             if (authenticatedCommand == null)
@@ -82,7 +80,6 @@ namespace Collectively.Api.Modules
         protected FetchRequestHandler<TQuery, TResult> Fetch<TQuery, TResult>(Func<TQuery, Task<Maybe<TResult>>> fetch)
             where TQuery : IQuery, new() where TResult : class
         {
-            ValidateAccess();
             var query = BindRequest<TQuery>();
             var authenticatedQuery = query as IAuthenticatedQuery;
             if (authenticatedQuery == null)
@@ -92,14 +89,6 @@ namespace Collectively.Api.Modules
             authenticatedQuery.UserId = CurrentUserId;
 
             return new FetchRequestHandler<TQuery, TResult>(query, fetch, Negotiate, Request.Url);
-        }
-
-        private void ValidateAccess()
-        {
-            if(ForbiddenAccountStates.Contains(Identity.State))
-            {
-                throw new UnauthorizedAccessException($"Forbidden access. Account state: '{Identity.State}'.");
-            }            
         }
 
         private CollectivelyIdentity Identity => Context.CurrentUser != null ? 
