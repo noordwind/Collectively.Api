@@ -1,5 +1,6 @@
 ﻿using Collectively.Api.Queries;
 using Collectively.Api.Validation;
+using Collectively.Messages.Commands.Users;
 using Collectively.Services.Storage.Models.Users;
 using BrowseUsers = Collectively.Api.Queries.BrowseUsers;
 using ICommandDispatcher = Collectively.Api.Commands.ICommandDispatcher;
@@ -19,6 +20,14 @@ namespace Collectively.Api.Modules
 
             Get("{name}", async args => await Fetch<GetUserByName, UserInfo>
                 (async x => await userStorage.GetInfoByNameAsync(x.Name)).HandleAsync());
+
+            Put("{lockUserId}/lock", async args => await ForAdministrator<LockAccount>()
+                .OnSuccessAccepted()
+                .DispatchAsync());
+
+            Put("{unlockUserId}/unlock", async args => await ForAdministrator<UnlockAccount>()
+                .OnSuccessAccepted()
+                .DispatchAsync());
         }
     }
 }

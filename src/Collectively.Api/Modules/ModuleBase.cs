@@ -39,6 +39,15 @@ namespace Collectively.Api.Modules
         }
 
         protected CommandRequestHandler<T> For<T>() where T : ICommand, new()
+        => For<T>();
+
+        protected CommandRequestHandler<T> ForModerator<T>(params string[] roles) where T : ICommand, new()
+        => For<T>("moderator", "administrator");
+
+        protected CommandRequestHandler<T> ForAdministrator<T>(params string[] roles) where T : ICommand, new()
+        => For<T>("administrator");
+
+        private CommandRequestHandler<T> For<T>(params string[] roles) where T : ICommand, new()
         {
             var command = BindRequest<T>();
             var authenticatedCommand = command as IAuthenticatedCommand;
@@ -47,8 +56,11 @@ namespace Collectively.Api.Modules
                 return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
                     _validatorResolver, Negotiate, CreateRequest<T>());
             }
-
             this.RequiresAuthentication();
+            if(roles != null && roles.Any())
+            {
+                this.RequiresAnyClaim(x => x.Type == ClaimTypes.Role && roles.Any(r => r == x.Value));
+            }
             authenticatedCommand.UserId = CurrentUserId;
 
             return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
