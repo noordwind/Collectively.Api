@@ -30,7 +30,8 @@ namespace Collectively.Api.Framework
     {
         private static readonly string[] ForbiddenAccountStates = new []{"inactive", "locked", "deleted"};
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
-        private static IExceptionHandler _exceptionHandler;
+        private IExceptionHandler _exceptionHandler;
+        private IAccountStateProvider _accountStateProvider;
         private static readonly string DecimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
         private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
         private readonly IConfiguration _configuration;
@@ -61,6 +62,7 @@ namespace Collectively.Api.Framework
             pipelines.AfterRequest += (ctx) => AddCorsHeaders(ctx.Response);
             pipelines.SetupTokenAuthentication(container);
             _exceptionHandler = container.Resolve<IExceptionHandler>();
+            _accountStateProvider = container.Resolve<IAccountStateProvider>();
             Logger.Info("Collectively API has started.");
         }
 
@@ -80,7 +82,7 @@ namespace Collectively.Api.Framework
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerRequest();
                 builder.RegisterModule<ModuleContainer>();
-                builder.RegisterType<AccountStateProvider>().As<IAccountStateProvider>();
+                builder.RegisterType<AccountStateProvider>().As<IAccountStateProvider>().SingleInstance();
                 SecurityContainer.Register(builder, _configuration);
                 RabbitMqContainer.Register(builder, _configuration.GetSettings<RawRabbitConfiguration>());
             });
@@ -110,7 +112,7 @@ namespace Collectively.Api.Framework
                     return null;
                 }
                 var userId = nancyContext.CurrentUser.Identity.Name;
-                var state = await container.Resolve<IAccountStateProvider>().GetAsync(userId);
+                var state = await _accountStateProvider.GetAsync(userId);
                 if(state.Empty() || ForbiddenAccountStates.Contains(state))
                 {
                     return HttpStatusCode.Forbidden;
