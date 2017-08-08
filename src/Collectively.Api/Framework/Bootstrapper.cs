@@ -36,6 +36,7 @@ namespace Collectively.Api.Framework
         private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
         private readonly IConfiguration _configuration;
         private readonly IServiceCollection _services;
+        private bool _accountStateValidationEnabled = false;
 
         public Bootstrapper(IConfiguration configuration, IServiceCollection services)
         {
@@ -63,6 +64,8 @@ namespace Collectively.Api.Framework
             pipelines.SetupTokenAuthentication(container);
             _exceptionHandler = container.Resolve<IExceptionHandler>();
             _accountStateProvider = container.Resolve<IAccountStateProvider>();
+            _accountStateValidationEnabled = container.Resolve<AppSettings>().AccountStateValidationEnabled;
+            Logger.Info($"Account state validation is {(_accountStateValidationEnabled ? "enabled" : "disabled")}.");
             Logger.Info("Collectively API has started.");
         }
 
@@ -104,21 +107,23 @@ namespace Collectively.Api.Framework
 
                 return ctx.Response;
             });
-
-            pipelines.BeforeRequest += async (ctx, token) => {
-                var nancyContext = ctx as NancyContext;
-                if(nancyContext.CurrentUser == null)
-                {
+            if(_accountStateValidationEnabled)
+            {
+                pipelines.BeforeRequest += async (ctx, token) => {
+                    var nancyContext = ctx as NancyContext;
+                    if(nancyContext.CurrentUser == null)
+                    {
+                        return null;
+                    }
+                    var userId = nancyContext.CurrentUser.Identity.Name;
+                    var state = await _accountStateProvider.GetAsync(userId);
+                    if(state.Empty() || ForbiddenAccountStates.Contains(state))
+                    {
+                        return HttpStatusCode.Forbidden;
+                    }
                     return null;
-                }
-                var userId = nancyContext.CurrentUser.Identity.Name;
-                var state = await _accountStateProvider.GetAsync(userId);
-                if(state.Empty() || ForbiddenAccountStates.Contains(state))
-                {
-                    return HttpStatusCode.Forbidden;
-                }
-                return null;
-            };
+                };
+            }
         }
 
         private void FixNumberFormat(NancyContext ctx)

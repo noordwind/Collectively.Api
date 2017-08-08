@@ -6,5 +6,6 @@ namespace Collectively.Api.Framework
     {
         public string AvatarUrl { get; set; }
         public string ResetPasswordUrl { get; set; }
+        public bool AccountStateValidationEnabled { get; set; }
     }
 }
