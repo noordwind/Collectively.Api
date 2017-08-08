@@ -39,15 +39,15 @@ namespace Collectively.Api.Modules
         }
 
         protected CommandRequestHandler<T> For<T>() where T : ICommand, new()
-        => For<T>();
+        => HandleRequest<T>();
 
         protected CommandRequestHandler<T> ForModerator<T>(params string[] roles) where T : ICommand, new()
-        => For<T>("moderator", "administrator");
+        => HandleRequest<T>("moderator", "administrator");
 
         protected CommandRequestHandler<T> ForAdministrator<T>(params string[] roles) where T : ICommand, new()
-        => For<T>("administrator");
+        => HandleRequest<T>("administrator");
 
-        private CommandRequestHandler<T> For<T>(params string[] roles) where T : ICommand, new()
+        private CommandRequestHandler<T> HandleRequest<T>(params string[] roles) where T : ICommand, new()
         {
             var command = BindRequest<T>();
             var authenticatedCommand = command as IAuthenticatedCommand;

@@ -36,7 +36,7 @@ namespace Collectively.Api.Framework
         private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
         private readonly IConfiguration _configuration;
         private readonly IServiceCollection _services;
-        private bool _accountStateValidationEnabled = false;
+        private bool _validateAccountState = false;
 
         public Bootstrapper(IConfiguration configuration, IServiceCollection services)
         {
@@ -64,8 +64,8 @@ namespace Collectively.Api.Framework
             pipelines.SetupTokenAuthentication(container);
             _exceptionHandler = container.Resolve<IExceptionHandler>();
             _accountStateProvider = container.Resolve<IAccountStateProvider>();
-            _accountStateValidationEnabled = container.Resolve<AppSettings>().AccountStateValidationEnabled;
-            Logger.Info($"Account state validation is {(_accountStateValidationEnabled ? "enabled" : "disabled")}.");
+            _validateAccountState = container.Resolve<AppSettings>().ValidateAccountState;
+            Logger.Info($"Account state validation is {(_validateAccountState ? "enabled" : "disabled")}.");
             Logger.Info("Collectively API has started.");
         }
 
@@ -107,7 +107,7 @@ namespace Collectively.Api.Framework
 
                 return ctx.Response;
             });
-            if(_accountStateValidationEnabled)
+            if(_validateAccountState)
             {
                 pipelines.BeforeRequest += async (ctx, token) => {
                     var nancyContext = ctx as NancyContext;
