@@ -70,9 +70,14 @@ namespace Collectively.Api.Modules
         private void AuthenticateAndValidateRoles(params string[] roles)
         {
             this.RequiresAuthentication();
-            if(roles != null && roles.Any())
+            if(roles == null || !roles.Any())
             {
-                this.RequiresAnyClaim(x => x.Type == ClaimTypes.Role && roles.Any(r => r == x.Value));
+                return;
+            }
+            var user = Context.CurrentUser as CollectivelyIdentity;
+            if(!roles.Any(x => x == user.Role))
+            {
+                throw new UnauthorizedAccessException();
             }
         }
 
