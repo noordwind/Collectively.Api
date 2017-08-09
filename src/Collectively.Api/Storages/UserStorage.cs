@@ -34,6 +34,6 @@ namespace Collectively.Api.Storages
             => await _storageClient.GetAsync<UserSession>($"user-sessions/{id}");
 
         public async Task<Maybe<PagedResult<UserInfo>>> BrowseAsync(BrowseUsers query)
-            => await _storageClient.GetFilteredCollectionUsingCacheAsync<UserInfo, BrowseUsers>(query, "users");
+            => await _storageClient.GetFilteredCollectionAsync<UserInfo, BrowseUsers>(query, "users");
     }
 }
