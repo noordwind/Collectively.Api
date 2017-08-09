@@ -52,7 +52,7 @@ namespace Collectively.Api.Modules
             var command = BindRequest<T>();
             if(forceAuth)
             {
-                AuthenticateAndValidateRoles();
+                AuthenticateAndValidateRoles(roles);
             }
             var authenticatedCommand = command as IAuthenticatedCommand;
             if (authenticatedCommand == null)
@@ -60,7 +60,7 @@ namespace Collectively.Api.Modules
                 return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
                     _validatorResolver, Negotiate, CreateRequest<T>());
             }
-            AuthenticateAndValidateRoles();
+            AuthenticateAndValidateRoles(roles);
             authenticatedCommand.UserId = CurrentUserId;
 
             return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
