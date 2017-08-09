@@ -42,29 +42,38 @@ namespace Collectively.Api.Modules
         => HandleRequest<T>();
 
         protected CommandRequestHandler<T> ForModerator<T>(params string[] roles) where T : ICommand, new()
-        => HandleRequest<T>("moderator", "administrator");
+        => HandleRequest<T>(true, "moderator", "administrator");
 
         protected CommandRequestHandler<T> ForAdministrator<T>(params string[] roles) where T : ICommand, new()
-        => HandleRequest<T>("administrator");
+        => HandleRequest<T>(true, "administrator");
 
-        private CommandRequestHandler<T> HandleRequest<T>(params string[] roles) where T : ICommand, new()
+        private CommandRequestHandler<T> HandleRequest<T>(bool forceAuth = false, params string[] roles) where T : ICommand, new()
         {
             var command = BindRequest<T>();
+            if(forceAuth)
+            {
+                AuthenticateAndValidateRoles();
+            }
             var authenticatedCommand = command as IAuthenticatedCommand;
             if (authenticatedCommand == null)
             {
                 return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
                     _validatorResolver, Negotiate, CreateRequest<T>());
             }
+            AuthenticateAndValidateRoles();
+            authenticatedCommand.UserId = CurrentUserId;
+
+            return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
+                _validatorResolver,Negotiate, CreateRequest<T>());
+        }
+
+        private void AuthenticateAndValidateRoles(params string[] roles)
+        {
             this.RequiresAuthentication();
             if(roles != null && roles.Any())
             {
                 this.RequiresAnyClaim(x => x.Type == ClaimTypes.Role && roles.Any(r => r == x.Value));
             }
-            authenticatedCommand.UserId = CurrentUserId;
-
-            return new CommandRequestHandler<T>(CommandDispatcher, command, Response,
-                _validatorResolver,Negotiate, CreateRequest<T>());
         }
 
         protected Collectively.Messages.Commands.Models.File ToFile()
