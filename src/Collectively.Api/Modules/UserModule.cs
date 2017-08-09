@@ -44,6 +44,10 @@ namespace Collectively.Api.Modules
             Put("{unlockUserId}/unlock", async args => await ForAdministrator<UnlockAccount>()
                 .OnSuccessAccepted()
                 .DispatchAsync());
+
+            Post("", async (ctx, p) => await ForAdministrator<SignUp>()
+                .OnSuccessAccepted()
+                .DispatchAsync());
         }
     }
 }

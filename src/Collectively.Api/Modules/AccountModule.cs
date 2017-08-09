@@ -35,6 +35,15 @@ namespace Collectively.Api.Modules
                 .OnSuccessAccepted("account")
                 .DispatchAsync());
 
+            Post("sign-up", async (ctx, p) => await For<SignUp>()
+                .Set(x => 
+                {
+                    x.Role = string.Empty;
+                    x.State = string.Empty;
+                })
+                .OnSuccessAccepted("account")
+                .DispatchAsync());
+
             Post("account/avatar", async args => await For<UploadAvatar>()
                 .OnSuccessAccepted("account")
                 .DispatchAsync());

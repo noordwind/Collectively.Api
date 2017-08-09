@@ -30,10 +30,6 @@ namespace Collectively.Api.Modules
                 return session.Value;
             });
 
-            Post("sign-up", async (ctx, p) => await For<SignUp>()
-                .OnSuccessAccepted("account")
-                .DispatchAsync());
-
             Post("sign-out", async (ctx, p) => await For<SignOut>()
                 .OnSuccess(HttpStatusCode.NoContent)
                 .DispatchAsync());
