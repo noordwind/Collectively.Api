@@ -35,6 +35,10 @@ namespace Collectively.Api.Modules
                 .SetResourceId(x => x.OrganizationId)
                 .OnSuccessAccepted("organizations/{0}")
                 .DispatchAsync());   
+
+            Post("{organizationId}/members", async args => await ForModerator<AddMemberToOrganization>()
+                .OnSuccessAccepted("organizations/{0}")
+                .DispatchAsync());  
         }
     }
 }

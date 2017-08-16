@@ -34,7 +34,11 @@ namespace Collectively.Api.Modules
             Post("", async args => await For<CreateGroup>()
                 .SetResourceId(x => x.GroupId)
                 .OnSuccessAccepted("groups/{0}")
-                .DispatchAsync());        
+                .DispatchAsync());  
+
+            Post("{groupId}/members", async args => await ForModerator<AddMemberToGroup>()
+                .OnSuccessAccepted("groups/{0}")
+                .DispatchAsync());  
         }
     }
 }
