@@ -37,15 +37,15 @@ namespace Collectively.Api.Modules
                 return Response.AsRedirect(string.Format(settings.AvatarUrl, query.Id));
             });
 
-            Put("{lockUserId}/lock", async args => await ForAdministrator<LockAccount>()
+            Put("{lockUserId}/lock", async args => await ForModerator<LockAccount>()
                 .OnSuccessAccepted()
                 .DispatchAsync());
 
-            Put("{unlockUserId}/unlock", async args => await ForAdministrator<UnlockAccount>()
+            Put("{unlockUserId}/unlock", async args => await ForModerator<UnlockAccount>()
                 .OnSuccessAccepted()
                 .DispatchAsync());
 
-            Post("", async (ctx, p) => await ForAdministrator<SignUp>()
+            Post("", async (ctx, p) => await ForModerator<SignUp>()
                 .OnSuccessAccepted()
                 .DispatchAsync());
         }
