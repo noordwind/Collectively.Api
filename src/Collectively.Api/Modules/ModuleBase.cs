@@ -42,10 +42,13 @@ namespace Collectively.Api.Modules
         => HandleRequest<T>();
 
         protected CommandRequestHandler<T> ForModerator<T>(params string[] roles) where T : ICommand, new()
-        => HandleRequest<T>(true, "moderator", "administrator");
+        => HandleRequest<T>(true, "moderator", "administrator", "owner");
 
         protected CommandRequestHandler<T> ForAdministrator<T>(params string[] roles) where T : ICommand, new()
-        => HandleRequest<T>(true, "administrator");
+        => HandleRequest<T>(true, "administrator", "owner");
+
+        protected CommandRequestHandler<T> ForOwner<T>(params string[] roles) where T : ICommand, new()
+        => HandleRequest<T>(true, "owner");
 
         private CommandRequestHandler<T> HandleRequest<T>(bool forceAuth = false, params string[] roles) where T : ICommand, new()
         {

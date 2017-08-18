@@ -45,7 +45,7 @@ namespace Collectively.Api.Modules
                 .OnSuccessAccepted()
                 .DispatchAsync());
 
-            Post("", async (ctx, p) => await ForModerator<SignUp>()
+            Post("", async (ctx, p) => await ForAdministrator<SignUp>()
                 .OnSuccessAccepted()
                 .DispatchAsync());
         }
