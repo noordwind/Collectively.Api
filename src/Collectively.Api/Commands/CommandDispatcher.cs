@@ -17,8 +17,10 @@ namespace Collectively.Api.Commands
         public async Task DispatchAsync<T>(T command) where T : ICommand
         {
             if (command == null)
-                throw new ArgumentNullException(nameof(command), "Command can not be null.");
-
+            {
+                throw new ArgumentNullException(nameof(command), 
+                    $"Command {typeof(T).Name} can not be null.");
+            }
             await _bus.PublishAsync(command);
         }
     }

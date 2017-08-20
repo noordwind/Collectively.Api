@@ -1,3 +1,3 @@
 #!/bin/bash
 cd tests/Collectively.Api.Tests.EndToEnd
-dotnet test
+dotnet test --no-restore

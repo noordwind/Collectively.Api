@@ -46,13 +46,13 @@ In order to run the **Collectively.Api** you need to have installed:
 - [.NET Core](https://dotnet.github.io)
 - [RabbitMQ](https://www.rabbitmq.com)
 
-Clone the repository and start the application via *dotnet run* command:
+Clone the repository and start the application via *dotnet run --no-restore* command:
 
 ```
 git clone https://github.com/noordwind/Collectively.Api
 cd Collectively.Api/Collectively.Api
 dotnet restore --source https://api.nuget.org/v3/index.json --source https://www.myget.org/F/collectively/api/v3/index.json --no-cache
-dotnet run --urls "http://*:5000"
+dotnet run --no-restore --urls "http://*:5000"
 ```
 
 Once executed, you shall be able to access the API at [http://localhost:5000](http://localhost:5000)
@@ -73,6 +73,6 @@ For the local testing purposes the *.local* or *.docker* configuration files are
 
 **Solution structure**
 ----------------
-- **Collectively.Api** - core and executable project via *dotnet run* command.
-- **Collectively.Api.Tests** - unit & integration tests executable via *dotnet test* command.
-- **Collectively.Api.Tests.EndToEnd** - End-to-End tests executable via *dotnet test* command.
+- **Collectively.Api** - core and executable project via *dotnet run --no-restore* command.
+- **Collectively.Api.Tests** - unit & integration tests executable via *dotnet test --no-restore* command.
+- **Collectively.Api.Tests.EndToEnd** - End-to-End tests executable via *dotnet test --no-restore* command.

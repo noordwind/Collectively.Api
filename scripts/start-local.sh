@@ -1,4 +1,4 @@
 #!/bin/bash
 export ASPNETCORE_ENVIRONMENT=local
 cd src/Collectively.Api
-dotnet run --urls "http://*:5000"
+dotnet run --no-restore --urls "http://*:5000"
