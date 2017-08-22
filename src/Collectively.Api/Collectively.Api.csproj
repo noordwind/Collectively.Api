@@ -21,7 +21,7 @@
   <ItemGroup>
     <PackageReference Include="Collectively.Messages" Version="2.0.*" />
     <PackageReference Include="Collectively.Common" Version="2.0.*" />
-    <PackageReference Include="Collectively.Services.Storage.Models" Version="1.0.*" />
+    <PackageReference Include="Collectively.Services.Storage.Models" Version="2.0.*" />
     <PackageReference Include="Autofac" Version="4.6.1" />
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
     <PackageReference Include="Lockbox.Client" Version="1.0.0" />
