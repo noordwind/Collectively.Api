@@ -31,6 +31,7 @@ namespace Collectively.Api.Modules
                     Description = x.Description,
                     CreatedAt = x.CreatedAt,
                     State = x.State,
+                    Status = x.Status,
                     Rating = x.Rating,
                     CommentsCount = x.CommentsCount,
                     ParticipantsCount = x.ParticipantsCount,
