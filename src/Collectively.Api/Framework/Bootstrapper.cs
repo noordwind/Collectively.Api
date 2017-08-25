@@ -2,6 +2,7 @@
 using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
+using System;
 using Autofac;
 using Collectively.Api.Validation;
 using Collectively.Common.Extensions;
@@ -28,7 +29,7 @@ namespace Collectively.Api.Framework
 {
     public class Bootstrapper : AutofacNancyBootstrapper
     {
-        private static readonly string[] ForbiddenAccountStates = new []{"inactive", "locked", "deleted"};
+        private static readonly string[] ForbiddenAccountStates = new []{"inactive", "unconfirmed", "locked", "deleted"};
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private IExceptionHandler _exceptionHandler;
         private IAccountStateProvider _accountStateProvider;
@@ -117,7 +118,11 @@ namespace Collectively.Api.Framework
                     }
                     var userId = nancyContext.CurrentUser.Identity.Name;
                     var state = await _accountStateProvider.GetAsync(userId);
-                    if(state.Empty() || ForbiddenAccountStates.Contains(state))
+                    if (state == "unconfirmed" && nancyContext.Request.Method == "GET")
+                    {
+                        return null;
+                    }
+                    if (state.Empty() || ForbiddenAccountStates.Contains(state))
                     {
                         return HttpStatusCode.Forbidden;
                     }
