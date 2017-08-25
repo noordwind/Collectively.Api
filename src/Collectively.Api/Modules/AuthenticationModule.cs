@@ -16,12 +16,12 @@ namespace Collectively.Api.Modules
         {
             Post("sign-in", async args => 
             {
-                var credentials = BindRequest<SignIn>();
-                credentials.Request = CreateRequest<SignIn>();
-                credentials.SessionId = Guid.NewGuid();
-                credentials.IpAddress = Request.UserHostAddress;
-                credentials.UserAgent = Request.Headers.UserAgent;
-                var session = await authenticationService.AuthenticateAsync(credentials);
+                var command = BindRequest<SignIn>();
+                command.Request = CreateRequest<SignIn>();
+                command.SessionId = Guid.NewGuid();
+                command.IpAddress = Request.UserHostAddress;
+                command.UserAgent = Request.Headers.UserAgent;
+                var session = await authenticationService.AuthenticateAsync(command);
                 if (session.HasNoValue)
                 {
                     return HttpStatusCode.Unauthorized;
@@ -33,6 +33,20 @@ namespace Collectively.Api.Modules
             Post("sign-out", async (ctx, p) => await For<SignOut>()
                 .OnSuccess(HttpStatusCode.NoContent)
                 .DispatchAsync());
+
+            Post("sessions", async args => 
+            {
+                var command = BindRequest<RefreshUserSession>();
+                command.Request = CreateRequest<RefreshUserSession>();
+                command.NewSessionId = Guid.NewGuid();
+                var session = await authenticationService.RefreshSessionAsync(command);
+                if (session.HasNoValue)
+                {
+                    return HttpStatusCode.Forbidden;
+                }
+
+                return session.Value;
+            });
         }
     }
 }

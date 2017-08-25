@@ -18,7 +18,10 @@ namespace Collectively.Api.Services
             _name = name;
         }
 
-        public async Task<Maybe<JwtBasic>> AuthenticateAsync(SignIn credentials)
-            => await _serviceClient.PostAsync<JwtBasic>(_name, "sign-in", credentials);
+        public async Task<Maybe<JwtSession>> AuthenticateAsync(SignIn command)
+            => await _serviceClient.PostAsync<JwtSession>(_name, "sign-in", command);
+
+        public async Task<Maybe<JwtSession>> RefreshSessionAsync(RefreshUserSession command)
+            => await _serviceClient.PostAsync<JwtSession>(_name, "sessions", command);
     }
 }

@@ -21,15 +21,18 @@ namespace Collectively.Api.Services
             _jwtTokenSettings = jwtTokenSettings;
         }
         
-        public async Task<Maybe<JwtBasic>> AuthenticateAsync(SignIn credentials)
+        public async Task<Maybe<JwtSession>> AuthenticateAsync(SignIn command)
         {
-            if(HasInvalidCredentials(credentials))
+            if(HasInvalidCredentials(command))
             {
                 return null;
             }
             
-            return await _serviceClient.AuthenticateAsync(credentials);
+            return await _serviceClient.AuthenticateAsync(command);
         }
+
+        public async Task<Maybe<JwtSession>> RefreshSessionAsync(RefreshUserSession command)
+            => await _serviceClient.RefreshSessionAsync(command);
 
         private bool HasInvalidCredentials(SignIn credentials)
         {

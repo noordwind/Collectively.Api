@@ -7,6 +7,7 @@ namespace Collectively.Api.Services
 {
     public interface IAuthenticationService
     {
-         Task<Maybe<JwtBasic>> AuthenticateAsync(SignIn credentials);
+         Task<Maybe<JwtSession>> AuthenticateAsync(SignIn command);
+         Task<Maybe<JwtSession>> RefreshSessionAsync(RefreshUserSession command);
     }
 }
