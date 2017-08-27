@@ -86,7 +86,8 @@ namespace Collectively.Api.Framework
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerRequest();
                 builder.RegisterModule<ModuleContainer>();
-                builder.RegisterType<AccountStateProvider>().As<IAccountStateProvider>().SingleInstance();
+                builder.RegisterType<AccountStateProvider>().As<IAccountStateProvider>();
+                builder.RegisterType<OperationProvider>().As<IOperationProvider>();
                 SecurityContainer.Register(builder, _configuration);
                 RabbitMqContainer.Register(builder, _configuration.GetSettings<RawRabbitConfiguration>());
             });

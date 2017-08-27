@@ -21,8 +21,9 @@ namespace Collectively.Api.Modules
             {
                 var operation = await operationStorage.GetAsync(x.RequestId);
                 if (operation.HasNoValue || operation.Value.UserId.Empty())
+                {
                     return operation;
-
+                }
                 this.RequiresAuthentication();
 
                 return operation.Value.UserId == CurrentUserId
