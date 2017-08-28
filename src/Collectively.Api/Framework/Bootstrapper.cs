@@ -32,7 +32,6 @@ namespace Collectively.Api.Framework
         private static readonly string[] ForbiddenAccountStates = new []{"inactive", "unconfirmed", "locked", "deleted"};
         private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
         private IExceptionHandler _exceptionHandler;
-        private IAccountStateProvider _accountStateProvider;
         private static readonly string DecimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
         private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
         private readonly IConfiguration _configuration;
@@ -64,7 +63,6 @@ namespace Collectively.Api.Framework
             pipelines.AfterRequest += (ctx) => AddCorsHeaders(ctx.Response);
             pipelines.SetupTokenAuthentication(container);
             _exceptionHandler = container.Resolve<IExceptionHandler>();
-            _accountStateProvider = container.Resolve<IAccountStateProvider>();
             _validateAccountState = container.Resolve<AppSettings>().ValidateAccountState;
             Logger.Info($"Account state validation is {(_validateAccountState ? "enabled" : "disabled")}.");
             Logger.Info("Collectively API has started.");
@@ -84,10 +82,10 @@ namespace Collectively.Api.Framework
                 builder.RegisterInstance(_configuration.GetSettings<ExceptionlessSettings>()).SingleInstance();
                 builder.RegisterType<ExceptionlessExceptionHandler>().As<IExceptionHandler>().SingleInstance();
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
-                builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerRequest();
+                builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
                 builder.RegisterModule<ModuleContainer>();
-                builder.RegisterType<AccountStateProvider>().As<IAccountStateProvider>();
-                builder.RegisterType<OperationProvider>().As<IOperationProvider>();
+                builder.RegisterType<AccountStateProvider>().As<IAccountStateProvider>().InstancePerLifetimeScope();
+                builder.RegisterType<OperationProvider>().As<IOperationProvider>().InstancePerLifetimeScope();
                 SecurityContainer.Register(builder, _configuration);
                 RabbitMqContainer.Register(builder, _configuration.GetSettings<RawRabbitConfiguration>());
             });
@@ -118,7 +116,8 @@ namespace Collectively.Api.Framework
                         return null;
                     }
                     var userId = nancyContext.CurrentUser.Identity.Name;
-                    var state = await _accountStateProvider.GetAsync(userId);
+                    var accountStateProvider = container.Resolve<IAccountStateProvider>();
+                    var state = await accountStateProvider.GetAsync(userId);
                     if (state == "unconfirmed" && nancyContext.Request.Method == "GET")
                     {
                         return null;
