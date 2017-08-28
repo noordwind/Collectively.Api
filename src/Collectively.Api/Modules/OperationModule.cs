@@ -19,23 +19,7 @@ namespace Collectively.Api.Modules
             : base(commandDispatcher, validatorResolver, modulePath: "operations")
         {
             Get("{requestId}", args => Fetch<GetOperation, Operation>
-            (async x =>
-            {
-                var operation = await operationProvider.GetAsync(x.RequestId);
-                if (operation == null)
-                {
-                    return new Maybe<Operation>();
-                }
-                if (operation.UserId.Empty())
-                {
-                    return operation;
-                }
-                this.RequiresAuthentication();
-
-                return operation.UserId == CurrentUserId
-                    ? operation
-                    : new Maybe<Operation>();
-            }).HandleAsync());
+            (async x => await operationProvider.GetAsync(x.RequestId)).HandleAsync());
         }
     }
 }
