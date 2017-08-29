@@ -94,6 +94,7 @@ namespace Collectively.Api.Modules
                 {
                     file.Value.CopyTo(stream);
                     var bytes = stream.ToArray();
+                    Logger.Info($"Uploading file: {file.Name} [{file.ContentType}], size: {bytes.Count()} bytes.");
 
                     return new Collectively.Messages.Commands.Models.File
                     {
