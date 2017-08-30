@@ -12,6 +12,7 @@ using Nancy.Owin;
 using Lockbox.Client.Extensions;
 using Microsoft.Extensions.Caching.Distributed;
 using Collectively.Common.Logging;
+using Collectively.Common.Caching;
 
 namespace Collectively.Api
 {
