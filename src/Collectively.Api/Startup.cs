@@ -9,10 +9,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Nancy.Owin;
-using NLog.Extensions.Logging;
 using Lockbox.Client.Extensions;
-using NLog.Web;
 using Microsoft.Extensions.Caching.Distributed;
+using Collectively.Common.Logging;
 
 namespace Collectively.Api
 {
@@ -40,6 +39,7 @@ namespace Collectively.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSerilog(Configuration);
             services.AddWebEncoders();
             services.AddCors();
             var redisSettings = new RedisSettings();
@@ -53,9 +53,7 @@ namespace Collectively.Api
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddNLog();
-            app.AddNLogWeb();
-            env.ConfigureNLog("nlog.config");
+            app.UseSerilog(loggerFactory);
             app.UseCors(builder => builder.AllowAnyHeader()
                 .AllowAnyMethod()
                 .AllowAnyOrigin()

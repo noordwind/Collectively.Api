@@ -14,7 +14,7 @@ using Nancy;
 using Nancy.ModelBinding;
 using Nancy.Responses;
 using Nancy.Security;
-using NLog;
+using Serilog;
 using Structure.Sketching.ExtensionMethods;
 using Collectively.Common.Security;
 using System.Security.Claims;
@@ -24,7 +24,7 @@ namespace Collectively.Api.Modules
 {
     public abstract class ModuleBase : NancyModule
     {
-        protected static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        protected static readonly ILogger Logger = Log.Logger;
         protected readonly ICommandDispatcher CommandDispatcher;
         private readonly IValidatorResolver _validatorResolver;
         private string _currentUserId;
@@ -94,7 +94,7 @@ namespace Collectively.Api.Modules
                 {
                     file.Value.CopyTo(stream);
                     var bytes = stream.ToArray();
-                    Logger.Info($"Uploading file: {file.Name} [{file.ContentType}], size: {bytes.Count()} bytes.");
+                    Logger.Information($"Uploading file: {file.Name} [{file.ContentType}], size: {bytes.Count()} bytes.");
 
                     return new Collectively.Messages.Commands.Models.File
                     {
@@ -162,7 +162,7 @@ namespace Collectively.Api.Modules
         {
             if (stream.HasNoValue)
             {
-                Logger.Warn($"Stream result has no value, fileName: {fileName}, contentType: {contentType}");
+                Logger.Warning($"Stream result has no value, fileName: {fileName}, contentType: {contentType}");
                 return HttpStatusCode.NotFound;
             }
             Logger.Debug($"File received successfully, fileName: {fileName}, contentType: {contentType}");

@@ -7,7 +7,7 @@ using Collectively.Common.Queries;
 using Collectively.Common.Types;
 using Collectively.Common.Extensions;
 using System.Linq;
-using NLog;
+using Serilog;
 using Collectively.Common.Security;
 using Collectively.Common.ServiceClients;
 
@@ -15,7 +15,7 @@ namespace Collectively.Api.Storages
 {
     public class StorageClient : IStorageClient
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = Log.Logger;
         private readonly IServiceClient _serviceClient;
         private readonly ICache _cache;
         private readonly IFilterResolver _filterResolver;

@@ -7,14 +7,14 @@ using Collectively.Messages.Commands;
 using Nancy;
 using Collectively.Common.Extensions;
 using Nancy.Responses.Negotiation;
-using NLog;
+using Serilog;
 using ICommandDispatcher = Collectively.Api.Commands.ICommandDispatcher;
 
 namespace Collectively.Api.Framework
 {
     public class CommandRequestHandler<T> where T : ICommand
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = Log.Logger;
         private readonly ICommandDispatcher _dispatcher;
         private readonly T _command;
         private readonly IResponseFormatter _responseFormatter;

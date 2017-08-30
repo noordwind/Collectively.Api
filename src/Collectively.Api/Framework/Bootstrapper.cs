@@ -15,7 +15,7 @@ using Nancy;
 using Nancy.Bootstrapper;
 using Nancy.Bootstrappers.Autofac;
 using Nancy.Configuration;
-using NLog;
+using Serilog;
 using RawRabbit.Configuration;
 using ModuleContainer = Collectively.Api.IoC.ModuleContainer;
 using Newtonsoft.Json;
@@ -30,7 +30,7 @@ namespace Collectively.Api.Framework
     public class Bootstrapper : AutofacNancyBootstrapper
     {
         private static readonly string[] ForbiddenAccountStates = new []{"inactive", "unconfirmed", "locked", "deleted"};
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = Log.Logger;
         private IExceptionHandler _exceptionHandler;
         private static readonly string DecimalSeparator = CultureInfo.CurrentCulture.NumberFormat.NumberDecimalSeparator;
         private static readonly string InvalidDecimalSeparator = DecimalSeparator == "." ? "," : ".";
@@ -64,13 +64,13 @@ namespace Collectively.Api.Framework
             pipelines.SetupTokenAuthentication(container);
             _exceptionHandler = container.Resolve<IExceptionHandler>();
             _validateAccountState = container.Resolve<AppSettings>().ValidateAccountState;
-            Logger.Info($"Account state validation is {(_validateAccountState ? "enabled" : "disabled")}.");
-            Logger.Info("Collectively API has started.");
+            Logger.Information($"Account state validation is {(_validateAccountState ? "enabled" : "disabled")}.");
+            Logger.Information("Collectively API has started.");
         }
 
         protected override void ConfigureApplicationContainer(ILifetimeScope container)
         {
-            Logger.Info("Configuring IoC");
+            Logger.Information("Configuring IoC");
             base.ConfigureApplicationContainer(container);
 
             container.Update(builder =>

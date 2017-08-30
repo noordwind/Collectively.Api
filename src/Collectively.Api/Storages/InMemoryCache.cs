@@ -2,13 +2,13 @@
 using System.Threading.Tasks;
 using Collectively.Common.Types;
 using Microsoft.Extensions.Caching.Memory;
-using NLog;
+using Serilog;
 
 namespace Collectively.Api.Storages
 {
     public class InMemoryCache : ICache
     {
-        private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+        private static readonly ILogger Logger = Log.Logger;
 
         private readonly IMemoryCache _cache;
 
