@@ -24,6 +24,7 @@ using Collectively.Common.Security;
 using Collectively.Api.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac.Extensions.DependencyInjection;
+using Collectively.Common.Caching;
 
 namespace Collectively.Api.Framework
 {
@@ -80,10 +81,12 @@ namespace Collectively.Api.Framework
                 builder.RegisterInstance(_configuration.GetSettings<AppSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<FeatureSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<ExceptionlessSettings>()).SingleInstance();
+                builder.RegisterInstance(_configuration.GetSettings<RedisSettings>()).SingleInstance();
                 builder.RegisterType<ExceptionlessExceptionHandler>().As<IExceptionHandler>().SingleInstance();
                 builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
                 builder.RegisterModule<ModuleContainer>();
+                builder.RegisterModule<RedisModule>();
                 builder.RegisterType<AccountStateProvider>().As<IAccountStateProvider>().InstancePerLifetimeScope();
                 builder.RegisterType<OperationProvider>().As<IOperationProvider>().InstancePerLifetimeScope();
                 SecurityContainer.Register(builder, _configuration);
