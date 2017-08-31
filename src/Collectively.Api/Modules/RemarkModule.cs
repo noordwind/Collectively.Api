@@ -33,9 +33,10 @@ namespace Collectively.Api.Modules
                     State = x.State,
                     Status = x.Status,
                     Rating = x.Rating,
+                    Distance = x.Distance,
                     CommentsCount = x.CommentsCount,
                     ParticipantsCount = x.ParticipantsCount,
-                    ReportsCount = x.ReportsCount
+                    ReportsCount = x.ReportsCount,
                 }).HandleAsync());
 
             Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategory>
