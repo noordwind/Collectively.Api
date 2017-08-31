@@ -21,7 +21,5 @@ namespace Collectively.Api.Queries
         public IEnumerable<string> States { get; set; }
         public IEnumerable<string> Categories { get; set; }
         public IEnumerable<string> Tags { get; set; }
-        public bool IsLocationProvided => (Math.Abs(Latitude) <= 0.0000000001 || 
-            Math.Abs(Longitude) <= 0.0000000001) == false;
     }
 }

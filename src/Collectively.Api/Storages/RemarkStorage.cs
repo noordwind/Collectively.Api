@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Collectively.Api.Framework;
 using Collectively.Api.Queries;
 using Collectively.Common.Caching;
 using Collectively.Common.Locations;
@@ -44,7 +45,7 @@ namespace Collectively.Api.Storages
             {
                 return await _storageClient.GetFilteredCollectionAsync<Remark, BrowseRemarks>(query, "remarks");
             }
-            if (!query.IsLocationProvided)
+            if (!query.IsLocationProvided())
             {
                 var latestKeys = await _cache.GetSortedSetAsync("remarks-latest");
                 var remarks  = await _cache.GetManyAsync<Remark>(latestKeys

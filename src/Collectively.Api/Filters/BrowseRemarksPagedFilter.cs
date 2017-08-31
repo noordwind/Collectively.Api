@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Collectively.Api.Framework;
 using Collectively.Api.Queries;
 using Collectively.Common.Extensions;
 using Collectively.Common.Types;
@@ -14,7 +15,7 @@ namespace Collectively.Api.Filters
 
         public PagedResult<Remark> Filter(IEnumerable<Remark> values, BrowseRemarks query)
         {
-            if (!query.IsLocationProvided && query.AuthorId.Empty())
+            if (!query.IsLocationProvided() && query.AuthorId.Empty())
             {
                 query.Latest = true;
             }

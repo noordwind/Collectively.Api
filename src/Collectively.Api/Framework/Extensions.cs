@@ -1,4 +1,5 @@
 ﻿using System;
+using Collectively.Api.Queries;
 using Nancy;
 
 namespace Collectively.Api.Framework
@@ -15,5 +16,9 @@ namespace Collectively.Api.Framework
         {
             return response.AsRedirect(path).WithStatusCode(statusCode);
         }
+
+        public static bool IsLocationProvided(this BrowseRemarks query)
+        => (Math.Abs(query.Latitude) <= 0.0000000001 || 
+            Math.Abs(query.Longitude) <= 0.0000000001) == false;
     }
 }
