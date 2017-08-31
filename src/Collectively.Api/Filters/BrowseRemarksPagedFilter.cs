@@ -65,7 +65,7 @@ namespace Collectively.Api.Filters
             }
             if(query.GroupId.HasValue && query.GroupId != Guid.Empty)
             {
-                values = values.Where(x => x.Group.Id == query.GroupId);
+                values = values.Where(x => x.Group?.Id == query.GroupId);
             }
             if(query.UserFavorites.NotEmpty())
             {
