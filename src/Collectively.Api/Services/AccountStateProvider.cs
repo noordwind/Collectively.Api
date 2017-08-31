@@ -1,21 +1,25 @@
 using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Distributed;
 using Collectively.Common.Extensions;
 using System.Security.Authentication;
+using Collectively.Common.Caching;
 
 namespace Collectively.Api.Services
 {
     public class AccountStateProvider : IAccountStateProvider
     {
-        private readonly IDistributedCache _cache;
+        private readonly ICache _cache;
 
-        public AccountStateProvider(IDistributedCache cache)
+        public AccountStateProvider(ICache cache)
         {
             _cache = cache;
         }
 
         public async Task<string> GetAsync(string userId)
-        => await _cache.GetStringAsync($"users:{userId}:state");
+        {
+            var state = await _cache.GetAsync<string>($"users:{userId}:state");
+
+            return state.HasNoValue ? string.Empty : state.Value;
+        }
     }
 }
