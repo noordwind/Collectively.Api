@@ -3,6 +3,7 @@ using Collectively.Api.Commands;
 using Collectively.Api.Storages;
 using Collectively.Api.Validation;
 using Collectively.Services.Storage.Models.Operations;
+using Nancy;
 
 namespace Collectively.Api.Modules
 {
@@ -17,20 +18,25 @@ namespace Collectively.Api.Modules
         {
             Get("operation", args => 
             {
-                var state = "created";
                 RequestCounter++;
-                if(RequestCounter == 10)
+                if(RequestCounter <= 2)
                 {
-                    state = "completed";
+                    return HttpStatusCode.NotFound;
+                }
+                if(RequestCounter == 3)
+                {
+                    return HttpStatusCode.Unauthorized;
+                }
+                if(RequestCounter == 8)
+                {
                     RequestCounter = 0;
                 }
-
                 return new Operation
                 {
                     Id = Guid.NewGuid(),
                     RequestId = Guid.NewGuid(),
                     CreatedAt = DateTime.UtcNow,
-                    State = state
+                    State = "completed"
                 };
             });
         }
