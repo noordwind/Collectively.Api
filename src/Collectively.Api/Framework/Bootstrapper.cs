@@ -25,6 +25,10 @@ using Collectively.Api.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Autofac.Extensions.DependencyInjection;
 using Collectively.Common.Caching;
+using Collectively.Api.Filters;
+using Collectively.Api.Queries;
+using Collectively.Common.Types;
+using Collectively.Services.Storage.Models.Remarks;
 
 namespace Collectively.Api.Framework
 {
@@ -78,6 +82,7 @@ namespace Collectively.Api.Framework
             {
                 builder.Populate(_services);
                 builder.RegisterType<CustomJsonSerializer>().As<JsonSerializer>().SingleInstance();
+                builder.RegisterType<BrowseRemarksPagedFilter>().As<IPagedFilter<Remark, BrowseRemarks>>().SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<AppSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<FeatureSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<ExceptionlessSettings>()).SingleInstance();
