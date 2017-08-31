@@ -53,8 +53,9 @@ namespace Collectively.Api.Storages
 
                 return _filter.Filter(remarks, query);
             }
+            var radius = query.Radius > 0 ? query.Radius : 10000;
             var geoKeys = await _cache.GetGeoRadiusAsync("remarks", 
-                query.Longitude, query.Latitude, query.Radius);
+                query.Longitude, query.Latitude, radius);
             var results = await _cache.GetManyAsync<Remark>(geoKeys
                 .OrderBy(x => x.Distance)
                 .Select(x => $"remarks:{x.Name}")
