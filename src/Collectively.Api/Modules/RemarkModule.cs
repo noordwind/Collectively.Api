@@ -23,7 +23,11 @@ namespace Collectively.Api.Modules
                 .MapTo(x => new BasicRemark
                 {
                     Id = x.Id,
-                    Group = x.Group,
+                    Group = x.Group == null ? null : new RemarkGroup
+                    {
+                        Id = x.Group.Id,
+                        Name = x.Group.Name
+                    },
                     Author = x.Author,
                     Category = x.Category,
                     Location = x.Location,
