@@ -48,9 +48,10 @@ namespace Collectively.Api.Storages
             if (!query.IsLocationProvided())
             {
                 var latestKeys = await _cache.GetSortedSetAsync("remarks-latest");
-                var remarks  = await _cache.GetManyAsync<Remark>(latestKeys
+                var remarks = await _cache.GetManyAsync<Remark>(latestKeys
                         .Select(x => $"remarks:{x}")
                         .ToArray());
+                remarks = remarks.Where(x => x != null);
 
                 return _filter.Filter(remarks, query);
             }
@@ -61,6 +62,7 @@ namespace Collectively.Api.Storages
                 .OrderBy(x => x.Distance)
                 .Select(x => $"remarks:{x.Name}")
                 .ToArray());
+            results = results.Where(x => x != null);
             var center = new Coordinates(query.Latitude, query.Longitude);
             foreach (var remark in results)
             {
