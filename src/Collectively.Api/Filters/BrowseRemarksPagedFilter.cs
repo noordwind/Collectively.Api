@@ -23,9 +23,13 @@ namespace Collectively.Api.Filters
             {
                 query.Page = 1;
             }
-            if (query.Results <= 0 || query.Results > 100)
+            if (query.Results <= 0)
             {
                 query.Results = 10;
+            }
+            if (query.Results > 100)
+            {
+                query.Results = 100;
             }
             if (query.AuthorId.NotEmpty())
             {
