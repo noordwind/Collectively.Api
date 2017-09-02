@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Collectively.Api.Framework;
@@ -8,24 +9,26 @@ using Collectively.Common.Locations;
 using Collectively.Common.Types;
 using Collectively.Services.Storage.Models.Remarks;
 
-
 namespace Collectively.Api.Storages
 {
     public class RemarkStorage : IRemarkStorage
     {
         private readonly IStorageClient _storageClient;
-        private readonly IPagedFilter<Remark, BrowseRemarks> _filter;
+        private readonly IPagedFilter<Remark, BrowseRemarks> _browseRemarksFilter;
+        private readonly IPagedFilter<Remark, BrowseSimilarRemarks> _browseSimilarRemarksFilter;
         private readonly Collectively.Common.Caching.ICache _cache;
         private readonly bool _useCache;
 
         public RemarkStorage(IStorageClient storageClient, 
-            IPagedFilter<Remark, BrowseRemarks> filter,
+            IPagedFilter<Remark, BrowseRemarks> browseRemarksFilter,
+            IPagedFilter<Remark, BrowseSimilarRemarks> browseSimilarRemarksFilter,
             Collectively.Common.Caching.ICache cache,
             RedisSettings redisSettings)
         {
             _storageClient = storageClient;
             _cache = cache;
-            _filter = filter;
+            _browseRemarksFilter = browseRemarksFilter;
+            _browseSimilarRemarksFilter = browseSimilarRemarksFilter;
             _useCache = redisSettings.Enabled;
         }
 
@@ -47,31 +50,42 @@ namespace Collectively.Api.Storages
             }
             if (!query.IsLocationProvided())
             {
-                var latestKeys = await _cache.GetSortedSetAsync("remarks-latest");
-                var remarks = await _cache.GetManyAsync<Remark>(latestKeys
-                        .Select(x => $"remarks:{x}")
-                        .ToArray());
-                remarks = remarks.Where(x => x != null);
-
-                return _filter.Filter(remarks, query);
+                return _browseRemarksFilter.Filter(await GetRemarksWithoutLocationAsync(query), query);
             }
+
+            return _browseRemarksFilter.Filter(await GetRemarksByLocationAsync(query), query);
+        }
+
+        public async Task<Maybe<PagedResult<Remark>>> BrowseSimilarAsync(BrowseSimilarRemarks query)
+        => _useCache ? 
+            _browseSimilarRemarksFilter.Filter(await GetRemarksByLocationAsync(query), query) : 
+            await _storageClient.GetFilteredCollectionAsync<Remark, BrowseSimilarRemarks>(query, "remarks/similar");
+
+        private async Task<IEnumerable<Remark>> GetRemarksWithoutLocationAsync(BrowseRemarksBase query)
+        {
+            var latestKeys = await _cache.GetSortedSetAsync("remarks-latest");
+            var remarks = await _cache.GetManyAsync<Remark>(latestKeys
+                    .Select(x => $"remarks:{x}")
+                    .ToArray());
+            remarks = remarks.Where(x => x != null);
+
+            return remarks;
+        }
+
+        private async Task<IEnumerable<Remark>> GetRemarksByLocationAsync(BrowseRemarksBase query)
+        {
             var radius = query.Radius > 0 ? query.Radius : 10000;
             var geoKeys = await _cache.GetGeoRadiusAsync("remarks", 
                 query.Longitude, query.Latitude, radius);
-            var results = await _cache.GetManyAsync<Remark>(geoKeys
+            var remarks = await _cache.GetManyAsync<Remark>(geoKeys
                 .OrderBy(x => x.Distance)
                 .Select(x => $"remarks:{x.Name}")
                 .ToArray());
-            results = results.Where(x => x != null);
-            var center = new Coordinates(query.Latitude, query.Longitude);
-            foreach (var remark in results)
-            {
-                var coordinates = new Coordinates(remark.Location.Latitude, remark.Location.Longitude);
-                remark.Distance = center.DistanceTo(coordinates, UnitOfLength.Meters);
-            }
+            remarks = remarks.Where(x => x != null);
 
-            return _filter.Filter(results, query);
+            return remarks;
         }
+
         public async Task<Maybe<PagedResult<RemarkCategory>>> BrowseCategoriesAsync(BrowseRemarkCategories query)
             => await _storageClient.GetFilteredCollectionAsync<RemarkCategory, BrowseRemarkCategories>
                 (query, "remarks/categories");

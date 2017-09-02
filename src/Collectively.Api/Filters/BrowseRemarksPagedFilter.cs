@@ -4,6 +4,7 @@ using System.Linq;
 using Collectively.Api.Framework;
 using Collectively.Api.Queries;
 using Collectively.Common.Extensions;
+using Collectively.Common.Locations;
 using Collectively.Common.Types;
 using Collectively.Services.Storage.Models.Remarks;
 
@@ -68,23 +69,20 @@ namespace Collectively.Api.Filters
             {
                 values = values.Where(x => x.Rating > NegativeVotesThreshold);
             }
-            if(query.GroupId.HasValue && query.GroupId != Guid.Empty)
+            if (query.GroupId.HasValue && query.GroupId != Guid.Empty)
             {
                 values = values.Where(x => x.Group?.Id == query.GroupId);
             }
-            if(query.UserFavorites.NotEmpty())
+            if (query.UserFavorites.NotEmpty())
             {
                 values = values.Where(x => x.UserFavorites.Contains(query.UserFavorites));
             }
+            if (query.IsLocationProvided())
+            {
+                values.SetRemarksDistance(query.Latitude, query.Longitude);
+            }
 
-            var totalCount = values.Count();
-            var totalPages = (int) totalCount / query.Results + 1;
-            values = values.Skip(query.Results * (query.Page - 1))
-                           .Take(query.Results);
-
-            values = SortRemarks(query, values);
-
-            return PagedResult<Remark>.Create(values, query.Page, query.Results, totalPages, totalCount);
+            return SortRemarks(query, values).Paginate(query);
         }
 
         private static IEnumerable<Remark>  SortRemarks(BrowseRemarks query, 

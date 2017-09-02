@@ -10,6 +10,7 @@ namespace Collectively.Api.Storages
     {
         Task<Maybe<Remark>> GetAsync(Guid id);
         Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query);
+        Task<Maybe<PagedResult<Remark>>> BrowseSimilarAsync(BrowseSimilarRemarks query);
         Task<Maybe<PagedResult<RemarkCategory>>> BrowseCategoriesAsync(BrowseRemarkCategories query);
         Task<Maybe<PagedResult<Tag>>> BrowseTagsAsync(BrowseRemarkTags query);
     }

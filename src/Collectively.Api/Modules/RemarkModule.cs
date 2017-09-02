@@ -20,28 +20,13 @@ namespace Collectively.Api.Modules
         {
             Get("", async args => await FetchCollection<BrowseRemarks, Remark>
                 (async x => await remarkStorage.BrowseAsync(x))
-                .MapTo(x => new BasicRemark
-                {
-                    Id = x.Id,
-                    Group = x.Group == null ? null : new RemarkGroup
-                    {
-                        Id = x.Group.Id,
-                        Name = x.Group.Name
-                    },
-                    Author = x.Author,
-                    Category = x.Category,
-                    Location = x.Location,
-                    SmallPhotoUrl = x.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
-                    Description = x.Description,
-                    CreatedAt = x.CreatedAt,
-                    State = x.State,
-                    Status = x.Status,
-                    Rating = x.Rating,
-                    Distance = x.Distance,
-                    CommentsCount = x.CommentsCount,
-                    ParticipantsCount = x.ParticipantsCount,
-                    ReportsCount = x.ReportsCount,
-                }).HandleAsync());
+                .MapTo(MapToBasicRemark)
+                .HandleAsync());
+
+            Get("similar", async args => await FetchCollection<BrowseSimilarRemarks, Remark>
+                (async x => await remarkStorage.BrowseSimilarAsync(x))
+                .MapTo(MapToBasicRemark)
+                .HandleAsync());
 
             Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategory>
                 (async x => await remarkStorage.BrowseCategoriesAsync(x)).HandleAsync());
@@ -110,5 +95,29 @@ namespace Collectively.Api.Modules
                 .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
         }
+
+        private BasicRemark MapToBasicRemark(Remark remark) 
+        => new BasicRemark
+        {
+            Id = remark.Id,
+            Group = remark.Group == null ? null : new RemarkGroup
+            {
+                Id = remark.Group.Id,
+                Name = remark.Group.Name
+            },
+            Author = remark.Author,
+            Category = remark.Category,
+            Location = remark.Location,
+            SmallPhotoUrl = remark.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
+            Description = remark.Description,
+            CreatedAt = remark.CreatedAt,
+            State = remark.State,
+            Status = remark.Status,
+            Rating = remark.Rating,
+            Distance = remark.Distance,
+            CommentsCount = remark.CommentsCount,
+            ParticipantsCount = remark.ParticipantsCount,
+            ReportsCount = remark.ReportsCount,
+        };
     }
 }

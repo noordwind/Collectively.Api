@@ -83,6 +83,7 @@ namespace Collectively.Api.Framework
                 builder.Populate(_services);
                 builder.RegisterType<CustomJsonSerializer>().As<JsonSerializer>().SingleInstance();
                 builder.RegisterType<BrowseRemarksPagedFilter>().As<IPagedFilter<Remark, BrowseRemarks>>().SingleInstance();
+                builder.RegisterType<BrowseSimilarRemarksPagedFilter>().As<IPagedFilter<Remark, BrowseSimilarRemarks>>().SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<AppSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<FeatureSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<ExceptionlessSettings>()).SingleInstance();
