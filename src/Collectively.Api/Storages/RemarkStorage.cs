@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Collectively.Api.Framework;
 using Collectively.Api.Queries;
 using Collectively.Common.Caching;
+using Collectively.Common.Extensions;
 using Collectively.Common.Locations;
 using Collectively.Common.Types;
 using Collectively.Services.Storage.Models.Remarks;
@@ -16,13 +17,13 @@ namespace Collectively.Api.Storages
         private readonly IStorageClient _storageClient;
         private readonly IPagedFilter<Remark, BrowseRemarks> _browseRemarksFilter;
         private readonly IPagedFilter<Remark, BrowseSimilarRemarks> _browseSimilarRemarksFilter;
-        private readonly Collectively.Common.Caching.ICache _cache;
+        private readonly ICache _cache;
         private readonly bool _useCache;
 
         public RemarkStorage(IStorageClient storageClient, 
             IPagedFilter<Remark, BrowseRemarks> browseRemarksFilter,
             IPagedFilter<Remark, BrowseSimilarRemarks> browseSimilarRemarksFilter,
-            Collectively.Common.Caching.ICache cache,
+            ICache cache,
             RedisSettings redisSettings)
         {
             _storageClient = storageClient;
@@ -87,11 +88,27 @@ namespace Collectively.Api.Storages
         }
 
         public async Task<Maybe<PagedResult<RemarkCategory>>> BrowseCategoriesAsync(BrowseRemarkCategories query)
-            => await _storageClient.GetFilteredCollectionAsync<RemarkCategory, BrowseRemarkCategories>
+        {
+            var categories = await _cache.GetSetAsync<RemarkCategory>("categories");
+            if (categories?.Any() == true)
+            {
+                return categories.Paginate(1, int.MaxValue);
+            }
+
+            return await _storageClient.GetFilteredCollectionAsync<RemarkCategory, BrowseRemarkCategories>
                 (query, "remarks/categories");
+        }
 
         public async Task<Maybe<PagedResult<Tag>>> BrowseTagsAsync(BrowseRemarkTags query)
-            => await _storageClient.GetFilteredCollectionAsync<Tag, BrowseRemarkTags>
-                (query, "remarks/tags");
+        {
+            var tags = await _cache.GetSetAsync<Tag>("tags");
+            if (tags?.Any() == true)
+            {
+                return tags.Paginate(1, int.MaxValue);
+            }
+
+            return await _storageClient.GetFilteredCollectionAsync<Tag, BrowseRemarkTags>
+                (query, "remarks/tags");            
+        }
     }
 }

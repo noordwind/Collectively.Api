@@ -17,12 +17,12 @@ namespace Collectively.Api.Storages
     {
         private static readonly ILogger Logger = Log.Logger;
         private readonly IServiceClient _serviceClient;
-        private readonly ICache _cache;
+        private readonly IMemoryCache _cache;
         private readonly IFilterResolver _filterResolver;
         private readonly IServiceAuthenticatorClient _serviceAuthenticatorClient;
         private readonly ServiceSettings _settings;
 
-        public StorageClient(IServiceClient serviceClient, ICache cache, 
+        public StorageClient(IServiceClient serviceClient, IMemoryCache cache, 
             IFilterResolver filterResolver, IServiceAuthenticatorClient serviceAuthenticatorClient,
             ServiceSettings settings)
         {

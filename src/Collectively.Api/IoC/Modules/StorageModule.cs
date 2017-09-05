@@ -20,7 +20,7 @@ namespace Collectively.Api.IoC.Modules
 
             builder.Register(x => new StorageClient(
                     x.Resolve<IServiceClient>(),
-                    x.Resolve<ICache>(), 
+                    x.Resolve<IMemoryCache>(), 
                     x.Resolve<IFilterResolver>(), 
                     x.Resolve<IServiceAuthenticatorClient>(),
                     x.ResolveNamed<ServiceSettings>(StorageSettingsKey)))
@@ -56,7 +56,7 @@ namespace Collectively.Api.IoC.Modules
                 .SingleInstance();
 
             builder.RegisterType<InMemoryCache>()
-                .As<ICache>()
+                .As<IMemoryCache>()
                 .SingleInstance();
         }
     }

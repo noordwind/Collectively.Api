@@ -6,13 +6,13 @@ using Serilog;
 
 namespace Collectively.Api.Storages
 {
-    public class InMemoryCache : ICache
+    public class InMemoryCache : IMemoryCache
     {
         private static readonly ILogger Logger = Log.Logger;
 
-        private readonly IMemoryCache _cache;
+        private readonly Microsoft.Extensions.Caching.Memory.IMemoryCache _cache;
 
-        public InMemoryCache(IMemoryCache cache)
+        public InMemoryCache(Microsoft.Extensions.Caching.Memory.IMemoryCache cache)
         {
             _cache = cache;
         }
