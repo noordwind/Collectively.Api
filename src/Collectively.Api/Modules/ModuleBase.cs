@@ -15,7 +15,6 @@ using Nancy.ModelBinding;
 using Nancy.Responses;
 using Nancy.Security;
 using Serilog;
-using Structure.Sketching.ExtensionMethods;
 using Collectively.Common.Security;
 using System.Security.Claims;
 using System.Security.Authentication;
