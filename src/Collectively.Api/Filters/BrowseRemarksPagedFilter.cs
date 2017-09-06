@@ -16,7 +16,7 @@ namespace Collectively.Api.Filters
 
         public PagedResult<Remark> Filter(IEnumerable<Remark> values, BrowseRemarks query)
         {
-            if (!query.IsLocationProvided() && query.AuthorId.Empty())
+            if (!query.IsLocationProvided() && query.AuthorId.Empty() && query.ResolverId.Empty())
             {
                 query.Latest = true;
             }

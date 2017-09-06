@@ -40,6 +40,7 @@ namespace Collectively.Api.Storages
             {
                 return remark;
             }
+            
             return await _storageClient.GetAsync<Remark>($"remarks/{id}");
         }
 
@@ -49,7 +50,7 @@ namespace Collectively.Api.Storages
             {
                 return await _storageClient.GetFilteredCollectionAsync<Remark, BrowseRemarks>(query, "remarks");
             }
-            if (!query.IsLocationProvided())
+            if (!query.IsLocationProvided() || query.SkipLocation)
             {
                 return _browseRemarksFilter.Filter(await GetRemarksWithoutLocationAsync(query), query);
             }
@@ -62,10 +63,26 @@ namespace Collectively.Api.Storages
             _browseSimilarRemarksFilter.Filter(await GetRemarksByLocationAsync(query), query) : 
             await _storageClient.GetFilteredCollectionAsync<Remark, BrowseSimilarRemarks>(query, "remarks/similar");
 
-        private async Task<IEnumerable<Remark>> GetRemarksWithoutLocationAsync(BrowseRemarksBase query)
+        private async Task<IEnumerable<Remark>> GetRemarksWithoutLocationAsync(BrowseRemarks query)
         {
-            var latestKeys = await _cache.GetSortedSetAsync("remarks-latest");
-            var remarks = await _cache.GetManyAsync<Remark>(latestKeys
+            var keys = Enumerable.Empty<string>();
+            if (query.AuthorId.NotEmpty())
+            {
+                keys = await _cache.GetSetAsync($"users:{query.AuthorId}:remarks");
+            }
+            else if (query.ResolverId.NotEmpty())
+            {
+                keys = await _cache.GetSetAsync($"users:{query.ResolverId}:remarks");
+            }
+            else
+            {
+                keys = await _cache.GetSortedSetAsync("remarks-latest");
+            }
+            if (keys == null || !keys.Any()) 
+            {
+                return Enumerable.Empty<Remark>();
+            }
+            var remarks = await _cache.GetManyAsync<Remark>(keys
                     .Select(x => $"remarks:{x}")
                     .ToArray());
             remarks = remarks.Where(x => x != null);
