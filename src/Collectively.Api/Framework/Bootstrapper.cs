@@ -66,7 +66,6 @@ namespace Collectively.Api.Framework
                 return null;
             };
             pipelines.AfterRequest += (ctx) => AddCorsHeaders(ctx.Response);
-            pipelines.SetupTokenAuthentication(container);
             _exceptionHandler = container.Resolve<IExceptionHandler>();
             _validateAccountState = container.Resolve<AppSettings>().ValidateAccountState;
             Logger.Information($"Account state validation is {(_validateAccountState ? "enabled" : "disabled")}.");
@@ -100,13 +99,9 @@ namespace Collectively.Api.Framework
             });
         }
 
-        protected override void ConfigureRequestContainer(ILifetimeScope container, NancyContext context)
-        {
-            // Perform registrations that should have a request lifetime
-        }
-
         protected override void RequestStartup(ILifetimeScope container, IPipelines pipelines, NancyContext context)
         {
+            pipelines.SetupTokenAuthentication(container.Resolve<IJwtTokenHandler>());
             pipelines.OnError.AddItemToEndOfPipeline((ctx, ex) =>
             {
                 ctx.Response = ErrorResponse.FromException(ex, context.Environment);
