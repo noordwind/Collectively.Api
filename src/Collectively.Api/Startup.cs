@@ -22,20 +22,9 @@ namespace Collectively.Api
         public IConfiguration Configuration { get; set; }
         public IServiceCollection Services { get; set; }
 
-        public Startup(IHostingEnvironment env)
+        public Startup(IConfiguration configuration)
         {
-            EnvironmentName = env.EnvironmentName.ToLowerInvariant();
-            var builder = new ConfigurationBuilder()
-                .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
-                .AddJsonFile($"appsettings.{EnvironmentName}.json", optional: true)
-                .AddEnvironmentVariables()
-                .SetBasePath(env.ContentRootPath);
-
-            if (env.IsProduction() || env.IsDevelopment())
-            {
-                builder.AddLockbox();
-            }
-            Configuration = builder.Build();
+            Configuration = configuration;
         }
 
         public void ConfigureServices(IServiceCollection services)
