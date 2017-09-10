@@ -7,7 +7,7 @@ using Autofac;
 using Collectively.Api.Validation;
 using Collectively.Common.Extensions;
 using Collectively.Common.Exceptionless;
-using Collectively.Common.Nancy;
+using Collectively.Common.NancyFx;
 using Collectively.Common.Services;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;

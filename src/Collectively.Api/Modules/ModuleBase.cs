@@ -7,7 +7,7 @@ using Collectively.Api.Framework;
 using Collectively.Api.Validation;
 using Collectively.Messages.Commands;
 using Collectively.Common.Extensions;
-using Collectively.Common.Nancy;
+using Collectively.Common.NancyFx;
 using Collectively.Common.Queries;
 using Collectively.Common.Types;
 using Nancy;
