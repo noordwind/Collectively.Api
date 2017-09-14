@@ -118,6 +118,8 @@ namespace Collectively.Api.Modules
             CommentsCount = remark.CommentsCount,
             ParticipantsCount = remark.ParticipantsCount,
             ReportsCount = remark.ReportsCount,
+            Offering = remark.Offering,
+            OfferingProposalsCount = remark.OfferingProposalsCount
         };
     }
 }
