@@ -109,6 +109,12 @@ namespace Collectively.Api.Modules
             Category = remark.Category,
             Location = remark.Location,
             SmallPhotoUrl = remark.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
+            Photo = new BasicRemarkPhoto 
+            {
+                Small = remark.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
+                Medium = remark.Photos.FirstOrDefault(p => p.Size == "medium")?.Url,
+                Big = remark.Photos.FirstOrDefault(p => p.Size == "big")?.Url
+            },
             Description = remark.Description,
             CreatedAt = remark.CreatedAt,
             State = remark.State,
