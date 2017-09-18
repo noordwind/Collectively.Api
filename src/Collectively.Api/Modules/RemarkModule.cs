@@ -96,38 +96,46 @@ namespace Collectively.Api.Modules
                 .DispatchAsync());
         }
 
-        private BasicRemark MapToBasicRemark(Remark remark) 
-        => new BasicRemark
+        private BasicRemark MapToBasicRemark(Remark remark)
         {
-            Id = remark.Id,
-            Group = remark.Group == null ? null : new RemarkGroup
+            var model = new BasicRemark
             {
-                Id = remark.Group.Id,
-                Name = remark.Group.Name
-            },
-            Author = remark.Author,
-            Category = remark.Category,
-            Location = remark.Location,
-            SmallPhotoUrl = remark.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
-            Photo = new BasicRemarkPhoto 
+                Id = remark.Id,
+                Group = remark.Group == null ? null : new RemarkGroup
+                {
+                    Id = remark.Group.Id,
+                    Name = remark.Group.Name
+                },
+                Author = remark.Author,
+                Category = remark.Category,
+                Location = remark.Location,
+                SmallPhotoUrl = remark.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
+                Description = remark.Description,
+                CreatedAt = remark.CreatedAt,
+                State = remark.State,
+                Status = remark.Status,
+                Rating = remark.Rating,
+                Distance = remark.Distance,
+                CommentsCount = remark.CommentsCount,
+                ParticipantsCount = remark.ParticipantsCount,
+                ReportsCount = remark.ReportsCount,
+                Offering = remark.Offering,
+                OfferingProposalsCount = remark.OfferingProposalsCount,
+                PositiveVotesCount = remark.PositiveVotesCount,
+                NegativeVotesCount = remark.NegativeVotesCount
+            };
+            if (remark.Photos == null || !remark.Photos.Any())
+            {
+                return model;
+            }
+            model.Photo = new BasicRemarkPhoto 
             {
                 Small = remark.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
                 Medium = remark.Photos.FirstOrDefault(p => p.Size == "medium")?.Url,
                 Big = remark.Photos.FirstOrDefault(p => p.Size == "big")?.Url
-            },
-            Description = remark.Description,
-            CreatedAt = remark.CreatedAt,
-            State = remark.State,
-            Status = remark.Status,
-            Rating = remark.Rating,
-            Distance = remark.Distance,
-            CommentsCount = remark.CommentsCount,
-            ParticipantsCount = remark.ParticipantsCount,
-            ReportsCount = remark.ReportsCount,
-            Offering = remark.Offering,
-            OfferingProposalsCount = remark.OfferingProposalsCount,
-            PositiveVotesCount = remark.PositiveVotesCount,
-            NegativeVotesCount = remark.NegativeVotesCount
-        };
+            };
+
+            return model;
+        } 
     }
 }
