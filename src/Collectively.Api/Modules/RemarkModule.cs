@@ -112,6 +112,7 @@ namespace Collectively.Api.Modules
                 SmallPhotoUrl = remark.Photos.FirstOrDefault(p => p.Size == "small")?.Url,
                 Description = remark.Description,
                 CreatedAt = remark.CreatedAt,
+                UpdatedAt = remark.UpdatedAt,
                 State = remark.State,
                 Status = remark.Status,
                 Rating = remark.Rating,
