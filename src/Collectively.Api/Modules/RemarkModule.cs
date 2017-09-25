@@ -35,7 +35,7 @@ namespace Collectively.Api.Modules
                 (async x => await remarkStorage.BrowseTagsAsync(x)).HandleAsync());
 
             Get("{id}", async args => await Fetch<GetRemark, Remark>
-                (async x => await remarkStorage.GetAsync(x.Id)).HandleAsync());
+                (async x => await remarkStorage.GetAsync(x.Id, CurrentUserId)).HandleAsync());
 
             Post("", async args => await For<CreateRemark>()
                 .SetResourceId(x => x.RemarkId)

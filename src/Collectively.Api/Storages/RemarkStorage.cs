@@ -8,12 +8,14 @@ using Collectively.Common.Caching;
 using Collectively.Common.Extensions;
 using Collectively.Common.Locations;
 using Collectively.Common.Types;
+using Collectively.Services.Storage.Models.Groups;
 using Collectively.Services.Storage.Models.Remarks;
 
 namespace Collectively.Api.Storages
 {
     public class RemarkStorage : IRemarkStorage
     {
+        private static readonly IList<string> RemarkMemberCriteria = new []{"member", "moderator", "administrator", "owner"};
         private readonly IStorageClient _storageClient;
         private readonly IPagedFilter<Remark, BrowseRemarks> _browseRemarksFilter;
         private readonly IPagedFilter<Remark, BrowseSimilarRemarks> _browseSimilarRemarksFilter;
@@ -33,15 +35,30 @@ namespace Collectively.Api.Storages
             _useCache = redisSettings.Enabled;
         }
 
-        public async Task<Maybe<Remark>> GetAsync(Guid id)
+        public async Task<Maybe<Remark>> GetAsync(Guid id, string userId)
         {
             var remark = await _cache.GetAsync<Remark>($"remarks:{id}");
-            if (remark.HasValue)
+            if (remark.HasNoValue)
+            {
+                remark = await _storageClient.GetAsync<Remark>($"remarks/{id}");
+            }
+            if (remark.HasNoValue)
+            {
+                return null;
+            }
+            if (userId.Empty())
             {
                 return remark;
             }
+            if (remark.Value.Group == null)
+            {
+                return remark;
+            }
+            var groupMemberCriteria = await GetGroupMemberCriteriaAsync(remark.Value.Group.Id, userId);
+            remark.Value.Group.MemberRole = groupMemberCriteria.role;
+            remark.Value.Group.MemberCriteria = groupMemberCriteria.criteria;
             
-            return await _storageClient.GetAsync<Remark>($"remarks/{id}");
+            return remark;
         }
 
         public async Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query)
@@ -126,6 +143,37 @@ namespace Collectively.Api.Storages
 
             return await _storageClient.GetFilteredCollectionAsync<Tag, BrowseRemarkTags>
                 (query, "remarks/tags");            
+        }
+
+        private async Task<(string role, IList<string> criteria)> GetGroupMemberCriteriaAsync(Guid id, string userId)
+        {
+            var criteria = new List<string>();
+            var group = await _cache.GetAsync<Group>($"groups:{id}");
+            if (group.HasNoValue || group.Value.Criteria == null) 
+            {
+                return (string.Empty, criteria);
+            }
+            var member = group.Value.Members.SingleOrDefault(x => x.UserId == userId);
+            if (member == null || !member.IsActive)
+            {
+                return (string.Empty, criteria);
+            }
+            var memberRoleIndex = RemarkMemberCriteria.IndexOf(member.Role);
+            foreach (var criterion in group.Value.Criteria)
+            {
+                var requiredRole = criterion.Value.FirstOrDefault();
+                if (requiredRole.Empty() || !RemarkMemberCriteria.Contains(requiredRole))
+                {
+                    continue;
+                }
+                var requiredRoleIndex = RemarkMemberCriteria.IndexOf(requiredRole);
+                if (memberRoleIndex >= requiredRoleIndex)
+                {
+                    criteria.Add(criterion.Key);
+                }
+            }
+
+            return (member.Role, criteria);
         }
     }
 }
