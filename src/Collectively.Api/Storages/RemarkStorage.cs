@@ -162,7 +162,16 @@ namespace Collectively.Api.Storages
             foreach (var criterion in group.Value.Criteria)
             {
                 var requiredRole = criterion.Value.FirstOrDefault();
-                if (requiredRole.Empty() || !RemarkMemberCriteria.Contains(requiredRole))
+                if (requiredRole.Empty())
+                {
+                    continue;
+                }
+                if (requiredRole == "public")
+                {
+                    criteria.Add(criterion.Key);
+                    continue;
+                }
+                if (!RemarkMemberCriteria.Contains(requiredRole))
                 {
                     continue;
                 }
