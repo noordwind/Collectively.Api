@@ -78,6 +78,10 @@ namespace Collectively.Api.Modules
                 .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
 
+            Put("{remarkId}/cancel", async args => await For<CancelRemark>()
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
+                .DispatchAsync());
+
             Delete("{remarkId}", async args => await For<DeleteRemark>()
                 .OnSuccessAccepted()
                 .DispatchAsync());
