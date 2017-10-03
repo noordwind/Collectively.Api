@@ -88,7 +88,6 @@ namespace Collectively.Api.Framework
                 builder.RegisterInstance(_configuration.GetSettings<ExceptionlessSettings>()).SingleInstance();
                 builder.RegisterInstance(_configuration.GetSettings<RedisSettings>()).SingleInstance();
                 builder.RegisterType<ExceptionlessExceptionHandler>().As<IExceptionHandler>().SingleInstance();
-                builder.RegisterInstance(new MemoryCache(new MemoryCacheOptions())).As<IMemoryCache>().SingleInstance();
                 builder.RegisterType<AuthenticationService>().As<IAuthenticationService>().InstancePerLifetimeScope();
                 builder.RegisterModule<ModuleContainer>();
                 builder.RegisterModule<RedisModule>();

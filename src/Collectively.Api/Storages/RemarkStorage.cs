@@ -67,6 +67,11 @@ namespace Collectively.Api.Storages
             {
                 return await _storageClient.GetFilteredCollectionAsync<Remark, BrowseRemarks>(query, "remarks");
             }
+            var keys = await _cache.GetSortedSetAsync("remarks-latest");
+            if (keys == null || !keys.Any()) 
+            {
+                return await _storageClient.GetFilteredCollectionAsync<Remark, BrowseRemarks>(query, "remarks");
+            }
             if (!query.IsLocationProvided() || query.SkipLocation)
             {
                 return _browseRemarksFilter.Filter(await GetRemarksWithoutLocationAsync(query), query);
@@ -102,7 +107,7 @@ namespace Collectively.Api.Storages
             var remarks = await _cache.GetManyAsync<Remark>(keys
                     .Select(x => $"remarks:{x}")
                     .ToArray());
-            remarks = remarks.Where(x => x != null);
+            remarks = remarks?.Where(x => x != null) ?? Enumerable.Empty<Remark>();
 
             return remarks;
         }
@@ -112,11 +117,15 @@ namespace Collectively.Api.Storages
             var radius = query.Radius > 0 ? query.Radius : 10000;
             var geoKeys = await _cache.GetGeoRadiusAsync("remarks", 
                 query.Longitude, query.Latitude, radius);
+            if (geoKeys == null || !geoKeys.Any()) 
+            {
+                return Enumerable.Empty<Remark>();
+            }                
             var remarks = await _cache.GetManyAsync<Remark>(geoKeys
                 .OrderBy(x => x.Distance)
                 .Select(x => $"remarks:{x.Name}")
                 .ToArray());
-            remarks = remarks.Where(x => x != null);
+            remarks = remarks?.Where(x => x != null) ?? Enumerable.Empty<Remark>();
 
             return remarks;
         }
@@ -149,6 +158,10 @@ namespace Collectively.Api.Storages
         {
             var criteria = new List<string>();
             var group = await _cache.GetAsync<Group>($"groups:{id}");
+            if (group.HasNoValue)
+            {
+                group = await _storageClient.GetAsync<Group>($"groups/{id}"); 
+            }
             if (group.HasNoValue || group.Value.Criteria == null) 
             {
                 return (string.Empty, criteria);

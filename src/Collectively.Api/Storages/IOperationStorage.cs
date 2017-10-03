@@ -8,6 +8,5 @@ namespace Collectively.Api.Storages
     public interface IOperationStorage
     {
         Task<Maybe<Operation>> GetAsync(Guid requestId);
-        Task<Maybe<Operation>> GetUpdatedAsync(Guid requestId);
     }
 }

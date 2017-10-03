@@ -20,19 +20,5 @@ namespace Collectively.Api.Storages
 
         public async Task<Maybe<Operation>> GetAsync(Guid requestId)
             => await _operationProvider.GetAsync(requestId);
-
-        public async Task<Maybe<Operation>> GetUpdatedAsync(Guid requestId)
-        {
-            var requestsCount = 0;
-            var operation = await GetAsync(requestId);
-            while((operation.HasNoValue || operation.Value.State == "created") && requestsCount < 10) 
-            {
-                operation = await GetAsync(requestId);
-                requestsCount++;
-                await Task.Delay(500);
-            }
-
-            return operation;
-        }
     }
 }

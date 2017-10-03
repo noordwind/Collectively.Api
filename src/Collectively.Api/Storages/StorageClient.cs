@@ -10,6 +10,7 @@ using System.Linq;
 using Serilog;
 using Collectively.Common.Security;
 using Collectively.Common.ServiceClients;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Collectively.Api.Storages
 {
@@ -146,9 +147,10 @@ namespace Collectively.Api.Storages
 
             Logger.Debug($"Fetch data from cache, type: {typeof(T).Name}, endpoint: {endpoint}, cacheKey: {cacheKey}");
             cacheKey = GetCacheKey(endpoint, cacheKey);
-            var result = await _cache.GetAsync<T>(cacheKey);
+            var result = _cache.Get<T>(cacheKey);
+            await Task.CompletedTask;
 
-            return result.HasValue ? result : new Maybe<T>();
+            return result;
         }
 
         private async Task StoreInCacheAsync<T>(Maybe<T> value, string endpoint, string cacheKey = null,
@@ -162,7 +164,14 @@ namespace Collectively.Api.Storages
             cacheKey = GetCacheKey(endpoint, cacheKey);
             var cacheExpiry = expiry ?? _settings.CacheExpiry;
             Logger.Debug($"Store data in cache, type: {typeof(T).Name}, endpoint: {endpoint}, cacheKey: {cacheKey}, expiry: {expiry}");
-            await _cache.AddAsync(cacheKey, value.Value, cacheExpiry);
+            if (expiry == null)
+            {
+                _cache.Set(cacheKey, value.Value);
+
+                return;
+            }
+            _cache.Set(cacheKey, value.Value, expiry.Value);
+            await Task.CompletedTask;
         }
 
         private static string GetCacheKey(string endpoint, string cacheKey)

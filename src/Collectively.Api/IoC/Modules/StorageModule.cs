@@ -4,6 +4,7 @@ using Collectively.Api.Filters;
 using Collectively.Api.Storages;
 using Collectively.Common.Security;
 using Collectively.Common.ServiceClients;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Collectively.Api.IoC.Modules
 {
@@ -53,10 +54,6 @@ namespace Collectively.Api.IoC.Modules
 
             builder.RegisterType<OrganizationStorage>()
                 .As<IOrganizationStorage>()
-                .SingleInstance();
-
-            builder.RegisterType<InMemoryCache>()
-                .As<IMemoryCache>()
                 .SingleInstance();
         }
     }

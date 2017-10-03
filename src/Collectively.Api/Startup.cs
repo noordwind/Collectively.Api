@@ -32,6 +32,7 @@ namespace Collectively.Api
             services.AddSerilog(Configuration);
             services.AddWebEncoders();
             services.AddCors();
+            services.AddMemoryCache();
             Services = services;
         }
 
