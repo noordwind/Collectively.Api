@@ -18,11 +18,17 @@ using Serilog;
 using Collectively.Common.Security;
 using System.Security.Claims;
 using System.Security.Authentication;
+using Collectively.Messages;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using System.Collections.Generic;
+using Newtonsoft.Json.Serialization;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Collectively.Api.Modules
 {
     public abstract class ModuleBase : NancyModule
     {
+        private static readonly CamelCasePropertyNamesContractResolver ContractResolver = new CamelCasePropertyNamesContractResolver();
         protected static readonly ILogger Logger = Log.Logger;
         protected readonly ICommandDispatcher CommandDispatcher;
         private readonly IValidatorResolver _validatorResolver;
@@ -37,21 +43,37 @@ namespace Collectively.Api.Modules
             _validatorResolver = validatorResolver;
         }
 
-        protected CommandRequestHandler<T> For<T>() where T : ICommand, new()
-        => HandleRequest<T>();
+        protected CommandRequestHandler<T> For<T>(T model = null) 
+            where T : class, ICommand, new()
+            => HandleRequest<T>(model);
 
-        protected CommandRequestHandler<T> ForModerator<T>(params string[] roles) where T : ICommand, new()
-        => HandleRequest<T>(true, "moderator", "administrator", "owner");
+        protected CommandRequestHandler<T> ForModerator<T>(T model = null, params string[] roles) 
+            where T : class, ICommand, new()
+            => HandleRequest<T>(model, true, "moderator", "administrator", "owner");
 
-        protected CommandRequestHandler<T> ForAdministrator<T>(params string[] roles) where T : ICommand, new()
-        => HandleRequest<T>(true, "administrator", "owner");
+        protected CommandRequestHandler<T> ForAdministrator<T>(T model = null, params string[] roles) 
+            where T : class, ICommand, new()
+            => HandleRequest<T>(model, true, "administrator", "owner");
 
-        protected CommandRequestHandler<T> ForOwner<T>(params string[] roles) where T : ICommand, new()
-        => HandleRequest<T>(true, "owner");
+        protected CommandRequestHandler<T> ForOwner<T>(T model = null, params string[] roles) 
+            where T : class, ICommand, new()
+            => HandleRequest<T>(model, true, "owner");
 
-        private CommandRequestHandler<T> HandleRequest<T>(bool forceAuth = false, params string[] roles) where T : ICommand, new()
+        private CommandRequestHandler<T> HandleRequest<T>(T model = null, 
+            bool forceAuth = false, params string[] roles) where T : class, ICommand, new()
         {
-            var command = BindRequest<T>();
+            T command = default(T);
+            if (model is IEditable)
+            {
+                var patchOperations = BindRequest<List<Operation<T>>>();
+                var patch = new JsonPatchDocument<T>(patchOperations, ContractResolver);
+                patch.ApplyTo(model);
+                command = model;
+            }
+            else
+            {
+                command = BindRequest<T>();
+            } 
             if(forceAuth)
             {
                 AuthenticateAndValidateRoles(roles);

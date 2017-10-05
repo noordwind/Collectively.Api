@@ -8,6 +8,11 @@ using System.Collections.Generic;
 using System;
 using Collectively.Services.Storage.Models.Remarks;
 using Collectively.Messages.Commands.Models;
+using System.Threading.Tasks;
+using Collectively.Messages.Commands;
+using Microsoft.AspNetCore.JsonPatch.Operations;
+using Microsoft.AspNetCore.JsonPatch;
+using Newtonsoft.Json.Serialization;
 
 namespace Collectively.Api.Modules
 {
@@ -54,6 +59,12 @@ namespace Collectively.Api.Modules
             Put("{remarkId}/photos", async args => await For<AddPhotosToRemark>()
                 .OnSuccessAccepted($"remarks/{args.remarkId}")
                 .DispatchAsync());
+
+            Patch("{remarkId}", async args => await For<EditRemark>(
+                    new EditRemark { RemarkId = args.remarkId})
+                .OnSuccessAccepted($"remarks/{args.remarkId}")
+                .DispatchAsync());
+                
 
             Delete("{remarkId}/photos/{groupId}", async args => await For<RemovePhotosFromRemark>()
                 .Set(x => x.Photos = new List<GroupedFile>
@@ -141,6 +152,6 @@ namespace Collectively.Api.Modules
             };
 
             return model;
-        } 
+        }
     }
 }
