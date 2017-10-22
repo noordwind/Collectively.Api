@@ -30,17 +30,17 @@ namespace Collectively.Api.Filters
             {
                 query.Results = 10;
             }
-            if (query.Results > 100)
+            if (query.Results > 1000)
             {
-                query.Results = 100;
+                query.Results = 1000;
             }
             if (query.Radius <= 0)
             {
                 query.Radius = 10;
             }
-            if (query.Radius > 100)
+            if (query.Radius > 1000)
             {
-                query.Radius = 100;
+                query.Radius = 1000;
             }
             values = values.Where(x => x.Category.Name == query.Category);
             values.SetRemarksDistance(query.Latitude, query.Longitude);

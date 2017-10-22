@@ -28,9 +28,9 @@ namespace Collectively.Api.Filters
             {
                 query.Results = 10;
             }
-            if (query.Results > 100)
+            if (query.Results >= 1000)
             {
-                query.Results = 100;
+                query.Results = 1000;
             }
             if (query.AuthorId.NotEmpty())
             {
