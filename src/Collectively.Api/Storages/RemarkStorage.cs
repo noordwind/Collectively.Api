@@ -63,7 +63,7 @@ namespace Collectively.Api.Storages
 
         public async Task<Maybe<PagedResult<Remark>>> BrowseAsync(BrowseRemarks query)
         {
-            if (!_useCache)
+            if (!_useCache || (query.AvailableGroupId.HasValue && query.AvailableGroupId != Guid.Empty))
             {
                 return await _storageClient.GetFilteredCollectionAsync<Remark, BrowseRemarks>(query, "remarks");
             }

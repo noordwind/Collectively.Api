@@ -10,6 +10,7 @@ namespace Collectively.Api.Queries
         public string AuthorId { get; set; }
         public string ResolverId { get; set; }
         public Guid? GroupId { get; set; }
+        public Guid? AvailableGroupId { get; set; }
         public bool Latest { get; set; }
         public bool Disliked { get; set; }
         public bool OnlyLiked { get; set; }

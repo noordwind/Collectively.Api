@@ -73,6 +73,10 @@ namespace Collectively.Api.Filters
             {
                 values = values.Where(x => x.Group?.Id == query.GroupId);
             }
+            if (query.AvailableGroupId.HasValue && query.AvailableGroupId != Guid.Empty)
+            {
+                values = values.Where(x => x.AvailableGroups?.Contains(query.AvailableGroupId.Value) == true);
+            }
             if (query.UserFavorites.NotEmpty())
             {
                 values = values.Where(x => x.UserFavorites.Contains(query.UserFavorites));
