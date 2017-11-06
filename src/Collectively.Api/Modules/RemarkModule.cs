@@ -36,9 +36,6 @@ namespace Collectively.Api.Modules
             Get("categories", async args => await FetchCollection<BrowseRemarkCategories, RemarkCategory>
                 (async x => await remarkStorage.BrowseCategoriesAsync(x)).HandleAsync());
 
-            Get("tags", async args => await FetchCollection<BrowseRemarkTags, Tag>
-                (async x => await remarkStorage.BrowseTagsAsync(x)).HandleAsync());
-
             Get("{id}", async args => await Fetch<GetRemark, Remark>
                 (async x => await remarkStorage.GetAsync(x.Id, CurrentUserId)).HandleAsync());
 

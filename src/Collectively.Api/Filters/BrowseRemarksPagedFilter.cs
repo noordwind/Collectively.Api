@@ -59,7 +59,7 @@ namespace Collectively.Api.Filters
             }
             if (query.Tags?.Any() == true)
             {
-                values = values.Where(x => x.Tags.Any(y => query.Tags.Contains(y)));
+                values = values.Where(x => x.Tags.Any(y => query.Tags.Contains(y.Name)));
             }
             if (query.States?.Any() == true)
             {

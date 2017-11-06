@@ -150,8 +150,7 @@ namespace Collectively.Api.Storages
                 return tags.Paginate(1, int.MaxValue);
             }
 
-            return await _storageClient.GetFilteredCollectionAsync<Tag, BrowseRemarkTags>
-                (query, "remarks/tags");            
+            return await _storageClient.GetFilteredCollectionAsync<Tag, BrowseRemarkTags>(query, "tags");            
         }
 
         private async Task<(string role, IList<string> criteria)> GetGroupMemberCriteriaAsync(Guid id, string userId)
