@@ -75,7 +75,8 @@ namespace Collectively.Api.Filters
             }
             if (query.AvailableGroupId.HasValue && query.AvailableGroupId != Guid.Empty)
             {
-                values = values.Where(x => x.AvailableGroups?.Contains(query.AvailableGroupId.Value) == true);
+                values = values.Where(x => x.Assignee.Empty() && 
+                    x.AvailableGroups?.Contains(query.AvailableGroupId.Value) == true);
             }
             if (query.UserFavorites.NotEmpty())
             {
