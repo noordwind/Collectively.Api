@@ -8,37 +8,21 @@
     <RuntimeFrameworkVersion>2.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
   <ItemGroup>
-    <None Update="nlog.config">
-      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-    </None>
     <None Update="rsa-public-key.xml">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Collectively.Messages" Version="2.0.*" />
+    <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.7" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Debug'">
+    <ProjectReference Include="..\..\..\Collectively.Common\src\Collectively.Common\Collectively.Common.csproj" />
+    <ProjectReference Include="..\..\..\Collectively.Messages\src\Collectively.Messages\Collectively.Messages.csproj" />
+    <ProjectReference Include="..\..\..\Collectively.Services.Storage\src\Collectively.Services.Storage.Models\Collectively.Services.Storage.Models.csproj" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(Configuration)' == 'Release'">
     <PackageReference Include="Collectively.Common" Version="2.0.*" />
+    <PackageReference Include="Collectively.Messages" Version="2.0.*" />
     <PackageReference Include="Collectively.Services.Storage.Models" Version="2.0.*" />
-    <PackageReference Include="Autofac" Version="4.6.1" />
-    <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="4.2.0" />
-    <PackageReference Include="Lockbox.Client" Version="2.0.1" />
-    <PackageReference Include="Exceptionless" Version="4.0.1955" />
-    <PackageReference Include="Microsoft.AspNetCore.Hosting" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Server.Kestrel" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Owin" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Cors" Version="2.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
-    <PackageReference Include="Nancy" Version="2.0.0-clinteastwood" />
-    <PackageReference Include="Nancy.Authentication.Stateless" Version="2.0.0-clinteastwood" />
-    <PackageReference Include="Nancy.Bootstrappers.Autofac" Version="2.0.0-clinteastwood" />
-    <PackageReference Include="Nancy.JsonPatch.Core" Version="1.0.0" />
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.3.0" />
-    <PackageReference Include="Polly" Version="5.3.1" />
-    <PackageReference Include="RawRabbit" Version="2.0.0-beta8" />
-    <PackageReference Include="RawRabbit.Operations.Publish" Version="2.0.0-beta8" />
   </ItemGroup>
 </Project>

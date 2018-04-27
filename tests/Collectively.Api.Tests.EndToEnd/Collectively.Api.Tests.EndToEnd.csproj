@@ -7,22 +7,14 @@
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <RuntimeFrameworkVersion>2.0.0</RuntimeFrameworkVersion>
   </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="../../src/Collectively.Api/Collectively.Api.csproj" />
   </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
     <PackageReference Include="FluentAssertions" Version="4.*" />
     <PackageReference Include="Machine.Specifications" Version="0.11.0" />
     <PackageReference Include="Machine.Specifications.Should" Version="0.11.0" />
     <PackageReference Include="Machine.Specifications.Runner.VisualStudio" Version="2.*" />
-    <PackageReference Include="Newtonsoft.Json" Version="10.0.3" />
-    <PackageReference Include="Collectively.Messages" Version="2.0.*" />
-    <PackageReference Include="Collectively.Common" Version="2.0.*" />
-    <PackageReference Include="Collectively.Services.Storage.Models" Version="2.0.*" />
-    <PackageReference Include="System.Net.Http" Version="4.3.0" />
   </ItemGroup>
-
 </Project>

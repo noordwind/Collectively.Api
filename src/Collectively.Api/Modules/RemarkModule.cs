@@ -135,7 +135,9 @@ namespace Collectively.Api.Modules
                 Offering = remark.Offering,
                 OfferingProposalsCount = remark.OfferingProposalsCount,
                 PositiveVotesCount = remark.PositiveVotesCount,
-                NegativeVotesCount = remark.NegativeVotesCount
+                NegativeVotesCount = remark.NegativeVotesCount,
+                Tags = remark.Tags,
+                SelectedTag = remark.SelectedTag
             };
             if (remark.Photos == null || !remark.Photos.Any())
             {
